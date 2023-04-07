@@ -10,39 +10,55 @@
 <body>
 	
 	<div id="container">
-		<div class="header-wrap">
+		<div class="landing-section-header">
 			<header
-			  id="page-header-id"
-			  class="page-header"
+			  id="landing-header-id"
+			  class="landing-header"
 			  role="banner"
 			  itemscope=""
 			>
-			  <div class="page-header__inner">
-				<a href="#main" id="skip-to-content">Skip to Page content</a>
+			  <div class="landing-header-elements">
 				<a
 				  href="/landing.html"
-				  title="Link to kahoot.com homepage"
-				  aria-label="Link to kahoot.com homepage"
 				  class="logo-link"
 				>
 				  <img alt="" src="/pictures/logo.png" class="logo_landing" />
 				</a>
 				<nav
-				  id="header-menu"
-				  class="header-menu header-menu--microsite"
+				  id="landing-header_menu"
+				  class="landing-header_menu landing-header_menu--microsite"
 				  aria-label="Navigation"
 				  data-translated="1"
 				  itemscope=""
 				>
 				<p class="creat_formular_text">Create Formular</p>
+				<ul
+				id="menu-homepage-menu-right"
+				class="landing-header_menu-right first-in-focus"
+			  >
+				<li
+				  id="menu-item-92365"
+				  class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365"
+				>
+				  <a
+					href="/admin.html"
+					data-tracking-id="sign-up-top-bar"
+					itemprop="url"
+					>Back</a
+				  >
+				</li>
+			  </ul>
 				</nav>
 			  </div>
 			</header>
 		</div>
-
-		<div id="questions-container">
+		<div id="questions-container" style="
+		background-image: url(/pictures/create-formular.jpg);
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: cover;
+	  ">
 			<div class="flex-container-centered">
-
 				<button id="add-btn" class="rounded-div drop-shadow-effect" onclick='addQuestion()'>+ Add question</button>
 				<button id="del-btn" class="rounded-div drop-shadow-effect" onclick='deleteQuestion()'>- Delete question</button>
 			</div>
@@ -53,8 +69,6 @@
 				</a>
 			</div>
 		</div>
-
-
 	</div>
 
 </body>
