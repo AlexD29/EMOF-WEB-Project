@@ -1,0 +1,25 @@
+section {
+    overflow-x: hidden;
+    background-color: blueviolet; 
+    margin: 1em;
+    border-radius: 12px 12px 12px 12px;
+    border: 2px;
+    border-color: red;
+    border-style: dashed;
+}
+#form-list-topbar {
+    height:3%;
+    padding:1em;
+    background-color: blanchedalmond;
+    display: flex;
+}
+#form-list-main {
+    height:95%;
+    background-color: brown;
+    justify-content: space-between;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#form-list-bottom {
+    height:2%;
+}

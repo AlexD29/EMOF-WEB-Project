@@ -10,7 +10,7 @@
     <div class="first_part">
       <header class="header">
         <nav class="nav">
-          <img alt="" src="pictures/logo.png" class="logo" />
+          <a href="landing.html"><img alt="" src="pictures/logo.png" class="logo" /></a>
         </nav>
       </header>
     </div>
@@ -120,14 +120,18 @@
                     </div>
                   </div>
                   <div class="signup_button_section">
-                    <button
-                      disabled=""
-                      class="signup_button"
-                      type="submit"
-                      data-functional-selector="signup_submit-button"
-                    >
-                      Sign up
-                    </button>
+                    <form id="login-form" action="admin.html">
+                      <button
+                        id="login-submit-btn"
+                        class="login_button"
+                        type="button"
+                        data-functional-selector="sign-in-button"
+                        onclick="window.location.href='admin.html'"
+                      >
+                        Sign up
+                      </button>
+                    </form>
+                    
                   </div>
                 </form>
               </div>

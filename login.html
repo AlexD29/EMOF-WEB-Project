@@ -7,7 +7,7 @@
     <div class="first_part">
       <header class="header">
         <nav class="nav">
-          <img alt="" src="pictures/logo.png" class="logo" />
+          <a href="landing.html"><img alt="" src="pictures/logo.png" class="logo" /></a>
         </nav>
       </header>
     </div>
@@ -88,15 +88,17 @@
                     Forgot password?
                     <a href="reset_password.html">Reset your password</a>
                   </div>
-                  <button
-                    disabled=""
-                    id="login-submit-btn"
-                    class="login_button"
-                    type="submit"
-                    data-functional-selector="sign-in-button"
-                  >
-                    Log in
-                  </button>
+                  <form id="login-form" action="admin.html">
+                    <button
+                      id="login-submit-btn"
+                      class="login_button"
+                      type="button"
+                      data-functional-selector="sign-in-button"
+                      onclick="window.location.href='admin.html'"
+                    >
+                      Log in
+                    </button>
+                  </form>
                 </form>
               </div>
               <div class="or">
