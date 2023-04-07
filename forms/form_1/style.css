@@ -25,10 +25,21 @@ body {
 	text-align: center;
 	background-color: green;
 	font-size: large;
+	transition-duration: 0.4s;
 }
 
 #next-btn{
 	right: 8%;
+}
+
+#next-btn:hover{
+	background-color: #7836f4;
+  	color: white;
+}
+
+#back-btn:hover{
+	background-color: #f45c36;
+  	color: white;
 }
 
 
