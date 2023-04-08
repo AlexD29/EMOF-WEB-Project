@@ -1,15 +1,19 @@
 body {
-	background-color: #ECFFD4;
+	background-color: white;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-
+	font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-
 
 #header{
 	height: 4rem;
-	background-color: #D7FFB8;
+	background-color: #1bc908;
+	justify-content: center;
+}
+#header-incomplete{
+	height: 4rem;
+	background-color: #f05907;
 	justify-content: center;
 }
 
@@ -18,18 +22,18 @@ body {
 }
 
 #next-btn,#back-btn{
-	position: fixed;
-	bottom: 3rem;
-	width: 3rem;
+	height: 2rem;
+	width: 10rem;
 	padding: 0.75rem;
 	text-align: center;
+
 	background-color: green;
-	font-size: large;
+	font-size: 30px;
 	transition-duration: 0.4s;
 }
 
 #next-btn{
-	right: 8%;
+	
 }
 
 #next-btn:hover{
@@ -42,11 +46,9 @@ body {
   	color: white;
 }
 
-
 #back-btn{
 	left: 8%;
 }
-
 
 #next-btn > a,#back-btn > a{
 	color: white;
@@ -74,7 +76,7 @@ body {
 }
 
 #howyoufeel-header{
-	background-color: rgb(255, 218, 169);
+	background-color: #1165ba;
 	border-radius: 25px 25px 0 0;
 	height: 3rem;
 	justify-content: center;
@@ -89,7 +91,7 @@ body {
 	border-radius: 1rem;
 	border: 0px;
 	font-size: large;
-
+	font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #howyoufeel-textarea::placeholder{
@@ -103,10 +105,11 @@ body {
 
 #question{
 	margin: 1rem 0 3rem 0;
-	height: 200px;
-	font-size: x-large;
+	height: 120px;
+	width: 90%;
+	font-size: 45px;
 	justify-content: center;
-	padding: 1rem 5rem 1rem 5rem;
+	padding: 1rem 4rem 1rem 4rem;
 }
 
 #answer-container{
@@ -160,4 +163,13 @@ background-color: rgb(0, 162, 255);
 	
 	#content{padding: 3rem 10% 0 10%;}
 
+}
+
+#complete_text{
+	font-size: 25px;
+	font-weight: bold;
+}
+
+#instructions{
+	font-size: 20px;
 }

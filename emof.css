@@ -73,9 +73,7 @@ h1 {
     font-weight: bold;
     line-height: 2.3rem
 }
-* {
-    font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+
 input[type="password" i] {
     -webkit-text-security: disc !important;
     padding: 1px 2px;
@@ -822,6 +820,9 @@ html:not(.state--resizing) .landing-header {
     order: 1;
 }
 
+.explore-button{
+    font-size: 1.4rem;
+}
 
 .landing-header_menu ul li {
     font-size: 1.1rem;
