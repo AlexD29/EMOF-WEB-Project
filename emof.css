@@ -821,7 +821,31 @@ html:not(.state--resizing) .landing-header {
 }
 
 .explore-button{
-    font-size: 1.4rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* .explore-button-landing{
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+.menu-item-text{
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.your-formulars{
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .landing-header_menu ul li {
@@ -1282,7 +1306,7 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
 
 .creat_formular_text{
     font-weight: bold;
-    font-size: 1.9rem;
+    font-size: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
