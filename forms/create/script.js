@@ -71,7 +71,7 @@ function create(){
 	let questions = questions_elements.map((question,index) => (index + 1) + "."+ question.value)
 
 	alert("Form created !! These are your questions : " + questions);
-	window.location.href = "../../admin.html";
+	window.location.href = "../../admin/all_forms.html";
 
 
 }
