@@ -50,19 +50,62 @@ section {
     gap:1rem;
 }
 
+#form-list a {
+    color: white;
+    text-decoration: none;
+}
+
+#confirm-delete-dialog {
+    position:fixed;
+    background-color: rgba(0, 0, 0, 0.589);
+    z-index: 1;
+    margin:0;
+    height:100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    user-select: none;
+}
+
+#confirm-delete-dialog > div {
+    background-color: white; 
+    border-radius: 5em; 
+    width: 50%; 
+    height: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column;
+}
+
+#confirm-delete-dialog > div > h1 {
+    text-align: center; 
+}
+#confirm-delete-dialog > div > div {
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-around; 
+    width:100%;
+}
+#confirm-delete-dialog > div > div > a {
+    width:25%; 
+    height:100%;
+}
+
 #categories-button-wrapper a {
     user-select: none;
     height: 4rem;
     justify-content: center;
     align-items: center;
     display: flex;
-    color: white;
-    text-decoration: none;
 }
 
 #form-list-main {
     background-color: transparent;
     width: 100%;
+    min-width:390px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -75,17 +118,68 @@ section {
     padding:0.2rem;
     font-weight: bold;
     color: white;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    text-decoration: none;
 }
 
-.form-info {
-    display: flex;
-    flex-direction: column;
-}
 .form-info p {
     padding:0.5rem;
     padding-left:0;
     line-height: 2rem;
     font-size:1rem;
+}
+
+.collapsed-admin-buttons {
+    display:none;
+    color:black;
+    font-size:3rem;
+    padding:3rem 1rem;
+}
+
+@media only screen and (max-width:800px){
+    #form-list {
+        flex-direction: column;
+    }
+    #form-list-categories {
+        width:97%;
+        height:3rem;
+        border-color:black;
+        border-style: solid;
+        border-bottom: 3px;
+    }
+    #categories-button-wrapper {
+        width:100%;
+        flex-direction: row;
+        height: 3rem;
+        gap:0.5em;
+        justify-content: space-evenly;
+    }
+    #categories-button-wrapper a {
+        height: auto;
+        width:100%;
+    }
+    .form-info  {
+        display:none!important;
+    }
+    .form-admin-buttons {
+        display: none!important;
+    }
+    section {
+        height:min-content!important;
+        flex-direction: row!important;
+    }
+    .collapsed-admin-buttons {
+        display:flex!important;
+    }
+    .form-info-pane {
+        display: flex!important;
+        align-items: center!important;
+        gap:0.05rem!important;
+    }
 }
 
 #new-form-button {
@@ -133,6 +227,7 @@ h1 {
     justify-content: center;
     color: white;
     user-select: none;
+    text-decoration: none;
 }
 
 .active-button {

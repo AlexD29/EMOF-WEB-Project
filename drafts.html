@@ -84,6 +84,17 @@
       </div>
     </header>
   </div>
+
+  <div id="confirm-delete-dialog">
+    <div>
+      <h1>Are you sure you want to delete the Form?</h1>
+      <div>
+        <a class="button emphasised-button" onclick="deleteForm('Yes')">Yes</a>
+        <a class="button delete-button" onclick="deleteForm('Cancel')">Cancel</a>
+      </div>
+    </div>
+  </div>
+
   <div id="form-list">
     <div id="form-list-categories">
       <div id="categories-button-wrapper">
@@ -95,7 +106,7 @@
     </div>
     <div id="form-list-main">
       <section>
-        <div>
+        <div class="form-info-pane">
           <div class="form-heading">
             <h1>
               Update 1.12
@@ -111,17 +122,20 @@
             </p>
           </div>
         </div>
+        <div class="collapsed-admin-buttons">
+          ⋮
+        </div>
         <div class="form-admin-buttons">
           <a class="emphasised-button button">
             Launch
           </a>
-          <a class="active-button button">
+          <a class="active-button button" href="forms/create/index.html">
             Edit
           </a>
           <a class="unselectable-button button">
             View Statistics
           </a>
-          <a class="delete-button button">
+          <a class="delete-button button" onclick="deleteForm()">
             Delete
           </a>
         </div>
@@ -129,5 +143,5 @@
     </div>
   </div>
 </body>
-
+<script src="admin.js"></script>
 </html>
