@@ -235,12 +235,8 @@ h1 {
 .active-button {
     height: 70%;
     background-color: rgba(0,0,0,0.7);
-    cursor:normal;
 }
 
-.active-button:hover {
-    /*background-color: rgba(0, 0, 0, 1);*/
-}
 
 .inactive-button {
     height: 70%;
