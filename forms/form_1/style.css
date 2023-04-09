@@ -175,3 +175,24 @@ background-color: rgb(0, 162, 255);
 #instructions{
 	font-size: 20px;
 }
+
+#back-explore{
+	height: 20px;
+}
+#back-explore-button {
+	display: block;
+	margin: auto;
+	background-color: #4CAF50; /* a shade of green */
+	border: none;
+	border-radius: 20px; /* adjust the value to increase or decrease the roundness */
+	color: white;
+	text-align: center;
+	font-size: 20px;
+	padding: 20px 40px;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+  }
+  
+  #back-explore-button:hover {
+	background-color: #2E8B57; /* a darker shade of green */
+  }
