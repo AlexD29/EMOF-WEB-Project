@@ -1,6 +1,9 @@
 const container = document.getElementById('questions-container');
 let maxInputAllowed = 15;
-let questions_elements = [];
+let questions_elements = [
+	"Ce sentiment ti-a produs mancarea de la pranz ?", 
+	"Razboiul dintre Ucraina si Rusia cum te face sa te simti ?",
+	"Cum iti poti descrie copilaria in cateva emotii ?"];
 
 for(let i = 0 ; i < questions_elements.length ; i++){
 	loadQuestion(questions_elements[i]);
