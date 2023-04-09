@@ -699,6 +699,18 @@ button[disabled] {
 }
 
 /*LANDING*/
+
+#landing-page-txt-img-container{
+    display: flex;
+    flex-direction: row;
+}
+
+@media screen and (max-width: 800px) {
+    #landing-page-txt-img-container {
+      flex-direction: column;
+    }
+}
+
 .landing-section-header {
     position: sticky;
     top: 0;
