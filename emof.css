@@ -83,9 +83,6 @@ input[type="password" i] {
 ::before, ::after {
     box-sizing: inherit;
 }
-::before, ::after {
-    box-sizing: inherit;
-}
 
 
 /*Navigation Bar*/
@@ -138,8 +135,6 @@ input[type="password" i] {
     z-index: 110;
 }
 
-
-
 /*LOGIN*/
 .login_position {
     -webkit-box-pack: center;
@@ -173,7 +168,9 @@ input[type="password" i] {
     align-items: center;
     width: 100%;
     max-width: 26rem;
-    margin: 0px;
+    height: 100rem;
+    padding-top: 8rem;
+    margin: 0;
 }
 .login_fereastra {
     width: 100%;
@@ -185,7 +182,17 @@ input[type="password" i] {
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     color: inherit;
-}
+}  
+@media only screen and (max-width: 1000px) {
+
+  }
+  @media (max-width: 1000px){
+    .login_position{
+        -webkit-box-pack: center;
+        justify-content: center;
+    }
+  }
+
 .login_continut {
     display: flex;
     flex-direction: column;
@@ -399,11 +406,6 @@ input[type="password" i] {
     width: 100%;
     min-height: calc(100vh - 3.5rem);
     z-index: 90;
-    animation-name: iAjNNh;
-    animation-duration: 0.3s;
-    animation-delay: 0s;
-    animation-timing-function: ease-in;
-    animation-fill-mode: both;
     flex-direction: column;
     background-color: #0fd139;
     font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -430,6 +432,7 @@ input[type="password" i] {
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     color: inherit;
+    height: 14.5rem;
 }
 .reset_continut {
     display: flex;
@@ -567,6 +570,8 @@ input[type="password" i] {
     align-items: center;
     width: 100%;
     max-width: 26rem;
+    height: 100rem;
+    padding-top: 6rem;
     margin: 0px;
 }
 .create_account_text {
@@ -702,7 +707,7 @@ button[disabled] {
     flex-direction: row;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1265px) {
     #landing-page-txt-img-container {
       flex-direction: column;
     }
@@ -836,12 +841,7 @@ html:not(.state--resizing) .landing-header {
     justify-content: center;
     align-items: center;
 }
-/* .explore-button-landing{
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
+
 .menu-item-text{
     font-weight: bold;
     font-size: 1.2rem;
@@ -1084,7 +1084,8 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
 .video-box .video-box--large-image .video-box--video-container .landing-image img {
     display: block;
     margin-bottom: 0rem;
-    margin-right: 5rem;
+    margin-right: 2rem;
+    margin-left: 3rem;
 }
 .video-box .video-box--group img {
     width: 100%;
