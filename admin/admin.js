@@ -9,3 +9,11 @@ function deleteForm(resp) {
         }
     }
 }
+
+function launchForm() {
+    alert("Form launched!")
+}
+
+function stopForm() {
+    alert("Form stopped!")
+}

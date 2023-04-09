@@ -28,7 +28,7 @@ section {
 }
 
 #form-list-categories {
-    background-image: url(/pictures/portocaliu.jpg);
+    background-image: url(../pictures/portocaliu.jpg);
     width: 20%;
     padding:1em;
     display: flex;
@@ -102,7 +102,7 @@ section {
 }
 
 #form-list-main {
-    background-image: url(/pictures/your-formulars.jpg);
+    background-image: url(../pictures/your-formulars.jpg);
     width: 100%;
     min-width:390px;
     overflow-y: scroll;
@@ -228,6 +228,9 @@ h1 {
     user-select: none;
     text-decoration: none;
 }
+.button:hover {
+    cursor: pointer;
+}
 
 .active-button {
     height: 70%;
@@ -251,6 +254,9 @@ h1 {
     height: 70%;
     color: rgb(89, 91, 94);
     background-color: rgb(147, 156, 156);
+}
+.unselectable-button:hover {
+    cursor:not-allowed;
 }
 
 .emphasised-button {
