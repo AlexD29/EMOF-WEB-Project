@@ -56,7 +56,33 @@ function validateQuestion(text){
 	return true
 }
 
+function validateName(name){
+	if(name == null ) return "Name is null"
+	if(name.length < 6) return "No name under 6 characters allowed"
+	if(name.length > 100) return "No name bigger than 100 characters allowed"
+
+	console.log(name);
+
+	return true
+}
+
+function validateTags(tagsList){
+
+	// To be done 
+	return true
+}
+
 function validateForm(){
+
+	const name = document.getElementById('form-name-input').value;
+	if(validateName(name) !== true){
+		return validateName(name)
+	}
+	
+	const tags = document.getElementById('form-tags-input').value;
+	if(validateTags(tags) !== true){
+		return validateTags(tags)
+	}
 
 	if(questions_elements.length == 0){
 		return "You have no questions added"
