@@ -1,5 +1,3 @@
-Imagini puteti lua de pe link-ul asta: https://tophinhanhdep.com/anh-dep/color-hd-wallpapers/
-
 # Software Requirements Specification
 ## For  EMOF
 Prepared by Brassat Alexandru, Duca Alexandru, Popa Stefan
@@ -40,7 +38,7 @@ Frontend was build using HTML, CSS and JAVASCRIPT and the backend server will be
 ## External Interface Requirements
 ### 3.1 User Interfaces
 poze cu paginile principale
-![alt text](http://url/to/img.png)
+![alt text](/Images)
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
