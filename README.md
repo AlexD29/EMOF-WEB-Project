@@ -6,7 +6,6 @@ Prepared by Brassat Alexandru, Duca Alexandru, Popa Stefan
 
 Table of Contents
 =================
-  * [Revision History](#revision-history)
   * [Introduction](#1-introduction)
     * 1.4 [Product Scope](#14-product-scope)
   * [Overall Description](#overall-description)
@@ -17,8 +16,13 @@ Table of Contents
     * 3.1 [User Interfaces](#31-user-interfaces)
     * 3.3 [Software Interfaces](#33-software-interfaces)
   * [System Features](#system-features)
-    * 4.1 [System Feature 1](#41-system-feature-1)
-    * 4.2 [System Feature 2 (and so on)](#42-system-feature-2-and-so-on)
+    * 4.0 [***********TEMPLATE DELETE THIS AT THE END*************](#40-system-feature-1)
+    * 4.1 [Filling out the form](#41-filling-out-the-form)
+    * 4.2 [Creating a form](#42-creating-a-form)
+    * 4.3 [Editing a form](#43-editing-a-form)
+    * 4.4 [Viewing form statistics](#44-viewing-form-statistics)
+    * 4.5 [Viewing  Created Forms](#45-viewing-created-forms)
+    * 4.6 [Explore Forms](#46-explore-forms)
   * [Other Nonfunctional Requirements](#other-nonfunctional-requirements)
     * 5.3 [Security Requirements](#53-security-requirements)
 
@@ -40,7 +44,7 @@ poze cu paginile principale
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
-### 4.1 System Feature 1
+### 4.0 System Feature 1
 Don’t really say “System Feature 1.” State the feature name in just a few words.
 4.1.1   Description and Priority
  Provide a short description of the feature and indicate whether it is of High, Medium, or Low priority. You could also include specific priority component ratings, such as benefit, penalty, cost, and risk (each rated on a relative scale from a low of 1 to a high of 9).
@@ -77,8 +81,7 @@ The interaction is the same as the "Creating a form" page , but the difference i
 #### 4.3.3 Functional Requirements
 Same as [4.2.3](#423-functional-requirements)
 
-### 4.4 Viewing form's statistics
-
+### 4.4 Viewing form statistics
 #### 4.4.1 Description
 The LOGGED IN user can view the statistics of an own form.
 #### 4.4.2 Stimulus/Response Sequences
@@ -86,8 +89,7 @@ The quiz owner will be able to see the statistics in the form of a list of "inte
 #### 4.4.3 Functional Requirements
 [NOT YET IMPLEMENTED]
 
-### 4.5 Viewing  Created Forms
-
+### 4.5 Viewing Created Forms
 #### 4.5.1 Description
 The User will be able to view their unpublished, published or closed forms.
 #### 4.5.2 Stimulus/Response Sequences
