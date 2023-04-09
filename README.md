@@ -99,7 +99,16 @@ You can see the emotions already selected in the "What you feel" section. At the
 4.Z.2 The quiz owner will be able to see the statistics in the form of a list of "interesting things" .The algorithm based on Artificial Intelligence will decide what is most interesting to watch and based on those recommendations, different appropriate representations of the data will be displayed. Besides the "list of interesting things", there will also be a simpler list composed of the statistics of each question.
 4.Z.3 [NOT YET IMPLEMENTED]
 
+###4.A Viewing  Created Forms
 
+####4.A.1 The User will be able to view their unpublished, published or closed forms.
+####4.A.2 The User will interact with the "admin" page, which will list all of their forms. Those can be grouped in the three categories mentioned above, and can be sorted by category by using a series of buttons on the left side of the page. For all forms, the user will be able to perform certain actions (such as edit, publish, close, view statistics, delete), according to the state the forms are in (draft, active, closed). 
+####4.A.3 The user must be logged in to view their forms.
+
+###4.B Explore Forms
+####4.B.1 All users (anonymous or not) will be able to participate in public forms made by other users. The forms will be grouped by multiple criteria. 
+####4.B.2 The User will browse the page and, when a certain form catches their attention, will be able to join the form. 
+####4.B.3 In order for this page to be functional, it requires a number of public forms. In the case when there are none, an informative message will be shown.
 
 ### 4.2 System Feature 2 (and so on)
 
