@@ -105,6 +105,22 @@ The User will browse the page and, when a certain form catches their attention, 
 #### 4.6.3 Functional Requirements
 In order for this page to be functional, it requires a number of public forms. In the case when there are none, an informative message will be shown.
 
+### 4.7 Sign Up
+#### 4.7.1 Description
+Any user has the option to create an account, but it's not mandatory as the user can use the app and explore forms without an account. Creating an account allows the user to acces other features like Creating forms or Viewing Statistics about his completed forms.
+#### 4.7.2 Stimulus/Response Sequences
+If he wants to have permission to the features mentioned before, the user can easily and fast create an account by pressing the button 'Sign up' on the Landing page. He will be asked to enter an email address, an username and a password and then he will be redirected directly to his admin page, giving him acces to the features.
+#### 4.7.3 Functional Requirements
+To be able to access the 'Sign up' option, the user must not already be connected to an account in the application first and then must enter a valid email address and a username and a password of at least 8 characters.
+
+### 4.8 Log in - Log out
+#### 4.8.1 Description
+If the user has created an account in the application, he will always be able to access it through the 'Log in' feature. It will also be possible to disconnect from the account using the 'Log out' option.
+#### 4.8.2 Stimulus/Response Sequences
+Every time the user wants to access his created account, he will be able to do it easily by entering either the username or the email. Also, if he somehow forgots his password, he will be able to enter his email address where he will be sent a verification link that he will have to access in order to recover his account. If the user wishes this, the data entered by him can be retained to keep him connected all the time to his account or he can 'Log out' every time he leaves the application.
+#### 4.8.3 Functional Requirements
+To be able to acces the 'Log in' and 'Log out' features, the user should firstly create an account using the 'Sign up' feature.
+
 ## Other Nonfunctional Requirements
 ### 5.3 Security Requirements
 We want to prevent the most common attacks such as cross-site scripting, SQL injection, distributed denial of service.
