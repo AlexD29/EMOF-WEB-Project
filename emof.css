@@ -55,7 +55,6 @@ li {
     text-align: -webkit-match-parent;
 }
 img {
-    overflow-clip-margin: content-box;
     overflow: clip;
 }
 h1, h2, h3, h4, h5, h6, p {
@@ -297,7 +296,6 @@ input[type="password" i] {
     font-stretch: inherit;
     font-size: inherit;
     font-family: inherit;
-    font-optical-sizing: inherit;
     font-kerning: inherit;
     font-feature-settings: inherit;
     font-variation-settings: inherit;
@@ -643,7 +641,6 @@ input[type="password" i] {
     font-stretch: inherit;
     font-size: inherit;
     font-family: inherit;
-    font-optical-sizing: inherit;
     font-kerning: inherit;
     font-feature-settings: inherit;
     font-variation-settings: inherit;
