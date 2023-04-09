@@ -12,28 +12,24 @@ body {
 	justify-content: center;
 }
 #header-incomplete{
-	height: 4rem;
+	height: 2rem;
 	background-color: #f05907;
 	justify-content: center;
 }
 
 #content{
-	padding: 5rem 5% 5rem 5%;
+	padding: 2rem 8% 1rem 8%;
 }
 
 #next-btn,#back-btn{
-	height: 2rem;
-	width: 10rem;
+	height: 1.5rem;
+	width: 5rem;
 	padding: 0.75rem;
 	text-align: center;
 
 	background-color: green;
 	font-size: 30px;
 	transition-duration: 0.4s;
-}
-
-#next-btn{
-	
 }
 
 #next-btn:hover{
@@ -64,15 +60,15 @@ body {
 }
 
 #wheel-container {
-	width: 700px;
-	height: 700px;
+	width: 600px;
+	height: 600px;
 	margin: auto;
 }
 
 
 #howyoufeel-container{
 	width: 400px;
-	height: 400px;
+	height: 300px;
 }
 
 #howyoufeel-header{
@@ -80,6 +76,9 @@ body {
 	border-radius: 25px 25px 0 0;
 	height: 3rem;
 	justify-content: center;
+	color: white;
+	font-size: large;
+
 }
 
 #howyoufeel-textarea{
@@ -91,8 +90,7 @@ body {
 	border-radius: 1rem;
 	border: 0px;
 	font-size: large;
-	font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+}	
 
 #howyoufeel-textarea::placeholder{
 	font-weight: bold;
@@ -104,15 +102,17 @@ body {
 
 
 #question{
-	margin: 1rem 0 3rem 0;
-	height: 120px;
+	margin: 0rem 0 0rem 0;
+	height: 105px;
 	width: 90%;
-	font-size: 45px;
+	font-size: 30px;
+	
 	justify-content: center;
-	padding: 1rem 4rem 1rem 4rem;
+	padding: 1rem 3rem 1rem 3rem;
 }
 
 #answer-container{
+	padding: 2rem 0 2rem 0;
 	display: flex;
     justify-content: space-between;
     align-items: center;
@@ -155,15 +155,17 @@ background-color: rgb(0, 162, 255);
 	#answer-container{display: block;}
 	#howyoufeel-container{margin:0 auto;}
 	#howyoufeel-form-container{padding: 0 12rem 0 12rem;}
+	#question{font-size: 25px;}
 
 }
 
-@media only screen and (min-width: 768px) {
-	
-	
-	#content{padding: 3rem 10% 0 10%;}
+@media only screen and (max-width: 768px) {
+
+
+	#question{font-size: 20px;}
 
 }
+
 
 #complete_text{
 	font-size: 25px;

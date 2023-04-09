@@ -1204,13 +1204,9 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
 	justify-content: center;
 }
 
-#content{
-	padding: 5rem 5% 5rem 5%;
-}
-
 #next-btn,#back-btn{
 	position: fixed;
-	bottom: 3rem;
+	bottom: 2rem;
 	width: 3rem;
 	padding: 0.75rem;
 	text-align: center;

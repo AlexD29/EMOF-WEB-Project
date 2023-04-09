@@ -76,8 +76,8 @@ for (let k = 4; k >= 0; k--) {
 		let y = (canvas.height / 2 - (radius - 30) * Math.sin(Math.PI / 2 + i * angle + angle / 2));
 
 		if(k == 4){
-			x = (canvas.width / 2 - (radius - 35) * Math.cos(Math.PI / 2 + i * angle + angle));
-			y = (canvas.height / 2 - (radius - 35) * Math.sin(Math.PI / 2 + i * angle + angle));
+			x = (canvas.width / 2 - (radius - 30) * Math.cos(Math.PI / 2 + i * angle + angle));
+			y = (canvas.height / 2 - (radius - 30) * Math.sin(Math.PI / 2 + i * angle + angle));
 		}
 
 		context.save();
@@ -87,7 +87,7 @@ for (let k = 4; k >= 0; k--) {
 		context.strokeStyle = 'black';
 		context.lineWidth = 1;
 
-		context.font = '13px Arial';
+		context.font = '11px Arial';
 		//context.strokeText(emotions_list[k][i].name, x, y);
 		context.fillStyle = 'black';
 		context.fillText(emotions_list[k][i].name, x, y);
