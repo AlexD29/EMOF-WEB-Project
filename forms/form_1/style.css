@@ -1,5 +1,8 @@
 body {
-	background-color: white;
+	background-image: url(/pictures/option2.jpg);
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -7,7 +10,7 @@ body {
 }
 
 #header{
-	height: 4rem;
+	height: 2rem;
 	background-color: #1bc908;
 	justify-content: center;
 }
@@ -18,7 +21,7 @@ body {
 }
 
 #content{
-	padding: 2rem 8% 1rem 8%;
+	padding: 1rem 13% 1rem 13%;
 }
 
 #next-btn,#back-btn{
@@ -26,7 +29,6 @@ body {
 	width: 5rem;
 	padding: 0.75rem;
 	text-align: center;
-
 	background-color: green;
 	font-size: 30px;
 	transition-duration: 0.4s;
@@ -60,21 +62,21 @@ body {
 }
 
 #wheel-container {
-	width: 600px;
-	height: 600px;
+	width: 550px;
+	height: 550px;
 	margin: auto;
 }
 
 
 #howyoufeel-container{
 	width: 400px;
-	height: 300px;
+	height: 280px;
 }
 
 #howyoufeel-header{
 	background-color: #1165ba;
 	border-radius: 25px 25px 0 0;
-	height: 3rem;
+	height: 2.5rem;
 	justify-content: center;
 	color: white;
 	font-size: large;
@@ -99,16 +101,13 @@ body {
 	text-align: center;
 }
 
-
-
 #question{
-	margin: 0rem 0 0rem 0;
-	height: 105px;
-	width: 90%;
+	margin: 0rem 0rem 0rem 0rem;
+	height: 80px;
+	width: 100%;
 	font-size: 30px;
-	
 	justify-content: center;
-	padding: 1rem 3rem 1rem 3rem;
+	padding: 1rem 1rem 1rem 1rem;
 }
 
 #answer-container{
@@ -177,12 +176,12 @@ background-color: rgb(0, 162, 255);
 }
 
 #back-explore{
-	height: 20px;
+	background-color: transparent;
 }
 #back-explore-button {
 	display: block;
-	margin: auto;
-	background-color: #4CAF50; /* a shade of green */
+	margin: 20px 10px 10px 40%;
+	background-color: #002554; /* a shade of green */
 	border: none;
 	border-radius: 20px; /* adjust the value to increase or decrease the roundness */
 	color: white;
@@ -194,5 +193,5 @@ background-color: rgb(0, 162, 255);
   }
   
   #back-explore-button:hover {
-	background-color: #2E8B57; /* a darker shade of green */
+	background-color: #0c4ec8; /* a darker shade of green */
   }

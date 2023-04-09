@@ -1075,6 +1075,7 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
 .video-box .video-box--large-image .video-box--video-container .landing-image img {
     display: block;
     margin-bottom: 0rem;
+    margin-right: 5rem;
 }
 .video-box .video-box--group img {
     width: 100%;
@@ -1308,10 +1309,25 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
     align-items: center;
 }
 
-.landing-header .back-button a {
-    background-color: #002554;
-}
 .landing-header_menu .back-button a {
+    background-color: #002554;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    color: #fff;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: none;
+    display: inline-block;
+    top: -0.0625rem;
+    position: relative;
+    text-align: center;
+}
+
+.landing-header_menu .exit-button a {
+    background-color:#ed0c0c;
     font-size: 1.1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
