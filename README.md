@@ -14,7 +14,6 @@ Table of Contents
     * 3.1 [User Interfaces](#31-user-interfaces)
     * 3.3 [Software Interfaces](#33-software-interfaces)
   * [System Features](#system-features)
-    * 4.0 [***********TEMPLATE DELETE THIS AT THE END*************](#40-system-feature-1)
     * 4.1 [Filling out the form](#41-filling-out-the-form)
     * 4.2 [Creating a form](#42-creating-a-form)
     * 4.3 [Editing a form](#43-editing-a-form)
@@ -42,17 +41,6 @@ poze cu paginile principale
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
-### 4.0 System Feature 1
-Don’t really say “System Feature 1.” State the feature name in just a few words.
-4.1.1   Description and Priority
- Provide a short description of the feature and indicate whether it is of High, Medium, or Low priority. You could also include specific priority component ratings, such as benefit, penalty, cost, and risk (each rated on a relative scale from a low of 1 to a high of 9).
-4.1.2   Stimulus/Response Sequences
- List the sequences of user actions and system responses that stimulate the behavior defined for this feature. These will correspond to the dialog elements associated with use cases.
-4.1.3   Functional Requirements
- Itemize the detailed functional requirements associated with this feature. These are the software capabilities that must be present in order for the user to carry out the services provided by the feature, or to execute the use case. Include how the product should respond to anticipated error conditions or invalid inputs. Requirements should be concise, complete, unambiguous, verifiable, and necessary. Use “TBD” as a placeholder to indicate when necessary information is not yet available.
- 
-Each requirement should be uniquely identified with a sequence number or a meaningful tag of some kind.
-
 ### 4.1 Filling out the form
 #### 4.1.1 Description
 The user fills in the form using the Plutchick wheel and/or expressing himself in his own words.
