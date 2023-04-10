@@ -38,6 +38,11 @@ Frontend was build using HTML, CSS and JAVASCRIPT and the backend server will be
 ### 3.1 User Interfaces
 poze cu paginile principale
 ![alt text](/Images)
+View Forms:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/all_forms.png?raw=true)
+
+Explore Forms:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore.png?raw=true)
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
