@@ -42,7 +42,7 @@ View Forms:
 ![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/all_forms.png?raw=true)
 
 Explore Forms:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore.png?raw=true)
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore_formulars.png?raw=true)
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
