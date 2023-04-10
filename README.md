@@ -36,13 +36,23 @@ Anonymous users who can only fill out forms and users who have a created account
 Frontend was build using HTML, CSS and JAVASCRIPT and the backend server will be implemented in Python.
 ## External Interface Requirements
 ### 3.1 User Interfaces
-poze cu paginile principale
-![alt text](/Images)
+Landing Page:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232017.png?raw=true)
+Sign up:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232033.png?raw=true)
+Log in:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232025.png?raw=true)
 View Forms:
 ![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/all_forms.png?raw=true)
-
 Explore Forms:
 ![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore_formulars.png?raw=true)
+Create Form:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232206.png?raw=true)
+Complete Form:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232116.png?raw=true)
+View Statistics:
+![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232155.png?raw=true)
+
 ### 3.3 Software Interfaces
 SQL Lite for Database to keep user accounts and their forms.
 ## System Features
