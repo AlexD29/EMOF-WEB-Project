@@ -73,10 +73,7 @@ h1 {
     line-height: 2.3rem
 }
 
-input[type="password" i] {
-    -webkit-text-security: disc !important;
-    padding: 1px 2px;
-}
+
 :root {
     --real100vh: 100vh;
 }
@@ -699,6 +696,53 @@ button[disabled] {
 .login_redirection {
     color: rgb(19, 104, 206);
 }
+
+/*SIGN UP INVALID*/
+
+.input:focus{
+    outline: 5px solid red;
+}
+
+.erbCMr[type="password"] {
+    text-overflow: clip;
+}
+.dyQQor {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+.erbCMr {
+    padding-right: 2.5rem;
+    font: large Verdana, sans-serif;
+}
+.kYUBna {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 2.75rem;
+    font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: 1px solid rgb(226, 27, 60);
+    border-radius: 0.25rem;
+    background-color: rgb(255, 245, 247);
+    color: rgb(51, 51, 51);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    letter-spacing: 0.2px;
+    transition: all 0.2s ease 0s;
+    appearance: none;
+    text-overflow: ellipsis;
+    resize: none;
+    overflow: auto;
+    padding: 0px 5rem 0px 1rem;
+    white-space: nowrap;
+}
+
+.password-input-error-msg {
+    color: rgb(226, 27, 60);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    letter-spacing: 0.2px;
+    left: 0px;
+}
+
 
 /*LANDING*/
 
@@ -1352,3 +1396,12 @@ main.page .video-box.video-box--remove-box .video-box--group.video-box--remove-b
     position: relative;
     text-align: center;
 }
+
+
+/* Style for error messages */
+.error-message {
+    display: none;
+    color: red;
+  }
+  
+  
