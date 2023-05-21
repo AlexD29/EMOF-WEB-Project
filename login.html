@@ -19,14 +19,14 @@
             <section class="login_continut">
               <h2 class="login_text">Log in</h2>
               <div class="login__Username">
-                <form id="formular_login" class="login_formular">
+                <form id="formular_login" class="login_formular" action="/login" method="post">
                   <label for="username" class="username_text"
                     >Username or email
                   </label>
                   <div class="login_caseta">
                     <input
                       type="text"
-                      id="username"
+                      id="username_or_email"
                       class="caseta"
                       dir="auto"
                       name="username"
@@ -89,17 +89,16 @@
                     Forgot password?
                     <a href="reset_password.html">Reset your password</a>
                   </div>
-                  <form id="login-form" action="admin/all_forms.html">
+                  <div class="login-btn">
                     <button
                       id="login-submit-btn"
                       class="login_button"
-                      type="button"
+                      type="submit"
                       data-functional-selector="sign-in-button"
-                      onclick="window.location.href='admin/all_forms.html'"
                     >
                       Log in
                     </button>
-                  </form>
+                  </div>
                 </form>
               </div>
               <div class="or">
@@ -123,5 +122,6 @@
         </div>
       </div>
     </main>
+    <script src="login_script.js"></script>
   </body>
 </html>

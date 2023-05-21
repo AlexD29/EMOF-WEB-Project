@@ -39,3 +39,25 @@
 # email = "mamadsad@gmail.com"
 # if is_email(email, allow_gtld=False):
 #         raise ValueError("Invalid email address.")
+
+import psycopg2
+
+con = psycopg2.connect(
+    database="EMOF",
+    user="postgres",
+    password="s2receptor",
+    host="localhost",
+    port= '5432'
+)
+def check_if_email_match_password(email,password):
+    cur = con.cursor()
+    sql = "SELECT password FROM users WHERE email = %s"
+    cur.execute(sql, (email,))
+    account_password = cur.fetchone()[0]
+    cur.close()
+    if account_password == password:
+        return True
+    else:
+        return False
+    
+print(check_if_email_match_password("mama@acasa.rot","dsffsdffds"))

@@ -41,7 +41,39 @@ def check_if_username_already_exists(username):
     result = cur.fetchone()[0]
     cur.close()
     return result > 0
+
+def check_if_email_match_password(email,password):
+    cur = con.cursor()
+    sql = "SELECT password FROM users WHERE email = %s"
+    cur.execute(sql, (email,))
+    account_password = cur.fetchone()[0]
+    cur.close()
+    if account_password == password:
+        return True
+    else:
+        return False
     
+def check_if_username_match_password(username,password):
+    cur = con.cursor()
+    sql = "SELECT password FROM users WHERE username = %s"
+    cur.execute(sql, (username,))
+    account_password = cur.fetchone()[0]
+    cur.close()
+    if account_password == password:
+        return True
+    else:
+        return False
+
+def login_user(username_or_email,password):
+    if check_if_email_already_exists(username_or_email):
+        if check_if_email_match_password(username_or_email,password) == False:
+            raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
+    elif check_if_username_already_exists(username_or_email):
+        if check_if_username_match_password(username_or_email,password) == False:
+            raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
+    else:
+        raise ValueError("Your username, email, or password is incorrect. Re-enter your information or reset your password.")
+
 def insert_user(email, username, password):
     if not is_email(email, allow_gtld=False):
         raise ValueError("Invalid email address.")
@@ -80,21 +112,32 @@ class MyServer(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
         data = parse_qs(body.decode('utf-8'))
-        email = data['email'][0]
-        username = data['username'][0]
-        password = data['password'][0]
-        
-        try:
-            insert_user(email, username, password)
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(b"Success")
-        except ValueError as e:
-            self.send_response(400)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(str(e).encode('utf-8'))
+
+        if self.path == '/signup':
+            email = data['email'][0]
+            username = data['username'][0]
+            password = data['password'][0]
+
+            try:
+                insert_user(email, username, password)
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b"Success")
+            except ValueError as e:
+                self.send_response(400)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(str(e).encode('utf-8'))
+        elif self.path == '/login':
+            # Handle login request
+            # Extract the necessary login credentials from the request data
+            # Perform the login authentication logic
+            # Return appropriate response based on the result
+            pass
+        else:
+            self.send_error(404, 'Page not found')
+
 
 
 
