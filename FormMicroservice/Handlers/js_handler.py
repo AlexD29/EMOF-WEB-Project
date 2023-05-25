@@ -1,4 +1,5 @@
 import http.server
+import time
 
 class JsHandler:
     @staticmethod
