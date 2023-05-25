@@ -1,5 +1,6 @@
 const id = document.getElementById('ID').textContent;
-const API_URL = "http://localhost:8087/"
+//const API_URL = "http://localhost:8087/forms-microservice/"
+const API_URL = "http://localhost:8070/forms-microservice/"
 
 let formInfo = {}
 let pageCounter = 0;
@@ -97,7 +98,7 @@ function sendData() {
 	console.log("Trimitem \"data\" <3")
 	console.log(selectedEmotions)
 
-    fetch('/submit', {
+    fetch(API_URL + '/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
