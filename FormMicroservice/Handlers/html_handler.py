@@ -290,7 +290,7 @@ class HtmlHandler:
 	</div>
 <script>
 	const id = document.getElementById('ID').textContent;
-	const API_URL = "http://localhost:8070/forms-microservice/"
+	const API_URL = "http://127.0.0.1:8050/forms-microservice/"
 
 	let formInfo = {}
 	let pageCounter = 0;
