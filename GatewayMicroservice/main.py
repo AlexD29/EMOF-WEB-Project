@@ -8,8 +8,8 @@ from my_logging import Logger
 from http.server import ThreadingHTTPServer
 
 SERVICE_URLS = {
-    'forms-microservice': 'http://localhost:8087',
-    'service2': 'http://localhost:5002',
+    'forms-microservice': 'http://127.0.0.1:8088',
+    'service2': 'http://127.0.0.1:5002',
     # etc...
 }
 
@@ -55,7 +55,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', 404)
 
 
-PORT = 8070
+PORT = 8050
 
 with ThreadingHTTPServer(("", PORT), GatewayRequestHandler) as httpd:
     print("Gateway service running at port", PORT)
