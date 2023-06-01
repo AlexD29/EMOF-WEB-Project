@@ -1,14 +1,19 @@
 import http.server
-import socketserver
 import requests
-import json
 import urllib.parse
 
 from my_logging import Logger
 from http.server import ThreadingHTTPServer
 
+# acest gateway va prelua cererea clientului si va trimite cererea catre serviciul aferent , gateway ul asteapta
+# raspunsul de la serviciul aferent si dupa ce il primeste il trimite inapoi la client
+# 
+# de ex : 
+# clientul face request la http://127.0.0.1:8050/forms-microservice (8050 fiind portul acestui gateway)
+# acest gateway va prelua cererea cererea clientului si o va trimite catre http://127.0.0.1:8088 , gateway ul va returna automat catre client raspunsul de la http://127.0.0.1:8088
+
 SERVICE_URLS = {
-    'forms-microservice': 'http://127.0.0.1:8088',
+    'forms-microservice': 'http://127.0.0.1:8088',  # asta inseamna ca de acum requesturile catre http://127.0.0.1:8050/forms-microservice vor fi redirectate catre  http://127.0.0.1:8088
     'service2': 'http://127.0.0.1:5002',
     # etc...
 }
@@ -45,14 +50,14 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(response.content)
 
             # Log the time when the response is sent
-            Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', response.status_code)
+            #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', response.status_code)
         else:
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'Service not found')
 
             # Log the time when the response is sent
-            Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', 404)
+            #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', 404)
 
 
 PORT = 8050
