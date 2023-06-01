@@ -10,7 +10,8 @@ from http.server import ThreadingHTTPServer
 # 
 # de ex : 
 # clientul face request la http://127.0.0.1:8050/forms-microservice (8050 fiind portul acestui gateway , forms-microservice e serviciul aferent la care vrem sa trimitem request)
-# acest gateway va prelua cererea cererea clientului si o va trimite catre http://127.0.0.1:8088 , gateway ul va returna automat catre client raspunsul de la http://127.0.0.1:8088
+# acest gateway va prelua cererea cererea clientului si o va trimite catre http://127.0.0.1:8088 (acesta este URL-ul la care serviciul aferent a fost pornit) 
+# , gateway ul va returna automat catre client raspunsul de la http://127.0.0.1:8088
 
 SERVICE_URLS = {
     'forms-microservice': 'http://127.0.0.1:8088',  # asta inseamna ca de acum requesturile catre http://127.0.0.1:8050/forms-microservice vor fi redirectate catre  http://127.0.0.1:8088
