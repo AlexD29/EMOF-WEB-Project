@@ -2,7 +2,6 @@ import http.server
 import requests
 import urllib.parse
 
-from my_logging import Logger
 from http.server import ThreadingHTTPServer
 
 # acest gateway va prelua cererea clientului si va trimite cererea catre serviciul aferent , gateway ul asteapta
@@ -50,15 +49,10 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(response.content)
 
-            # Log the time when the response is sent
-            #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', response.status_code)
         else:
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'Service not found')
-
-            # Log the time when the response is sent
-            #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', 404)
 
 
 PORT = 8050

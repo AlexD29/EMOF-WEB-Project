@@ -19,14 +19,14 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         self.routes = [
             # GET routes
-            ('GET', f'{prefix}/(?P<id>\d+)\.html', HtmlHandler.handle),
-            ('GET', f'{prefix}/style\.css$', CssHandler.handle),
-            ('GET', f'{prefix}/script\.js$', JsHandler.handle),
-            ('GET', f'{prefix}/background\.jpg', ImgHandler.handle),
-            ('GET', f'{prefix}/data/(?P<id>\d+)\.json$', JsonHandler.handle),
+            ('GET', '/(?P<id>[\w\-]{16})\.html', HtmlHandler.handle),
+            ('GET', '/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
+            ('GET', '/style\.css$', CssHandler.handle),
+            ('GET', '/script\.js$', JsHandler.handle),
+            ('GET', '/background\.jpg', ImgHandler.handle),
 
             # POST routes
-            ('POST', f'{prefix}/submit', SubmitHandler.handle),
+            ('POST', '/submit/(?P<id>[\w\-]{16})', SubmitHandler.handle),
         ]
         super().__init__(*args, **kwargs)
 
@@ -55,7 +55,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(response_data_json.encode())
 
         # Log the response details
-        Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)
+        #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)
     
     def send_html_response(self, data , status=200):
         self.send_response(200)
@@ -64,4 +64,4 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(bytes(data, "utf8"))
 
         # Log the response details
-        Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)
+        #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)
