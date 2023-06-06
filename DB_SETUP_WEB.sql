@@ -154,13 +154,13 @@ BEGIN
 				v_published BOOLEAN := random() > 0.5;
 				v_expires_at TIMESTAMP := CASE (v_published AND random() > 0.5) WHEN TRUE THEN (NOW() + (random() * 10000 || ' minutes')::INTERVAL) WHEN FALSE THEN NULL END CASE;
 				v_name TEXT := 'topic' || v_i ||'_'||v_user_id;
-				v_questions TEXT := '{';
+				v_questions TEXT := '{ "description" : "This form is about something very interesting" , "ending" : "Thank you for your time" , "questions" : {';
 			BEGIN
 				FOR v_j IN 1..((random() * ((p_max_nr_questions - p_min_nr_questions)))::INTEGER + p_min_nr_questions) LOOP
 					v_questions := CONCAT(v_questions,'"'|| v_j ||'":"What about '|| v_j || '_' || v_name || '?",');
 				END LOOP;
 				v_questions := SUBSTR(v_questions, 1, LENGTH(v_questions) - 1);
-				v_questions := CONCAT(v_questions, '}');
+				v_questions := CONCAT(v_questions, '} }');
 				
 				INSERT INTO forms(id_creator, name, public, published, expires_at, questions) VALUES(v_user_id, v_name, v_public, v_published, v_expires_at, v_questions::JSON);
 			END;
@@ -331,4 +331,3 @@ ALTER TABLE ONLY public.responses
 --
 -- PostgreSQL database dump complete
 --
-
