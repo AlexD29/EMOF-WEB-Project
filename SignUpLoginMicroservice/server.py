@@ -1,7 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pyisemail import is_email
-import re         
+import requests        
 import psycopg2
+import hashlib
+import os
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
@@ -83,14 +85,22 @@ def insert_user(email, username, password):
         raise ValueError("Username already exists.")
 
     cur = con.cursor()
-    id = get_max_user_id() + 1
     now = datetime.now()
-    sql = "INSERT INTO users (id, email, username, password, created_at, updated_at) " \
-          "VALUES (%s, %s, %s, %s, %s, %s)"
-    cur.execute(sql, (id, email, username, password, now, now))
+    sql = "INSERT INTO users (email, username, password, created_at, updated_at) " \
+          "VALUES (%s, %s, %s, %s, %s)"
+    cur.execute(sql, (email, username, password, now, now))
     con.commit()
     cur.close()
 
+# def hash_password(password):
+#     salt = os.urandom(16)
+#     hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+#     return salt + hashed_password
+
+# def check_password(password, hashed_password):
+#     salt = hashed_password[:16]
+#     new_hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+#     return hashed_password == salt + new_hashed_password
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -130,16 +140,36 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
         elif self.path == '/login':
-            # Handle login request
-            # Extract the necessary login credentials from the request data
-            # Perform the login authentication logic
-            # Return appropriate response based on the result
-            pass
+            username_email = data['emailUsername'][0]
+            password = data['password'][0]
+
+            try:
+                login_user(username_email,password)
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b"Success")
+            except ValueError as e:
+                self.send_response(400)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(str(e).encode('utf-8'))
+        elif self.path == '/reset':
+            email = data['email'][0]
+
+            try:
+                print("Reset succesfully")
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(b"Success")
+            except ValueError as e:
+                self.send_response(400)
+                self.send_header('Content-Type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(str(e).encode('utf-8'))
         else:
             self.send_error(404, 'Page not found')
-
-
-
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
