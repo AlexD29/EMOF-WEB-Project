@@ -1,0 +1,137 @@
+body {
+    background-color: #ECFFD4;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h2 {
+    font-size: 1.7rem;
+}
+
+#content {
+    padding: 5rem 5% 5rem 5%;
+}
+
+.statistic {
+    height: 500px;
+    margin: 0 auto;
+}
+
+.statistic>img {
+    width: auto;
+    max-width: 600px;
+    margin: 0 auto;
+    display: block;
+}
+
+.flex-container-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.drop-shadow-effect {
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.rounded-div {
+    border-radius: 25px;
+    background-color: #FFFFFF;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-bottom: 5%;
+}
+
+canvas {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 50px;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 1%;
+    padding: 30px;
+}
+
+#container img:first-child {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 230px;
+    margin-bottom: 10px;
+    border-radius: 1%;
+}
+
+#container img {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 30px;
+    border: 3px solid black;
+    border-radius: 1%;
+}
+
+#container img:last-child {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-radius: 1%;
+}
+
+#title {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    margin-left: 5%;
+    margin-bottom: 4%;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+
+.button-container {
+    display: flex;
+    margin-left: 4.5%;
+    margin-top: 1%;
+}
+
+.download-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 0 10px;
+    border: none;
+    background-color: #ffea2b;
+    color: #333;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+/* Style the icon within the button */
+.download-button img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+#downloadText {
+    margin-left: 5%;
+    font-size: 2rem;
+    font-weight: bold;
+}
