@@ -418,4 +418,3 @@ ALTER TABLE ONLY public.responses
 --
 -- PostgreSQL database dump complete
 --
-
