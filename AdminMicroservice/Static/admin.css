@@ -4,8 +4,6 @@
 } */
 
 section {
-    height: 17rem;
-    overflow-x: hidden;
     background-color:rgba(255, 255, 255, 1);
     margin: 1.5em 3em;
     border-radius: 12px 12px 12px 12px;
@@ -54,7 +52,7 @@ section {
     text-decoration: none;
 }
 
-#confirm-delete-dialog {
+#confirm-dialog {
     position:fixed;
     background-color: rgba(0, 0, 0, 0.589);
     z-index: 1;
@@ -68,7 +66,7 @@ section {
     user-select: none;
 }
 
-#confirm-delete-dialog > div {
+#confirm-dialog > div {
     background-color: white; 
     border-radius: 5em; 
     width: 50%; 
@@ -79,16 +77,16 @@ section {
     flex-direction: column;
 }
 
-#confirm-delete-dialog > div > h1 {
+#confirm-dialog > div > h1 {
     text-align: center; 
 }
-#confirm-delete-dialog > div > div {
+#confirm-dialog > div > div {
     display: flex; 
     flex-direction: row; 
     justify-content: space-around; 
     width:100%;
 }
-#confirm-delete-dialog > div > div > a {
+#confirm-dialog > div > div > a {
     width:25%; 
     height:100%;
 }
@@ -289,4 +287,14 @@ strong {
 }
 .draft-form-bubble {
     background-color: rgb(16, 111, 167);
+}
+
+
+.no-content-text {
+    display: flex;
+    font-weight: bolder;
+    color: white;
+    height: 20%;
+    justify-content: center;
+    align-items: flex-end;
 }
