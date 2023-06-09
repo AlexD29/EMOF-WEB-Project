@@ -8,10 +8,8 @@ class FormListHandler:
         rez = cursor.fetchall()
         forms = []
         for i in rez:
-            cursor.execute("""SELECT COUNT(*) FROM responses WHERE id_form = %s""", (str(i[0]),))
-            nr_resp = cursor.fetchone()[0]
             forms.append(
-                {"id":i[0], "title":i[1], "public":i[2], "image":i[3], "status":i[4], "questions":i[5],"nr_questions":len(i[5]["questions"]),"nr_responses":nr_resp, "description":i[5]["description"]}
+                {"id":i[0], "title":i[1], "public":i[2], "image":i[3], "status":i[4], "questions":i[5],"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":i[5]["description"]}
             )
         return forms
 
@@ -48,7 +46,7 @@ class FormListHandler:
                     password="EMOF123_",
                     database="EMOF")
         cursor = conn.cursor()
-        cursor.execute("""SELECT id, name, public, image, status, questions FROM forms WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
+        cursor.execute("""SELECT id, name, public, image, status, questions, total_responses(id) FROM forms WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
         forms_of_user = FormListHandler.format_response(cursor)
         cursor.close()
         conn.close()
