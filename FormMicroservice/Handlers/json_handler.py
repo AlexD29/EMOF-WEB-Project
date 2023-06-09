@@ -27,6 +27,7 @@ class JsonHandler:
         #TODO : TREBUIE SA TRIMIT UN ALT JSON CE NU CONTINE SI DATE CONFIDENTIALE , CI NUMAI MINIMUL NECESAR
 
         if form:
+            #TODO : trebuie verificat daca formularul este live sau nu
             form_json = json.dumps(form[0][6]) # form[0] deoarece fetch_query returnează o listă de rezultate
             handler.send_json_response(form[0][6])
         else:
