@@ -1,6 +1,6 @@
 async function fetchCategory(category) {
     forms = []
-    await fetch('http://127.0.0.1:8091/explore-api/' + category).then(response => response.json()).then(data => {
+    await fetch('http://127.0.0.1:8050/explore/explore-api/' + category).then(response => response.json()).then(data => {
         if(data.length > 0) {
           forms = data
         }
@@ -18,6 +18,7 @@ function displayForm(container, form) {
           <h2>${form.title}</h2>
           <div class="form-presentation-info">
             <p><strong>Author: </strong> ${form.author}</p>
+            <p><strong>Description:</strong> ${form.description}</p>
             <p><strong>Questions:</strong> ${form.nr_questions}</p>
             <p><strong>Responses:</strong> ${form.nr_responses}</p>
           </div>
@@ -51,10 +52,16 @@ async function displayCategory(category_endpoint, category_title) {
   `
 
   container = parent_element.getElementsByClassName("form-scroller")[0].children[0]
+
+  forms = await fetchCategory(category_endpoint) 
+  console.log(category_endpoint, container)
+  populateContainer(container, forms);
   
   document.getElementById("section-list").appendChild(parent_element)
+}
 
-  forms = await fetchCategory(category_endpoint)
+async function populateContainer(container, forms) {
+  console.log(forms)
   if(forms.length > 0) {
     for (form in forms) {
       displayForm(container, forms[form])
@@ -64,6 +71,10 @@ async function displayCategory(category_endpoint, category_title) {
     container.innerHTML = '<h1 class="no-content-text">No Forms Here</h1>';
   }
 }
+async function init() {
+  document.getElementById("section-list").innerText = ''
+  await displayCategory("popular", "Popular forms")
+  await displayCategory("new", "New forms")
+}
 
-displayCategory("popular", "Popular forms")
-displayCategory("new", "New forms")
+init()

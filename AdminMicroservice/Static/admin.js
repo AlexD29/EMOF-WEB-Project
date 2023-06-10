@@ -1,9 +1,9 @@
 async function fetchUserForms(query_string) {
     //DE SCHIMBAT
-    id = 'irR6tbsVDMnln9YJ'
+    id = '6zM1lZW4n58qeOvu'
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
-    await fetch(`http://127.0.0.1:8090/admin-api/users/${id}/forms` + query_string).then(response => response.json()).then(data => {
+    await fetch(`http://127.0.0.1:8050/admin/admin-api/users/${id}/forms` + query_string).then(response => response.json()).then(data => {
         if(data.length > 0) {
           Array.prototype.forEach.call(data, form => displayForm(form));
         }
@@ -40,7 +40,7 @@ function displayForm(form) {
               </div>
             </div>
             <div class="collapsed-admin-buttons">
-              ⋮
+              ...
             </div>
             <div class="form-admin-buttons">
             </div>

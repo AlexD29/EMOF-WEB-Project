@@ -14,6 +14,8 @@ from http.server import ThreadingHTTPServer
 
 SERVICE_URLS = {
     'forms-microservice': 'http://127.0.0.1:8088',  # asta inseamna ca de acum requesturile catre http://127.0.0.1:8050/forms-microservice vor fi redirectate catre  http://127.0.0.1:8088
+    'admin': 'http://127.0.0.1:8090',
+    'explore': 'http://127.0.0.1:8091',
     'service2': 'http://127.0.0.1:5002',
     # etc...
 }
