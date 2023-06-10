@@ -1,8 +1,10 @@
 import http.server
 import requests
 import urllib.parse
+import json
 
 from http.server import ThreadingHTTPServer
+from http.cookies import SimpleCookie
 
 # acest gateway va prelua cererea clientului si va trimite cererea catre serviciul aferent , gateway ul asteapta
 # raspunsul de la serviciul aferent si dupa ce il primeste il trimite inapoi la client
@@ -36,14 +38,26 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
         segments = url.path.split('/')[1:]  # split by / and remove the first empty string
         service = segments[0]
 
-        post_data = None
+        #get cookie data
+        cookie_raw = self.headers.get('Cookie')
+        cookie = SimpleCookie()
+        cookie.load(cookie_raw)
+        cookies = {k: v.value for k, v in cookie.items()}
+        data = {"cookie" : cookies}
+
         if 'Content-Length' in self.headers:
             content_length = int(self.headers['Content-Length'])  # Get the size of data
-            post_data = self.rfile.read(content_length)  # Get the data itself
+            raw_data = self.rfile.read(content_length)  # Get the data itself
+            raw_data_decoded = raw_data.decode('utf-8')
+            data_json = json.loads(raw_data_decoded)
+            #combine cookie data with the data from client header request
+            data.update(data_json)
+    
+        forward_data = bytearray(json.dumps(data),"utf-8")
 
         if service in SERVICE_URLS:
             target_url = SERVICE_URLS[service] + '/' + '/'.join(segments[1:])
-            response = request_method(target_url, data=post_data)
+            response = request_method(target_url, data=forward_data)
 
             self.send_response(response.status_code)
             self.end_headers()
