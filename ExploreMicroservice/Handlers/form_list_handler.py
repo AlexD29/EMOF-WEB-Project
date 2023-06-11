@@ -1,13 +1,13 @@
-from Helpers.json_response import JsonResponse
 import json
 import psycopg2
+from Database.db_handler import DatabaseHandler
+from Config.config import get_config
 
 class ExploreListHandler:
     select_skeleton = """SELECT f.id, f.name, image, questions, total_responses(f.id), u.username, f.published_at, f.closed_at
             FROM forms f JOIN users u ON u.id = id_creator WHERE status='active' AND public=TRUE"""
     @staticmethod
-    def format_response(cursor):
-        rez = cursor.fetchall()
+    def format_response(rez):
         forms = []
         for i in rez:
             forms.append(
@@ -19,17 +19,13 @@ class ExploreListHandler:
     @staticmethod
     def handle_popular(handler):
         forms = []
-        conn = psycopg2.connect(
-                    host="localhost",
-                    user="EMOF",
-                    password="EMOF123_",
-                    database="EMOF")
-        cursor = conn.cursor()
-        cursor.execute(ExploreListHandler.select_skeleton + """ ORDER BY total_responses(f.id) DESC LIMIT 10;""")
-        forms = ExploreListHandler.format_response(cursor)
-        cursor.close()
-        conn.close()
-        print(len(forms))
+        config = get_config()
+
+        db_config = config['database']        
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        
+        forms_of_user = db.fetch_query(ExploreListHandler.select_skeleton + """ ORDER BY total_responses(f.id) DESC LIMIT 10;""")
+        forms = ExploreListHandler.format_response(forms_of_user)
 
         handler.send_json_response(forms)
 
@@ -37,15 +33,12 @@ class ExploreListHandler:
     @staticmethod
     def handle_new(handler):
         forms = []
-        conn = psycopg2.connect(
-                    host="localhost",
-                    user="EMOF",
-                    password="EMOF123_",
-                    database="EMOF")
-        cursor = conn.cursor()
-        cursor.execute(ExploreListHandler.select_skeleton + """ ORDER BY f.published_at DESC LIMIT 10;""")
-        forms = ExploreListHandler.format_response(cursor)
-        cursor.close()
-        conn.close()
+        config = get_config()
+
+        db_config = config['database']        
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        
+        forms_of_user = db.fetch_query(ExploreListHandler.select_skeleton + """ ORDER BY f.published_at DESC LIMIT 10;""")
+        forms = ExploreListHandler.format_response(forms_of_user)
 
         handler.send_json_response(forms)
