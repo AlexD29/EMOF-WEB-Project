@@ -26,7 +26,7 @@ section {
 }
 
 #form-list-categories {
-    background-image: url(../pictures/portocaliu.jpg);
+    background-image: url(/admin/pictures/portocaliu.jpg);
     width: 20%;
     padding:1em;
     display: flex;
@@ -100,7 +100,7 @@ section {
 }
 
 #form-list-main {
-    background-image: url(../pictures/your-formulars.jpg);
+    background-image: url(/admin/pictures/your-formulars.jpg);
     width: 100%;
     min-width:390px;
     overflow-y: scroll;
