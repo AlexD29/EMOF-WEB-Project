@@ -16,17 +16,12 @@ class FormListHandler:
     @staticmethod
     def handle_form_list(handler):
         user_id = (handler.path.split("/users/")[1])[0:16]
-        print("User id: '"+user_id+"'")
         
         forms_of_user = []
         where_clause = ""
-        
         if handler.path.find("?") != -1:
             qstr = handler.path.split("?")[1]
             for i in qstr.split("&"):
-                print(i)
-                #if i in {"public","public=true"}:
-                #    conditions.append("public=true")
                 if i == "filter=draft":
                     where_clause = " AND status='draft'"
                 elif i == "filter=active":
@@ -38,7 +33,7 @@ class FormListHandler:
                     # Daca intalnesc un parametru necunoscut
                     handler.send_json_response([])
                     return
-
+        
         config = get_config()
 
         db_config = config['database']        
@@ -49,45 +44,7 @@ class FormListHandler:
             )
 
         handler.send_json_response(forms_of_user)
-        
-    @staticmethod
-    def handle_explore_form_list(handler):
-        forms_of_user = []
-        where_clause = ""
-        
-        if handler.path.find("?") != -1:
-            conditions = []
-            qstr = handler.path.split("?")[1]
-            for i in qstr.split("&"):
-                print(i)
-                if i in {"public","public=true"}:
-                    conditions.append("public=true")
-                elif i == "filter=draft":
-                    conditions.append("status='draft'")
-                elif i == "filter=active":
-                    conditions.append("status='active'")
-                elif i == "filter=closed":
-                    conditions.append("status='closed'")
-
-
-                else:
-                    # Daca intalnesc un parametru necunoscut
-                    handler.send_json_response([])
-                    return
-                
-
-            if len(conditions) > 0:
-                where_clause = " AND " + " AND ".join(conditions)
-        print(where_clause)
-        config = get_config()
-
-        db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
-        
-        forms_of_user = FormListHandler.format_response(
-            db.fetch_query("""SELECT id, name, public, image, status, questions FROM forms WHERE public = true AND status = 'active'""" + where_clause + " LIMIT 10;")
-        )
-        handler.send_json_response(forms_of_user)
+    
 
     @staticmethod
     def handle_delete_form(handler):

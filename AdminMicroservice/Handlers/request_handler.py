@@ -26,7 +26,6 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             # Microservice routes
 
             ('GET', f'^{prefix}/admin-api/users/{id_regex}/forms/?(\?(.*))?$', FormListHandler.handle_form_list),
-            ('GET', f'^{prefix}/admin-api/forms/?(\?(.*))?$', FormListHandler.handle_explore_form_list),
             # DELETE routes
             ('DELETE', f'^{prefix}/admin-api/forms/{id_regex}/?$', FormListHandler.handle_delete_form),
             # PATCH routes

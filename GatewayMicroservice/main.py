@@ -45,6 +45,9 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         if service in SERVICE_URLS:
             target_url = SERVICE_URLS[service] + '/' + '/'.join(segments[1:])
+            if url.query != "":
+                target_url = target_url + "?" + url.query
+            
             response = request_method(target_url, data=post_data)
 
             self.send_response(response.status_code)
