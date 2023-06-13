@@ -5,7 +5,7 @@ from Config.config import get_config
 from Database.db_handler import DatabaseHandler
 from Helpers.json_response import JsonResponse
 
-class SubmitHandler:
+class EditHandler:
     @staticmethod
     def handle(handler):
 
@@ -31,7 +31,7 @@ class SubmitHandler:
         user_id = "yLstQoFVDfZnDjVC"
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
-        form_id = secrets.token_hex(16)[:16] 
+        form_id = post_data_json.pop('id')
 
         form_data = {
             'id': form_id,
@@ -42,16 +42,21 @@ class SubmitHandler:
             'tags':tags
         }
 
-        print("ASTA E JSONU FORM_DATA CE URMEAZA SA INTRE IN DB :")
+        print("ASTA E JSONU FORM_DATA CE URMEAZA SA FACA UPDATE IN DB :")
         print(form_data)
          # inserați datele în baza de date
         query = """
-        INSERT INTO public.forms 
-        (id, id_creator, name, created_at, questions, public, tags)
-        VALUES (%s, %s, %s, NOW(), %s, %s, %s)
-        """
-        db.execute_query(query, (form_data['id'], form_data['id_creator'], form_data['name'], 
-                                 json.dumps(form_data['questions']), form_data['public'], json.dumps(form_data['tags'])))
+		UPDATE public.forms
+		SET id_creator = %s, name = %s, questions = %s, public = %s, tags = %s
+		WHERE id = %s
+		"""
 
-        # Trimiterea raspunsului
-        handler.send_json_response(JsonResponse.success("Data received and processed"))
+        try:
+            db.execute_query(query, (form_data['id_creator'], form_data['name'], 
+                         json.dumps(form_data['questions']), form_data['public'], 
+                         json.dumps(form_data['tags']), form_data['id']))
+            handler.send_json_response(JsonResponse.success("Data received and processed"))
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            handler.send_json_response(JsonResponse.error("Nu s-a putut edita formularul"))
+

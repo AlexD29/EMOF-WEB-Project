@@ -9,6 +9,10 @@ from Handlers.js_handler import JsHandler
 from Handlers.json_handler import JsonHandler
 from Handlers.img_handler import ImgHandler
 from Handlers.submit_handler import SubmitHandler
+from Handlers.edit_handler import EditHandler
+from Handlers.html_edit_handler import HtmlEditHandler
+from Handlers.js_edit_handler import JsEditHandler
+from Handlers.css_emof_handler import CssEmofHandler
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -21,9 +25,21 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             ('GET', '/index\.html', HtmlHandler.handle),
             ('GET', '/style\.css$', CssHandler.handle),
             ('GET', '/script\.js$', JsHandler.handle),
+            ('GET', '/emof\.css$', CssEmofHandler.handle),
+            ('GET', '/logo\.png$', ImgHandler.handle),
+            ('GET', '/update/style\.css$', CssHandler.handle),
+            ('GET', '/update/emof\.css$', CssEmofHandler.handle),
+            ('GET', '/update/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
+            ('GET', '/update/(?P<id>[\w\-]{16})\.html', HtmlEditHandler.handle),
+            ('GET', '/update/edit\.js$', JsEditHandler.handle),
+            ('GET', '/update/logo\.png$', ImgHandler.handle),
+
 
             # POST routes
             ('POST', r'/submit', SubmitHandler.handle),
+
+            # PUT routes
+            ('PUT',  r'/update', EditHandler.handle),
         ]
         super().__init__(*args, **kwargs)
 
@@ -32,6 +48,9 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         self.handle_request('POST')
+
+    def do_PUT(self):
+        self.handle_request('PUT')
 
     def handle_request(self, method):
         for route_method, pattern, handler in self.routes:

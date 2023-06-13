@@ -28,7 +28,19 @@ class JsonHandler:
 
         if form:
             #TODO : trebuie verificat daca formularul este live sau nu
-            form_json = json.dumps(form[0][6]) # form[0] deoarece fetch_query returnează o listă de rezultate
-            handler.send_json_response(form[0][6])
+            questions_column = form[0][6]
+            name = {"name" : form[0][2] }
+            tags_column = {"tags" : form[0][10]}
+
+            print(questions_column)
+            print(tags_column)
+
+            data_to_send = questions_column
+            data_to_send.update(name)
+            if tags_column:
+                data_to_send.update(tags_column)
+            #form_json = json.dumps(form[0][6] + form[0][10]) # form[0] deoarece fetch_query returnează o listă de rezultate
+            
+            handler.send_json_response(data_to_send)
         else:
             handler.send_json_response(JsonResponse.error("There is no form with this ID") , 400 )

@@ -145,13 +145,17 @@ class HtmlHandler:
 			align-content: center;
 			text-align: center;
 		}
+        
+        #user-info-container{
+			margin: 5rem 0rem;
+        }
 
 		#question {
 			overflow: auto;
 			display: block;
 			margin: 0rem 0rem 0rem 0rem;
 			height: 80px;
-			width: 100%;
+			
 			font-size: 30px;
 			justify-content: center;
 			padding: 1rem 1rem 1rem 1rem;
@@ -268,6 +272,7 @@ class HtmlHandler:
 	<div id="container">
 		<div id="content">
 			<div id="question" class="flex-container-centered rounded-div drop-shadow-effect">  </div>
+        	<div id="user-info-container" class="flex-container-centered rounded-div drop-shadow-effect"></div>
 			<div id="answer-container" class="">
 				<div id="wheel-container"> <canvas id="wheel-canvas"></canvas> </div>
 				<div>
@@ -289,12 +294,14 @@ class HtmlHandler:
 		</div>
 	</div>
 <script>
-	const id = document.getElementById('ID').textContent;
+const id = document.getElementById('ID').textContent;
 const API_URL = "http://127.0.0.1:8050/forms-microservice/"
 
 let formInfo = {}
 let pageCounter = 0;
 let numberOfPages = 2;
+
+const startTime = new Date();
 
 async function fetchData() {
 	try {
@@ -302,6 +309,9 @@ async function fetchData() {
 		const response = await fetch(API_URL + id + ".json")
 		const data = await response.json()
 		formInfo = data
+        const userInfoQuestions = formInfo.questions.getUserInfoQuestions
+        delete formInfo.questions.getUserInfoQuestions
+        formInfo.userInfoQuestions = userInfoQuestions
 		numberOfPages = Object.keys(formInfo.questions).length + 2;
 
 		console.log(formInfo)
@@ -340,6 +350,8 @@ function updateTagsContainer() {
 function setDefault() {
 	try {
 		document.getElementById("next-btn").style.visibility = "hidden"
+        document.getElementById("user-info-container").style.visibility = "hidden"
+        document.getElementById("user-info-container").innerHTML = ""
 		document.getElementById("back-explore-button").style.visibility = "hidden"
 		document.getElementById("back-btn").style.visibility = "hidden"
 		document.getElementById("howyoufeel-header").style.visibility = "hidden"
@@ -377,14 +389,26 @@ function sendData() {
 	}
 
 	console.log("Trimitem data <3")
-	console.log(selectedEmotions)
+    
+    const endTime = new Date();
+  	let timeDiff = endTime - startTime; //in ms
+  	// strip the ms
+  	timeDiff /= 1000;
+
+  	// get seconds 
+  	const seconds = Math.round(timeDiff);
+    
+    let dataToSend = selectedEmotions;
+    dataToSend.duration = seconds + " seconds"; 
+    
+	console.log(dataToSend)
 
 	fetch(API_URL + 'submit/' + id, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(selectedEmotions)
+			body: JSON.stringify(dataToSend)
 		})
 		.then(response => response.json())
 		.then(data => {
@@ -401,6 +425,15 @@ function sendData() {
 function updateDescriptionPage() {
 	document.getElementById("question").innerHTML = formInfo.description
 	document.getElementById("next-btn").style.visibility = "visible"
+    document.getElementById("user-info-container").style.visibility = "visible"
+    
+    // Parcurgem toate întrebările și creăm un input pentru fiecare
+    
+    formInfo.userInfoQuestions.forEach(question => {
+		console.log(question)
+        createUserInputQuestion(question);
+    });
+    
 }
 
 function updateFinalPage() {
@@ -447,6 +480,45 @@ function lastPage() {
 	pageCounter--;
 	updatePage();
 }
+
+function createUserInputQuestion(question) {
+    // Obținem containerul pentru a adăuga noi input-uri
+    const container = document.getElementById('user-info-container');
+
+    // Aplicăm stilurile pentru container direct în JavaScript
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.justifyContent = 'center';
+    container.style.alignItems = 'center';
+    container.style.width = '100%';
+
+    // Crearea div-ului
+    const divElement = document.createElement("div");
+    divElement.style.margin = "10px 0"; // Stilizare în JavaScript
+    divElement.style.display = 'flex'; // Adăugăm flex pentru a centra conținutul
+    divElement.style.flexDirection = 'column'; // Folosim flex-direction pentru a pune conținutul pe rânduri
+    divElement.style.alignItems = 'center'; // Centrăm conținutul pe linie
+
+    // Crearea și stilizarea label-ului
+    const labelElement = document.createElement("label");
+    labelElement.innerHTML = question;
+    labelElement.htmlFor = question.replace(/\s/g, "-"); // Adăugăm id-ul pentru label
+    labelElement.style.display = 'block'; // Face ca eticheta să apară pe linia sa
+
+    // Crearea input-ului
+    const inputElement = document.createElement("input");
+    inputElement.type = "text"; // tipul input-ului
+    inputElement.id = question.replace(/\s/g, "-"); // id-ul input-ului este același ca label-ul pentru accesibilitate
+    inputElement.style.marginTop = '10px'; // Adăugăm margin-top pentru a separa input-ul de label
+
+    // Adăugăm label și input în div
+    divElement.appendChild(labelElement);
+    divElement.appendChild(inputElement);
+
+    // Adăugăm div în container
+    container.appendChild(divElement);
+}
+
 
 const emotions_list = [
 	[{

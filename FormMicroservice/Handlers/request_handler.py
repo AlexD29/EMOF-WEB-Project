@@ -54,9 +54,6 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         self.wfile.write(response_data_json.encode())
-
-        # Log the response details
-        #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)
     
     def send_html_response(self, data , status=200):
         self.send_response(200)
@@ -65,6 +62,3 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     
         self.end_headers()
         self.wfile.write(bytes(data, "utf8"))
-
-        # Log the response details
-        #Logger.log(self.client_address[0], f'"{self.command} {self.path} {self.request_version}"', status)

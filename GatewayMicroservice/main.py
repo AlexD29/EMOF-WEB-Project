@@ -41,11 +41,15 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
         service = segments[0]
 
         #get cookie data
+        data = {}
         cookie_raw = self.headers.get('Cookie')
-        cookie = SimpleCookie()
-        cookie.load(cookie_raw)
-        cookies = {k: v.value for k, v in cookie.items()}
-        data = {"cookie" : cookies}
+        if cookie_raw:
+            print(cookie_raw)
+            cookie = SimpleCookie()
+            cookie.load(cookie_raw)
+            print(cookie)
+            cookies = {k: v.value for k, v in cookie.items()}
+            data.update({"cookie" : cookies})
 
         if 'Content-Length' in self.headers:
             content_length = int(self.headers['Content-Length'])  # Get the size of data
