@@ -300,6 +300,7 @@ const API_URL = "http://127.0.0.1:8050/forms-microservice/"
 let formInfo = {}
 let pageCounter = 0;
 let numberOfPages = 2;
+let userInfoResponses = [];
 
 const startTime = new Date();
 
@@ -400,6 +401,7 @@ function sendData() {
     
     let dataToSend = selectedEmotions;
     dataToSend.duration = seconds + " seconds"; 
+    dataToSend.userInfo = userInfoResponses;
     
 	console.log(dataToSend)
 
@@ -428,11 +430,11 @@ function updateDescriptionPage() {
     document.getElementById("user-info-container").style.visibility = "visible"
     
     // Parcurgem toate întrebările și creăm un input pentru fiecare
-    
-    formInfo.userInfoQuestions.forEach(question => {
+	formInfo.userInfoQuestions.forEach(question => {
 		console.log(question)
-        createUserInputQuestion(question);
-    });
+		createUserInputQuestion(question);
+	});	
+
     
 }
 
@@ -447,7 +449,9 @@ function updateQuestionPage() {
 	}
 	document.getElementById("question").innerHTML = formInfo.questions[pageCounter]
 	document.getElementById("next-btn").style.visibility = "visible"
-	document.getElementById("back-btn").style.visibility = "visible"
+    if(pageCounter > 1){
+		document.getElementById("back-btn").style.visibility = "visible"
+	}
 	document.getElementById("answer-container").style.visibility = "visible"
 
 }
@@ -465,8 +469,15 @@ function updatePage() {
 }
 
 function nextPage() {
+	if(pageCounter == 0)
+		userInfoResponses = getUserInfoResponses();
+        if(!validateResponses()) {
+			alert("Fiecare raspuns trebuie sa contina maximum un singur cuvant.");
+			return;
+    }
+
 	if (pageCounter == numberOfPages - 2)
-		sendData()
+		sendData();
 	else {
 		pageCounter++;
 		updatePage();
@@ -474,7 +485,7 @@ function nextPage() {
 }
 
 function lastPage() {
-	if (pageCounter == 0)
+	if (pageCounter <= 1)
 		return;
 
 	pageCounter--;
@@ -517,6 +528,42 @@ function createUserInputQuestion(question) {
 
     // Adăugăm div în container
     container.appendChild(divElement);
+}
+
+function getUserInfoResponses() {
+    // Obținem toate inputurile din containerul de întrebări
+    const inputs = document.getElementById('user-info-container').getElementsByTagName('input');
+
+    // Vom stoca perechile întrebare - răspuns aici
+    let responses = [];
+
+    // Parcurgem toate inputurile și extragem textul întrebării și răspunsul
+    for (let i = 0; i < inputs.length; i++) {
+        let input = inputs[i];
+        // id-ul inputului este textul întrebării (fără spații)
+        let questionText = input.id.replace(/-/g, " ");
+        // valoarea inputului este răspunsul
+        let answer = input.value;
+        // Adăugăm perechea la listă
+        responses.push({question: questionText, answer: answer});
+    }
+
+    return responses;
+}
+
+function validateResponses() {
+    let isValid = true;
+		
+	userInfoResponses.forEach(responseItem => {
+		// Împărțim răspunsul în cuvinte
+		let words = responseItem.answer.split(' ');
+		// Dacă numărul de cuvinte este mai mare de 1, setăm isValid ca false
+		if(words.length > 1) {
+			isValid = false;
+		}
+	});	
+	
+    return isValid;
 }
 
 
