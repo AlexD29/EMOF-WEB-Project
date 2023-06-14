@@ -1,5 +1,5 @@
 import hashlib
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 from pyisemail import is_email      
 import psycopg2
 import yaml
@@ -67,12 +67,14 @@ def check_if_username_match_password(username,password):
         return False
 
 def login_user(username_or_email, password):
-    hashed_password = hash_password(password)
+    print(username_or_email )
+    print(password)
+    # hashed_password = hash_password(password)
     if check_if_email_already_exists(username_or_email):
-        if check_if_email_match_password(username_or_email, hashed_password) == False:
+        if check_if_email_match_password(username_or_email, password) == False:
             raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
     elif check_if_username_already_exists(username_or_email):
-        if check_if_username_match_password(username_or_email, hashed_password) == False:
+        if check_if_username_match_password(username_or_email, password) == False:
             raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
     else:
         raise ValueError("Your username, email, or password is incorrect. Re-enter your information or reset your password.")
@@ -155,12 +157,13 @@ class MyServer(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
-        data = parse_qs(body.decode('utf-8'))
+        bodyDecoded = body.decode('utf-8')
+        data = json.loads(bodyDecoded)
 
         if self.path == '/signup':
-            email = data['email'][0]
-            username = data['username'][0]
-            password = data['password'][0]
+            email = data['email']
+            username = data['username']
+            password = data['password']
 
             try:
                 session_id = insert_user(email, username, password)
@@ -178,8 +181,8 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
         elif self.path == '/login':
-            username_email = data['emailUsername'][0]
-            password = data['password'][0]
+            username_email = data['emailUsername']
+            password = data['password']
 
             try:
                 session_id = login_user(username_email, password)
@@ -214,7 +217,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_error(404, 'Page not found')
 
 if __name__ == "__main__":
-    webServer = HTTPServer((hostName, serverPort), MyServer)
+    webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
     try:
         webServer.serve_forever()  

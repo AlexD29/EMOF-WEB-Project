@@ -77,10 +77,17 @@ loginButton.addEventListener("click", function (event) {
   xhr.onerror = function () {
     console.log("Request failed.");
   };
-  var formData =
-    "&emailUsername=" +
-    encodeURIComponent(emailUsername) +
-    "&password=" +
-    encodeURIComponent(password);
-  xhr.send(formData);
+
+  // var formData = 
+  //   "&emailUsername=" +
+  //   encodeURIComponent(emailUsername) +
+  //   "&password=" +
+  //   encodeURIComponent(password);
+  const formData = {
+    "emailUsername": emailUsername,
+    "password": password
+  }
+  const formDataString = JSON.stringify(formData);
+  console.log(formDataString);
+  xhr.send(formDataString);
 });
