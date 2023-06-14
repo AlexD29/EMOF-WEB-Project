@@ -16,6 +16,7 @@ from http.cookies import SimpleCookie
 
 SERVICE_URLS = {
     'forms-microservice': 'http://127.0.0.1:8088',  # asta inseamna ca de acum requesturile catre http://127.0.0.1:8050/forms-microservice vor fi redirectate catre  http://127.0.0.1:8088
+    'admin-forms-microservice' : "http://127.0.0.1:8100" ,
     'admin': 'http://127.0.0.1:8090',
     'explore': 'http://127.0.0.1:8091',
     'service2': 'http://127.0.0.1:5002',
@@ -34,6 +35,9 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
     
     def do_DELETE(self):
         self.handle_request(requests.delete)
+
+    def do_PUT(self):
+        self.handle_request(requests.put)
 
     def handle_request(self, request_method):
         url = urllib.parse.urlparse(self.path)
