@@ -50,6 +50,8 @@ loginButton.addEventListener("click", function (event) {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function () {
     if (xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      document.cookie = `sessionId=${response.sessionId}; path=/`;
       window.location.href = "admin/all_forms.html";
     } else if (xhr.status === 400) {
       var errorMessage = xhr.responseText;

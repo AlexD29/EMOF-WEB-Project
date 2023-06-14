@@ -11,7 +11,7 @@ from datetime import datetime
 from urllib.parse import parse_qs
 
 hostName = "localhost"
-serverPort = 8085
+serverPort = 8084
 
 def get_db_connection():
     with open('SignUpLoginMicroservice\config.yaml', 'r') as config_file:
@@ -139,7 +139,7 @@ def verify_password(password, hashed_password):
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            filename = 'landing.html'
+            filename = 'SignUpLoginMicroservice\landing.html'
         else:
             filename = self.path[1:]
         try:
@@ -170,7 +170,6 @@ class MyServer(BaseHTTPRequestHandler):
                 }
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
-                self.send_header('Set-Cookie', f'sessionId={session_id}; Path=/')
                 self.end_headers()
                 self.wfile.write(json.dumps(response_data).encode('utf-8'))
             except ValueError as e:
@@ -190,7 +189,6 @@ class MyServer(BaseHTTPRequestHandler):
                 }
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
-                self.send_header('Set-Cookie', f'sessionId={session_id}; Path=/')
                 self.end_headers()
                 self.wfile.write(json.dumps(response_data).encode('utf-8'))
             except ValueError as e:
