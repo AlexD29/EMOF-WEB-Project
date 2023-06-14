@@ -3,7 +3,7 @@ import json
 import psycopg2
 import yaml
 
-hostName = "localhost"
+hostName = "127.0.0.1"
 serverPort = 8083
 
 def get_db_connection():

@@ -1,6 +1,7 @@
 var formName;
 var requested;
 var fetchedData;
+var barChartArray;
 
 function fetchData() {
   fetch("/data")
@@ -91,7 +92,7 @@ function hslToRgb(h, s, l) {
   let r, g, b;
 
   if (s === 0) {
-    r = g = b = l; // achromatic
+    r = g = b = l;
   } else {
     const hue2rgb = (p, q, t) => {
       if (t < 0) t += 1;
@@ -122,24 +123,6 @@ function formatDateTime(date) {
   return date.toLocaleDateString("en-US", options);
 }
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
-}
-
-function formatHours(dateString) {
-  const date = new Date(dateString);
-  if (isNaN(date)) {
-    console.log("Invalid date:", dateString);
-    return ""; // or any default value you prefer
-  }
-  return date.getHours();
-}
-
-function padZero(num) {
-  return num.toString().padStart(2, "0");
-}
-
 function calculateStepSize(counts) {
   const maxCount = Math.max(...counts);
   const minCount = Math.min(...counts);
@@ -165,6 +148,19 @@ function generateRandomColors(count) {
     colors.push(color);
   }
   return colors;
+}
+
+function calculateDurationInSeconds(duration) {
+  const [hours, minutes, seconds] = duration.split(":").map(Number);
+  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  return totalSeconds;
+}
+
+function calculateBubbleSize(emotions, duration) {
+  const complexity = emotions * duration;
+  const scalingFactor = 0.05;
+  const bubbleSize = complexity * scalingFactor;
+  return bubbleSize;
 }
 
 function extractNumberFromCanvasId(canvasId) {
@@ -251,7 +247,6 @@ function excludeElements(htmlContent) {
 
   var titleElement = doc.querySelector("title");
   titleElement.textContent = formName;
-  console.log(titleElement);
 
   var styleElements = doc.querySelectorAll('link[rel="stylesheet"]');
   styleElements.forEach(function (styleElement) {
@@ -272,6 +267,118 @@ function excludeElements(htmlContent) {
   });
 
   return doc.documentElement.outerHTML;
+}
+
+function exportChartData() {
+  const container = document.getElementById("container");
+  const canvasElements = container.getElementsByTagName("canvas");
+  const chartIds = Array.from(canvasElements).map((canvas) => canvas.id);
+
+  const csvData = [];
+
+  chartIds.forEach((chartId) => {
+    const chartCanvas = document.getElementById(chartId);
+    const chartInstance = Chart.getChart(chartCanvas);
+
+    const datasets = chartInstance.data.datasets;
+    const title = chartInstance.options.plugins.title.text;
+
+    let chartCsvContent = "";
+
+    if (chartId === `${formName}BubbleChart`) {
+      chartCsvContent += `${title}\nAverage Duration,Min Duration,Max Duration,Average # Emotions,Min # Emotions,Max # emotions,Average Complexity\n`;
+
+      const data = datasets[0].data;
+
+      const durations = data.map((item) => item.y);
+      const emotions = data.map((item) => item.x);
+      const complexities = data.map((item) => item.r);
+      const averageDuration = (
+        durations.reduce((sum, value) => sum + value, 0) / durations.length
+      ).toFixed(2);
+      const smallestDuration = Math.min(...durations);
+      const biggestDuration = Math.max(...durations);
+      const averageEmotions = (
+        emotions.reduce((sum, value) => sum + value, 0) / emotions.length
+      ).toFixed(2);
+      const smallestEmotions = Math.min(...emotions);
+      const biggestEmotions = Math.max(...emotions);
+      const averageComplexity = (
+        complexities.reduce((sum, value) => sum + value, 0) /
+        complexities.length
+      ).toFixed(2);
+
+      chartCsvContent += `${averageDuration}s,${smallestDuration}s,${biggestDuration}s,${averageEmotions},${smallestEmotions},${biggestEmotions},${averageComplexity}\n`;
+    } else if (chartId === "lineChartSubmitTime") {
+      chartCsvContent += `${title}\n`;
+      chartCsvContent += `"Label",Value,Percentage\n`;
+
+      const labels = chartInstance.data.labels;
+      const data = datasets[0].data;
+
+      const total = data.reduce((sum, value) => sum + value, 0);
+      const percentages = data.map((value) =>
+        ((value / total) * 100).toFixed(2)
+      );
+
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const value = data[i];
+        const percentage = percentages[i];
+
+        chartCsvContent += `"${label}",${value},${percentage}%\n`;
+      }
+    } else if (chartId === "radarChart") {
+      const labels = chartInstance.data.labels;
+      chartCsvContent += `${title}\nLabel,Positivity,Negativity,Neutrality\n`;
+
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const positivity = datasets[0].data[i];
+        const negativity = datasets[1].data[i];
+        const neutrality = datasets[2].data[i];
+
+        chartCsvContent += `${label},${positivity},${negativity},${neutrality}\n`;
+      }
+    } else {
+      chartCsvContent += `${title}\nLabel,Value,Percentage\n`;
+
+      const data = datasets[0].data;
+      const labels = chartInstance.data.labels;
+
+      const total = data.reduce((sum, value) => sum + value, 0);
+      const percentages = data.map((value) =>
+        ((value / total) * 100).toFixed(2)
+      );
+
+      for (let i = 0; i < data.length; i++) {
+        const label = labels[i];
+        const value = data[i];
+        const percentage = percentages[i];
+
+        chartCsvContent += `${label},${value},${percentage}%\n`;
+      }
+    }
+
+    csvData.push(chartCsvContent);
+  });
+
+  const combinedCsvContent = csvData.join("\n");
+
+  const filename = formName + ".csv";
+  const csvBlob = new Blob([combinedCsvContent], { type: "text/csv" });
+  if (navigator.msSaveBlob) {
+    navigator.msSaveBlob(csvBlob, filename);
+  } else {
+    const url = URL.createObjectURL(csvBlob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }
 
 document
@@ -325,173 +432,9 @@ document
     });
   });
 
-function convertToCSV(chartDataArray) {
-  const csvContent = [];
-  chartDataArray.forEach((chartData) => {
-    const chartTitle = chartData.title;
-    const chartLabels = chartData.labels;
-    const chartCounts = chartData.counts;
-    const chartPercentages = chartData.counts.map((count) =>
-      ((count / chartData.counts.reduce((a, b) => a + b, 0)) * 100).toFixed(2)
-    );
-
-    csvContent.push(["Chart Title", chartTitle]);
-    csvContent.push(["Labels", ...chartLabels]);
-    csvContent.push(["Counts", ...chartCounts]);
-    csvContent.push(["Percentages", ...chartPercentages]);
-    csvContent.push([]);
-  });
-
-  const csvRows = csvContent.map((row) => row.join(","));
-  return csvRows.join("\n");
-}
-
 document
   .getElementById("downloadCSVButton")
-  .addEventListener("click", function () {
-    const platform = findWordPosition(fetchedData.requested, "Platforma");
-    const location1 = findWordPosition(fetchedData.requested, "Locatia");
-    const age = findWordPosition(fetchedData.requested, "Age");
-    const occupation = findWordPosition(fetchedData.requested, "Occupation");
-    const sex = findWordPosition(fetchedData.requested, "Sex");
-    const relationship = findWordPosition(fetchedData.requested, "Relationship Status");
-
-    const pieChartData = createPieChart(fetchedData.answers);
-    const doughnutChartData = createDoughnutChartPlatform(fetchedData.answers,platform);
-    const polarChartLocation = createPolarChartLocation(fetchedData.answers,location1);
-    const barChartAge = createBarChartAge(fetchedData.answers,age);
-    const polarChartOcupation = createPolarChartOccupation(fetchedData.answers,occupation);
-    const pieChartSex = createPieChartSex(fetchedData.answers,sex);
-    const doughnutChartRelationship = createDoughnutChartRelationshipStatus(fetchedData.answers,relationship);
-
-    const pieChartTitle = pieChartData.title;
-    const pieChartLabels = pieChartData.labels;
-    const pieChartCounts = pieChartData.counts;
-    const pieChartPercentages = pieChartCounts.map((count) =>
-      ((count / pieChartCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(2)
-    );
-
-    const doughnutChartTitle = doughnutChartData.title;
-    const doughnutChartLabels = doughnutChartData.labels;
-    const doughnutChartCounts = doughnutChartData.counts;
-    const doughnutChartPercentages = doughnutChartCounts.map((count) =>
-      ((count / doughnutChartCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const polarChartLocationTitle = polarChartLocation.title;
-    const polarChartLocationLabels = polarChartLocation.labels;
-    const polarChartLocationCounts = polarChartLocation.counts;
-    const polarChartLocationPercentages = polarChartLocationCounts.map((count) =>
-      ((count / polarChartLocationCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const barChartAgeTitle = barChartAge.title;
-    const barChartAgeLabels = barChartAge.labels;
-    const barChartAgeCounts = barChartAge.counts;
-    const barChartAgePercentages = barChartAgeCounts.map((count) =>
-      ((count / barChartAgeCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const pieChartSexTitle = pieChartSex.title;
-    const pieChartSexLabels = pieChartSex.labels;
-    const pieChartSexCounts = pieChartSex.counts;
-    const pieChartSexPercentages = pieChartSexCounts.map((count) =>
-      ((count / pieChartSexCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const doughnutChartRelationshipTitle = doughnutChartRelationship.title;
-    const doughnutChartRelationshipLabels = doughnutChartRelationship.labels;
-    const doughnutChartRelationshipCounts = doughnutChartRelationship.counts;
-    const doughnutChartRelationshipPercentages = doughnutChartRelationshipCounts.map((count) =>
-      ((count / doughnutChartRelationshipCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const polarChartOccupationTitle = polarChartOcupation.title;
-    const polarChartOccupationLabels = polarChartOcupation.labels;
-    const polarChartOccupationCounts = polarChartOcupation.counts;
-    const polarChartOccupationPercentages = polarChartOccupationCounts.map((count) =>
-      ((count / polarChartOccupationCounts.reduce((a, b) => a + b, 0)) * 100).toFixed(
-        2
-      )
-    );
-
-    const pieChartCombinedData = {
-      title: pieChartTitle,
-      labels: pieChartLabels,
-      counts: pieChartCounts,
-      percentages: pieChartPercentages,
-    };
-
-    const doughnutChartCombinedData = {
-      title: doughnutChartTitle,
-      labels: doughnutChartLabels,
-      counts: doughnutChartCounts,
-      percentages: doughnutChartPercentages,
-    };
-
-    const polarChartLocationCombinedData = {
-      title: polarChartLocationTitle,
-      labels: polarChartLocationLabels,
-      counts: polarChartLocationCounts,
-      percentages: polarChartLocationPercentages,
-    };
-
-    const barChartAgeCombinedData = {
-      title: barChartAgeTitle,
-      labels: barChartAgeLabels,
-      counts: barChartAgeCounts,
-      percentages: barChartAgePercentages,
-    };
-
-    const polarChartOccupationCombinedData = {
-      title: polarChartOccupationTitle,
-      labels: polarChartOccupationLabels,
-      counts: polarChartOccupationCounts,
-      percentages: polarChartOccupationPercentages,
-    };
-
-    const pieChartSexCombinedData = {
-      title: pieChartSexTitle,
-      labels: pieChartSexLabels,
-      counts: pieChartSexCounts,
-      percentages: pieChartSexPercentages,
-    };
-
-    const doughnutChartRelationshipCombinedData = {
-      title: doughnutChartRelationshipTitle,
-      labels: doughnutChartRelationshipLabels,
-      counts: doughnutChartRelationshipCounts,
-      percentages: doughnutChartRelationshipPercentages,
-    };
-
-    const chartDataArray = [
-      pieChartCombinedData,
-      doughnutChartCombinedData, 
-      polarChartLocationCombinedData,
-      barChartAgeCombinedData,
-      polarChartOccupationCombinedData,
-      pieChartSexCombinedData,
-      doughnutChartRelationshipCombinedData
-    ];
-
-    const csvContent = convertToCSV(chartDataArray);
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "chart_data.csv";
-    link.click();
-  });
+  .addEventListener("click", exportChartData);
 
 document
   .getElementById("downloadJSONButton")
@@ -613,19 +556,6 @@ const colorAgeCategories = {
   "60+": [128, 128, 128],
   NaN: [211, 211, 211],
 };
-
-function calculateDurationInSeconds(duration) {
-  const [hours, minutes, seconds] = duration.split(":").map(Number);
-  const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  return totalSeconds;
-}
-
-function calculateBubbleSize(emotions, duration) {
-  const complexity = emotions * duration;
-  const scalingFactor = 0.05;
-  const bubbleSize = complexity * scalingFactor;
-  return bubbleSize;
-}
 
 function createBarChart(canvasId, question, answers) {
   Chart.defaults.backgroundColor = "#fff";
@@ -1201,7 +1131,6 @@ function createLineChartSubmitTime(data) {
 
   const totalFormsSubmitted = data.answers.length;
 
-  // Calculate percentages
   const dataPoints = timePeriods.map((time) => {
     const count = responseCountByTime[time] || 0;
     const percentage = ((count / totalFormsSubmitted) * 100).toFixed(2);
@@ -1512,13 +1441,6 @@ function createPolarChartOccupation(data, occupationPosition) {
       },
     },
   });
-
-  return{
-    chart: canvas,
-    labels: labels,
-    counts: counts,
-    title: chartTitle
-  }
 }
 
 function createBarChartAge(data, agePosition) {
@@ -1661,8 +1583,8 @@ function createBarChartAge(data, agePosition) {
     chart: canvas,
     labels: labels,
     counts: counts,
-    title: chartTitle
-  }
+    title: chartTitle,
+  };
 }
 
 function createPieChartSex(data, sexPosition) {
@@ -1779,12 +1701,12 @@ function createPieChartSex(data, sexPosition) {
 
   new Chart(canvas, config);
 
-  return{
+  return {
     chart: canvas,
     labels: labels,
     counts: counts,
-    title: chartTitle
-  }
+    title: chartTitle,
+  };
 }
 
 function createDoughnutChartRelationshipStatus(
@@ -1908,10 +1830,10 @@ function createDoughnutChartRelationshipStatus(
 
   new Chart(canvas, config);
 
-  return{
+  return {
     chart: canvas,
     labels: labels,
     counts: counts,
-    title: chartTitle
-  }
+    title: chartTitle,
+  };
 }
