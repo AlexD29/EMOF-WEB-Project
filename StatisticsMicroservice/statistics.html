@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Statistics</title>
-    <link rel="stylesheet" href="../emof.css" />
-    <link rel="stylesheet" href="StatisticsMicroservice\styles.css" />
+    <link rel="stylesheet" href="/emof.css" />
+    <link rel="stylesheet" href="/StatisticsMicroservice\styles.css" />
     <link rel="icon" href="/pictures/icon.png" />
   </head>
   <body>
@@ -62,29 +62,31 @@
         </header>
       </div>
       <div id="content_body">
-        <div id="title"></div>
+        <div id="title">
+          Here's what people felt about the questions from <span id="form-name"></span>:
+        </div>
         <div id="download">
           <h2 id="downloadText">Download as:</h2>
           <div class="button-container">
             <button class="download-button" id="downloadHTMLButton">
-              <img src="StatisticsMicroservice\icons\html.png" alt="">
+              <img src="/StatisticsMicroservice\icons\html.png" alt="">
               HTML
             </button>
             <button class="download-button" id="downloadCSVButton">
-              <img src="StatisticsMicroservice\icons\csv.png" alt="CSV Icon">
+              <img src="/StatisticsMicroservice\icons\csv.png" alt="CSV Icon">
               CSV
             </button>
             <button class="download-button" id="downloadJSONButton">
-              <img src="StatisticsMicroservice\icons\json-file.png" alt="JSON Icon">
+              <img src="/StatisticsMicroservice\icons\json-file.png" alt="JSON Icon">
               JSON
             </button>
           </div>
-        </div>        
+        </div>
         <div id="container">
         </div>
       </div>
   </body>
-  <script src="StatisticsMicroservice\statistics.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/StatisticsMicroservice\statistics.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </html>

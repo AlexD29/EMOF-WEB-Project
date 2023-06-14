@@ -1,32 +1,32 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from pyisemail import is_email
-import requests        
-import psycopg2
 import hashlib
-import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pyisemail import is_email      
+import psycopg2
+import yaml
+import random
+import string
+import json
+import psycopg2.extras
 from datetime import datetime
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
 
 hostName = "localhost"
 serverPort = 8085
 
-con = psycopg2.connect(
-    database="EMOF",
-    user="postgres",
-    password="s2receptor",
-    host="localhost",
-    port= '5432'
-)
+def get_db_connection():
+    with open('SignUpLoginMicroservice\config.yaml', 'r') as config_file:
+        config = yaml.safe_load(config_file)
 
-def get_max_user_id():
-    cur = con.cursor()
-    sql = "SELECT MAX(id) FROM users"
-    cur.execute(sql)
-    result = cur.fetchone()[0]
-    if result == None:
-        result = 0
-    cur.close()
-    return result
+    conn = psycopg2.connect(
+        database=config['database'],
+        user=config['user'],
+        password=config['password'],
+        host=config['host'],
+        port=config['port']
+    )
+    return conn
+
+con = get_db_connection()
 
 def check_if_email_already_exists(email):
     cur = con.cursor()
@@ -66,15 +66,34 @@ def check_if_username_match_password(username,password):
     else:
         return False
 
-def login_user(username_or_email,password):
+def login_user(username_or_email, password):
+    hashed_password = hash_password(password)
     if check_if_email_already_exists(username_or_email):
-        if check_if_email_match_password(username_or_email,password) == False:
+        if check_if_email_match_password(username_or_email, hashed_password) == False:
             raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
     elif check_if_username_already_exists(username_or_email):
-        if check_if_username_match_password(username_or_email,password) == False:
+        if check_if_username_match_password(username_or_email, hashed_password) == False:
             raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
     else:
         raise ValueError("Your username, email, or password is incorrect. Re-enter your information or reset your password.")
+
+    session_id = generate_session_id()
+
+    insert_session_id(username_or_email, session_id)
+
+    return session_id
+
+def insert_session_id(username_or_email, session_id):
+    sql = "UPDATE users SET sid = %s WHERE username = %s OR email = %s"
+    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(sql, (session_id, username_or_email, username_or_email))
+    con.commit()
+    cursor.close()
+
+def generate_session_id(length=10):
+    characters = string.ascii_letters + string.digits
+    session_id = ''.join(random.choices(characters, k=length))
+    return session_id
 
 def insert_user(email, username, password):
     if not is_email(email, allow_gtld=False):
@@ -83,24 +102,39 @@ def insert_user(email, username, password):
         raise ValueError("Email address already exists.")
     if check_if_username_already_exists(username):
         raise ValueError("Username already exists.")
+    
+    session_id = generate_session_id()
+    now = datetime.now()
+    hashed_password = hash_password(password)
+    sql = "INSERT INTO users (email, username, password, created_at, updated_at, sid) " \
+          "VALUES (%(email)s, %(username)s, %(password)s, %(created_at)s, %(updated_at)s, %(sid)s)"
+    params = {
+        'email': email,
+        'username': username,
+        'password': hashed_password,
+        'created_at': now,
+        'updated_at': now,
+        'sid': session_id
+    }
 
     cur = con.cursor()
-    now = datetime.now()
-    sql = "INSERT INTO users (email, username, password, created_at, updated_at) " \
-          "VALUES (%s, %s, %s, %s, %s)"
-    cur.execute(sql, (email, username, password, now, now))
+    cur.execute(sql, params)
     con.commit()
     cur.close()
 
-# def hash_password(password):
-#     salt = os.urandom(16)
-#     hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-#     return salt + hashed_password
+    return session_id
 
-# def check_password(password, hashed_password):
-#     salt = hashed_password[:16]
-#     new_hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
-#     return hashed_password == salt + new_hashed_password
+def hash_password(password):
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(password.encode('utf-8'))
+    hashed_password = sha256_hash.hexdigest()
+    return hashed_password
+
+def verify_password(password, hashed_password):
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(password.encode('utf-8'))
+    entered_password_hashed = sha256_hash.hexdigest()
+    return entered_password_hashed == hashed_password
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -129,11 +163,16 @@ class MyServer(BaseHTTPRequestHandler):
             password = data['password'][0]
 
             try:
-                insert_user(email, username, password)
+                session_id = insert_user(email, username, password)
+                response_data = {
+                    'result': 'Success',
+                    'sessionId': session_id
+                }
                 self.send_response(200)
-                self.send_header('Content-Type', 'text/plain')
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Set-Cookie', f'sessionId={session_id}; Path=/')
                 self.end_headers()
-                self.wfile.write(b"Success")
+                self.wfile.write(json.dumps(response_data).encode('utf-8'))
             except ValueError as e:
                 self.send_response(400)
                 self.send_header('Content-Type', 'text/plain')
@@ -144,30 +183,35 @@ class MyServer(BaseHTTPRequestHandler):
             password = data['password'][0]
 
             try:
-                login_user(username_email,password)
+                session_id = login_user(username_email, password)
+                response_data = {
+                    'result': 'Success',
+                    'sessionId': session_id
+                }
                 self.send_response(200)
-                self.send_header('Content-Type', 'text/plain')
+                self.send_header('Content-Type', 'application/json')
+                self.send_header('Set-Cookie', f'sessionId={session_id}; Path=/')
                 self.end_headers()
-                self.wfile.write(b"Success")
+                self.wfile.write(json.dumps(response_data).encode('utf-8'))
             except ValueError as e:
                 self.send_response(400)
                 self.send_header('Content-Type', 'text/plain')
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
-        elif self.path == '/reset':
-            email = data['email'][0]
+        # elif self.path == '/reset':
+        #     email = data['email'][0]
 
-            try:
-                print("Reset succesfully")
-                self.send_response(200)
-                self.send_header('Content-Type', 'text/plain')
-                self.end_headers()
-                self.wfile.write(b"Success")
-            except ValueError as e:
-                self.send_response(400)
-                self.send_header('Content-Type', 'text/plain')
-                self.end_headers()
-                self.wfile.write(str(e).encode('utf-8'))
+        #     try:
+        #         print("Reset succesfully")
+        #         self.send_response(200)
+        #         self.send_header('Content-Type', 'text/plain')
+        #         self.end_headers()
+        #         self.wfile.write(b"Success")
+        #     except ValueError as e:
+        #         self.send_response(400)
+        #         self.send_header('Content-Type', 'text/plain')
+        #         self.end_headers()
+        #         self.wfile.write(str(e).encode('utf-8'))
         else:
             self.send_error(404, 'Page not found')
 

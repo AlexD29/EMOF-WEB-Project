@@ -1,31 +1,34 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 import psycopg2
+import yaml
 
 hostName = "localhost"
-serverPort = 8081
+serverPort = 8083
 
-con = psycopg2.connect(
-    database="EMOF",
-    user="postgres",
-    password="s2receptor",
-    host="localhost",
-    port='5432'
-)
+def get_db_connection():
+    with open('StatisticsMicroservice\config.yaml', 'r') as config_file:
+        config = yaml.safe_load(config_file)
 
+    conn = psycopg2.connect(
+        database=config['database'],
+        user=config['user'],
+        password=config['password'],
+        host=config['host'],
+        port=config['port']
+    )
+    return conn
+
+con = get_db_connection()
 
 class MyServer(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             self.path = '/StatisticsMicroservice/statistics.html'
         elif self.path == '/data':
-            id_form = 1
-            form_name = self.get_form_name(id_form)
+            id_form = "32F7VzlxY_J4kBgW"
             data = self.retrieve_data_from_database(id_form)
-            for item in data:
-                item['form_name'] = form_name
-            response_data = {'form_name': form_name, 'data': data}
-            response = json.dumps(response_data).encode('utf-8')
+            response = json.dumps(data).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
@@ -34,29 +37,59 @@ class MyServer(SimpleHTTPRequestHandler):
             return
         return SimpleHTTPRequestHandler.do_GET(self)
 
+    
     def retrieve_data_from_database(self, id_form):
         cur = con.cursor()
-        cur.execute(f"SELECT q.text, STRING_AGG(r.emotion, '|') FROM questions q JOIN responses r ON q.id = r.id_question WHERE q.id_form = {id_form} GROUP BY q.text")
-        rows = cur.fetchall()
-        cur.close()
-
-        data = [{'question': row[0], 'answers': row[1].split('|')} for row in rows]
-
-        return data
-
-    def get_form_name(self, id_form):
-        cur = con.cursor()
-        cur.execute(f"SELECT name FROM forms WHERE id = {id_form}")
+        cur.execute(f"SELECT name, questions, published_at, closed_at FROM forms WHERE id = '{id_form}'")
         result = cur.fetchone()
         cur.close()
-
+        
         if result:
             form_name = result[0]
-            return form_name
+            form_data = result[1]
+            published_at = result[2]
+            closed_at = result[3]
+            
+            questions = form_data['questions']
+            
+            cur = con.cursor()
+            cur.execute(f"SELECT response, duration, submitted_at FROM responses WHERE id_form = '{id_form}'")
+            response_rows = cur.fetchall()
+            cur.close()
+            
+            answers = []
+            for response_row in response_rows:
+                response = response_row[0]
+                response_duration = response_row[1]
+                submitted_at = response_row[2]
+                
+                first_key, info = next(iter(response.items()))
+                del response[first_key]
 
-        return None
+                answer_data = {
+                    'response': response,
+                    'user_info': info,
+                    'duration': str(response_duration),
+                    'submitted_at': str(submitted_at)
+                }
+                
+                answers.append(answer_data)
+            
+            published_at_str = published_at.strftime("%Y-%m-%d %H:%M:%S")
+            closed_at_str = closed_at.strftime("%Y-%m-%d %H:%M:%S")
 
-
+            last_key, requested = questions.popitem()
+            
+            return {
+                'form_name': form_name,
+                'published_at': published_at_str,
+                'closed_at': closed_at_str,
+                'answers': answers,
+                'questions':questions,
+                'requested': requested
+            }
+        else:
+            return None
 
 
 if __name__ == "__main__":
