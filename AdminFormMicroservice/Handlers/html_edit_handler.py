@@ -1,26 +1,32 @@
-<!DOCTYPE html>
+import http.server
+
+class HtmlEditHandler:
+    @staticmethod
+    def handle(handler , id = None):
+        html_template = """
+        <!DOCTYPE html>
 <html>
 
 <head>
-  <title>Create Formular</title>
-  <link href="../../emof.css" rel="stylesheet" />
+  <title>Edit Formular</title>
+  <link href="emof.css" rel="stylesheet" />
   <link href="style.css" rel="stylesheet" />
-  <link rel="icon" href="/pictures/icon.png" />
 </head>
 
 <body>
+	<div id="FORM_ID" style="display:none;">{{!@#$}}</div>
   <div id="container">
     <div class="landing-section-header">
       <header id="landing-header-id" class="landing-header" role="banner" itemscope="">
         <div class="landing-header-elements">
           <a href="/admin/all_forms.html" class="logo-link">
-            <img alt="" src="/pictures/logo.png" class="logo_landing" />
+            <img alt="" src="logo.png" class="logo_landing" />
           </a>
           <nav id="landing-header_menu" class="landing-header_menu landing-header_menu--microsite"
             aria-label="Navigation" data-translated="1" itemscope="">
             <ul id="menu-landing-header_menu-left" class="landing-header_menu-left">
               <li id="menu-item-92366" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-92366">
-                <a><span class="your-formulars">Create Formular</span></a>
+                <a><span class="your-formulars">Edit Formular</span></a>
               </li>
               <li id="menu-item-92365"
                 class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365">
@@ -60,6 +66,15 @@
     </div>
   </div>
 </body>
-<script src="script.js"></script>
+<script src="edit.js"></script>
 
 </html>
+        """
+        if id is not None:
+            html_content = html_template.replace("{{!@#$}}",id)
+            handler.send_html_response(html_content)
+            return
+        
+        #id is empty
+        handler.path = '/Static/error.html'
+        return http.server.SimpleHTTPRequestHandler.do_GET(handler)

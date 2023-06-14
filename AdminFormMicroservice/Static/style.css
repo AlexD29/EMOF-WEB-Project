@@ -111,6 +111,10 @@ body {
 	
 }
 
+#questions-about-user-info-container{
+	padding: 0.4rem;
+}
+
 .form-text-input{
 	width: 400px;
 	height: 50px;

@@ -2,10 +2,51 @@ const container = document.getElementById('questions-container');
 let maxInputAllowed = 15;
 let questions_elements = []
 let questions = [];
+const myURL = "http://127.0.0.1:8050/admin-forms-microservice"
+
+//const formID = "sNiLgqTiV7GrxGNh" 
+const formID = document.getElementById('FORM_ID').textContent
 
 //load preloaded questions if this is the case
-for (let i = 0; i < questions.length; i++) {
-	loadQuestion(questions[i]);
+fetch(myURL + '/update/' + formID + '.json', {
+		method: 'GET'
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		return response.json();
+	})
+	.then(data => {
+		// Apelam functia loadData cu datele primite
+		console.log(data)
+		loadData(data);
+	})
+	.catch(error => {
+		console.error('There has been a problem with your fetch operation:', error);
+	});
+
+function loadData(formData) {
+	console.log(formData)
+
+	// Incarcam numele formularului
+	document.getElementById('form-name-input').value = formData.name;
+
+	// Incarcam descrierea formularului
+	document.getElementById('form-description-input').value = formData.description;
+
+	// Incarcam finalizarea formularului
+	document.getElementById('form-ending-input').value = formData.ending;
+
+	// Incarcam intrebarile
+	for (let i = 0; i < Object.keys(formData.questions).length; i++) {
+		const key = (i + 1).toString() 
+		if(formData.questions[key] !== undefined)
+			loadQuestion(formData.questions[key]);
+	}
+
+	// Incarcam tag-urile
+	document.getElementById('form-tags-input').value = formData.tags.join(" ");
 }
 
 function loadQuestion(text) {
@@ -132,25 +173,31 @@ function validateForm() {
 			return result;
 		}
 	}
+
+	let questionsDict = {};
+	questions_elements.forEach((element, index) => {
+		const key = (index + 1).toString(); // Construim cheia ca un șir
+		questionsDict[key] = element.value; // Adăugăm cheia și valoarea în dicționar
+	});
 	/*
 	make a json from values above and return it
 	*/
 	const formData = {
-		name: name,
-		description: description,
-		ending: ending,
-		tags: tags,
-		questions: questions_elements
+		"name": name,
+		"description": description,
+		"ending": ending,
+		"tags": tags,
+		"questions": questionsDict,
+		"id" : formID
 	};
 
 	return formData;
 }
 
 function postFormData(formData) {
-	const url = 'https://exemplu.com/api/form';
 
-	fetch(url, {
-			method: 'POST',
+	fetch(myURL + '/update', {
+			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
 			},
@@ -158,10 +205,10 @@ function postFormData(formData) {
 		})
 		.then(response => {
 			if (response.ok) {
-				alert('Form submitted successfully!');
+				alert('Form edited successfully!');
 				window.location.href = '../../admin/all_forms.html';
 			} else {
-				throw new Error('Failed to submit form.');
+				throw new Error('Failed to edit form.');
 			}
 		})
 		.catch(error => {

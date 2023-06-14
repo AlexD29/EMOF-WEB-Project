@@ -2,6 +2,7 @@ const container = document.getElementById('questions-container');
 let maxInputAllowed = 15;
 let questions_elements = []
 let questions = [];
+const myURL = "http://127.0.0.1:8050/admin-forms-microservice"
 
 //load preloaded questions if this is the case
 for (let i = 0; i < questions.length; i++) {
@@ -132,22 +133,36 @@ function validateForm() {
 			return result;
 		}
 	}
-	/*
-	make a json from values above and return it
-	*/
+
+	let questionsDict = {};
+	questions_elements.forEach((element, index) => {
+		const key = (index + 1).toString(); // Construim cheia ca un șir
+		questionsDict[key] = element.value; // Adăugăm cheia și valoarea în dicționar
+	});
+	
+	let checkedQuestions = [];
+    for (let i = 1; i <= 10; i++) {
+        const checkbox = document.getElementById(`about-user-${i}`).getElementsByTagName('input')[0];
+        if (checkbox.checked) {
+            const questionText = document.getElementById(`about-user-${i}`).getElementsByTagName('label')[0].innerText;
+            checkedQuestions.push(questionText);
+        }
+    }
+	questionsDict["getUserInfoQuestions"] = checkedQuestions
+
 	const formData = {
-		name: name,
-		description: description,
-		ending: ending,
-		tags: tags,
-		questions: questions_elements
-	};
+        "name": name,
+        "description": description,
+        "ending": ending,
+        "tags": tags,
+        "questions": questionsDict
+    };
 
 	return formData;
 }
 
 function postFormData(formData) {
-	const url = 'https://exemplu.com/api/form';
+	const url = myURL + '/submit';
 
 	fetch(url, {
 			method: 'POST',
