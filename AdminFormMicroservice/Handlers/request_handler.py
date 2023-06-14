@@ -2,15 +2,17 @@
 import http.server
 import re
 import json
-from http import cookies
 
-from Helpers.my_logging import Logger
 from Handlers.html_handler import HtmlHandler
 from Handlers.css_handler import CssHandler
 from Handlers.js_handler import JsHandler
 from Handlers.json_handler import JsonHandler
 from Handlers.img_handler import ImgHandler
 from Handlers.submit_handler import SubmitHandler
+from Handlers.edit_handler import EditHandler
+from Handlers.html_edit_handler import HtmlEditHandler
+from Handlers.js_edit_handler import JsEditHandler
+from Handlers.css_emof_handler import CssEmofHandler
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -20,14 +22,24 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         self.routes = [
             # GET routes
-            ('GET', '/(?P<id>[\w\-]{16})\.html', HtmlHandler.handle),
-            ('GET', '/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
+            ('GET', '/index\.html', HtmlHandler.handle),
             ('GET', '/style\.css$', CssHandler.handle),
             ('GET', '/script\.js$', JsHandler.handle),
-            ('GET', '/background\.jpg', ImgHandler.handle),
+            ('GET', '/emof\.css$', CssEmofHandler.handle),
+            ('GET', '/logo\.png$', ImgHandler.handle),
+            ('GET', '/update/style\.css$', CssHandler.handle),
+            ('GET', '/update/emof\.css$', CssEmofHandler.handle),
+            ('GET', '/update/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
+            ('GET', '/update/(?P<id>[\w\-]{16})\.html', HtmlEditHandler.handle),
+            ('GET', '/update/edit\.js$', JsEditHandler.handle),
+            ('GET', '/update/logo\.png$', ImgHandler.handle),
+
 
             # POST routes
-            ('POST', '/submit/(?P<id>[\w\-]{16})', SubmitHandler.handle),
+            ('POST', r'/submit', SubmitHandler.handle),
+
+            # PUT routes
+            ('PUT',  r'/update', EditHandler.handle),
         ]
         super().__init__(*args, **kwargs)
 
@@ -36,6 +48,9 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         self.handle_request('POST')
+
+    def do_PUT(self):
+        self.handle_request('PUT')
 
     def handle_request(self, method):
         for route_method, pattern, handler in self.routes:
@@ -57,8 +72,6 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     
     def send_html_response(self, data , status=200):
         self.send_response(200)
-
         self.send_header('Content-type','text/html')
-    
         self.end_headers()
         self.wfile.write(bytes(data, "utf8"))
