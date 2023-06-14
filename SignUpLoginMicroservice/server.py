@@ -10,11 +10,11 @@ import psycopg2.extras
 from datetime import datetime
 from urllib.parse import parse_qs
 
-hostName = "localhost"
+hostName = "127.0.0.1"
 serverPort = 8084
 
 def get_db_connection():
-    with open('SignUpLoginMicroservice\config.yaml', 'r') as config_file:
+    with open('config.yaml', 'r') as config_file:
         config = yaml.safe_load(config_file)
 
     conn = psycopg2.connect(
@@ -139,7 +139,7 @@ def verify_password(password, hashed_password):
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
-            filename = 'SignUpLoginMicroservice\landing.html'
+            filename = 'static/landing.html'
         else:
             filename = self.path[1:]
         try:

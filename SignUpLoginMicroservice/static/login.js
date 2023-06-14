@@ -1,3 +1,4 @@
+const myURL = "http://127.0.0.1:8050/signupLogin";
 var loginButton = document.getElementById("login-submit-btn");
 loginButton.disabled = true;
 
@@ -46,13 +47,13 @@ loginButton.addEventListener("click", function (event) {
   passwordInput.classList.remove("kYUBna");
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "/login");
+  xhr.open("POST", myURL + "/login");
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function () {
     if (xhr.status === 200) {
       var response = JSON.parse(xhr.responseText);
       document.cookie = `sessionId=${response.sessionId}; path=/`;
-      window.location.href = "admin/all_forms.html";
+      window.location.href = "/admin/";
     } else if (xhr.status === 400) {
       var errorMessage = xhr.responseText;
       if (errorMessage.includes("email")) {
