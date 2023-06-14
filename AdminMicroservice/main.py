@@ -5,7 +5,7 @@ from Handlers.request_handler import MyHttpRequestHandler
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-PORT = 8088
+PORT = 8090
 
 with ThreadingHTTPServer(("", PORT), MyHttpRequestHandler) as httpd:
     
