@@ -1,0 +1,5 @@
+database: EMOF
+user: postgres
+password: s2receptor
+host: localhost
+port: 5432

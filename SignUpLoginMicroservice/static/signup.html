@@ -1,15 +1,15 @@
 <html>
   <head>
     <title>Sign up</title>
-    <link rel="stylesheet" type="text/css" href="emof.css" />
-    <link rel="icon" href="pictures/icon.png" />
+    <link rel="stylesheet" type="text/css" href="/emof.css" />
+    <link rel="icon" href="/pictures/icon.png" />
   </head>
   <body>
     <div class="first_part">
       <header class="header">
         <nav class="nav">
           <a href="landing.html"
-            ><img alt="" src="pictures/logo.png" class="logo"
+            ><img alt="" src="/pictures/logo.png" class="logo"
           /></a>
         </nav>
       </header>
@@ -36,7 +36,7 @@
                   <div class="form-field">
                     <label for="username" class="username_text">Username</label>
                     <div class="signup_caseta">
-                      <input type="text" id="username" name="username" class="caseta" dir="auto" aria-required="true" autocomplete="username" data-functional-selector="username-input-field__input" value="" />
+                      <input type="text" id="username" name="username" class="caseta" dir="auto" aria-required="true" data-functional-selector="username-input-field__input" value="" />
                       <p class="error-message"></p>
                       <p id="username-error-message"></p>
                     </div>
@@ -53,6 +53,7 @@
                           aria-label="Show password as plain text"
                           draggable="false"
                           class="view_password_button"
+                          id="show-password-btn"
                         >
                           <span
                             class="sc-eCssSg cAELPS sc-kIXaRb knQvsT"
@@ -106,6 +107,6 @@
         </div>
       </div>
     </main>
-    <script src="signup_script.js"></script>
+    <script src="signup.js"></script>
   </body>
 </html>

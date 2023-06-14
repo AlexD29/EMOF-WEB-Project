@@ -1,6 +1,41 @@
-var signUpButton = document.querySelector("#login-submit-btn");
+var submitButton = document.getElementById("login-submit-btn");
+submitButton.disabled = true;
 
-signUpButton.addEventListener("click", function (event) {
+function checkFormCompletion() {
+  var email = document.getElementById("email").value;
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+
+  submitButton.disabled = !(username && email && password);
+}
+
+function resetFields(){
+  document.getElementById("email").value="";
+  document.getElementById("username").value="";
+  document.getElementById("password").value="";
+}
+
+function initializeHideButton(){
+  const passwordInput = document.getElementById('password');
+  const showPasswordButton = document.getElementById('show-password-btn');
+
+  showPasswordButton.addEventListener('click', function () {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  });
+}
+
+resetFields();
+initializeHideButton();
+document.getElementById("username").addEventListener("input",checkFormCompletion);
+document.getElementById("email").addEventListener("input", checkFormCompletion);
+document.getElementById("password").addEventListener("input", checkFormCompletion);
+
+
+submitButton.addEventListener("click", function (event) {
   event.preventDefault();
 
   var emailInput = document.getElementById("email");
@@ -21,32 +56,20 @@ signUpButton.addEventListener("click", function (event) {
   passwordInput.classList.remove("kYUBna");
 
   var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (email === "") {
-    emailInput.classList.add("kYUBna");
-    emailErrorMessage.textContent = "Email field should be completed.";
-    emailErrorMessage.style.color = "rgb(226, 27, 60)";
-  } else if (!emailRegex.test(email)) {
+  if (!emailRegex.test(email)) {
     emailInput.classList.add("kYUBna");
     emailErrorMessage.textContent = "Invalid email.";
     emailErrorMessage.style.color = "rgb(226, 27, 60)";
   }
 
-  if (username === "") {
-    usernameInput.classList.add("kYUBna");
-    usernameErrorMessage.textContent = "Username field should be completed.";
-    usernameErrorMessage.style.color = "rgb(226, 27, 60)";
-  } else if (username.length < 4) {
+  if (username.length < 4) {
     usernameInput.classList.add("kYUBna");
     usernameErrorMessage.textContent =
       "Username should be at least 4 characters long.";
     usernameErrorMessage.style.color = "rgb(226, 27, 60)";
   }
 
-  if (password === "") {
-    passwordInput.classList.add("kYUBna");
-    passwordErrorMessage.textContent = "Password field should be completed.";
-    passwordErrorMessage.style.color = "rgb(226, 27, 60)";
-  } else if (password.length < 6) {
+  if (password.length < 6) {
     passwordInput.classList.add("kYUBna");
     passwordErrorMessage.textContent =
       "Password should be at least 6 characters long.";
@@ -64,6 +87,8 @@ signUpButton.addEventListener("click", function (event) {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function () {
       if (xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        document.cookie = `sessionId=${response.sessionId}; path=/`;
         window.location.href = "admin/all_forms.html";
       } else if (xhr.status === 400) {
         var errorMessage = xhr.responseText;
@@ -99,3 +124,5 @@ signUpButton.addEventListener("click", function (event) {
     xhr.send(formData);
   }
 });
+
+
