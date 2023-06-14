@@ -2,12 +2,13 @@ const container = document.getElementById('questions-container');
 let maxInputAllowed = 15;
 let questions_elements = []
 let questions = [];
+const myURL = "http://127.0.0.1:8050/admin-forms-microservice"
 
 //const formID = "sNiLgqTiV7GrxGNh" 
 const formID = document.getElementById('FORM_ID').textContent
 
 //load preloaded questions if this is the case
-fetch('http://127.0.0.1:8100/update/' + formID + '.json', {
+fetch(myURL + '/update/' + formID + '.json', {
 		method: 'GET'
 	})
 	.then(response => {
@@ -194,9 +195,8 @@ function validateForm() {
 }
 
 function postFormData(formData) {
-	const url = 'http://127.0.0.1:8100/update';
 
-	fetch(url, {
+	fetch(myURL + '/update', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'

@@ -2,6 +2,7 @@ const container = document.getElementById('questions-container');
 let maxInputAllowed = 15;
 let questions_elements = []
 let questions = [];
+const myURL = "http://127.0.0.1:8050/admin-forms-microservice"
 
 //load preloaded questions if this is the case
 for (let i = 0; i < questions.length; i++) {
@@ -161,7 +162,7 @@ function validateForm() {
 }
 
 function postFormData(formData) {
-	const url = 'http://127.0.0.1:8100/submit';
+	const url = myURL + '/submit';
 
 	fetch(url, {
 			method: 'POST',
