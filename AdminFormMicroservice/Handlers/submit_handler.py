@@ -28,10 +28,23 @@ class SubmitHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
         #TO BE DELETED
-        user_id = "yLstQoFVDfZnDjVC"
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
-        form_id = secrets.token_hex(16)[:16] 
+        form_id = secrets.token_hex(16)[:16]
+
+        cookie = post_data_json.pop("cookie")
+        print(cookie)
+
+        sessionID =  cookie['sessionId']
+
+        query = "SELECT id FROM public.users WHERE sid = %s"
+        result = db.fetch_query(query, (sessionID,))
+        print(result)
+        user_id = result[0][0] if result else None
+
+        if user_id is None:
+            handler.send_json_response(JsonResponse.error("User not found") , status=404)
+            return
 
         form_data = {
             'id': form_id,

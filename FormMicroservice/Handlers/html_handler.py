@@ -288,7 +288,7 @@ class HtmlHandler:
 				</div>
 			</div>
 			<div id="next-btn" class="rounded-div" onclick="nextPage()"> <a>Next</a> </div>
-			<div id="back-explore" class="rounded-div"> <button id="back-explore-button"> Back to Explore </button>
+			<div id="back-explore" class="rounded-div"> <button onclick="location.href='/explore';" id="back-explore-button"> Back to Explore </button>
 			</div>
 			<div id="back-btn" class="rounded-div" onclick="lastPage()"> <a> Back </a> </div>
 		</div>
