@@ -81,5 +81,5 @@ class EditHandler:
             handler.send_json_response(JsonResponse.success("Data received and processed"))
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
-            handler.send_json_response(JsonResponse.error("Nu s-a putut edita formularul"))
+            handler.send_json_response(JsonResponse.error("Nu s-a putut edita formularul") , status=400)
 

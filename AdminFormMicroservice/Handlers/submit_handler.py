@@ -43,7 +43,7 @@ class SubmitHandler:
         user_id = result[0][0] if result else None
 
         if user_id is None:
-            handler.send_json_response(JsonResponse.error("User not found"))
+            handler.send_json_response(JsonResponse.error("User not found") , status=404)
             return
 
         form_data = {
@@ -67,5 +67,4 @@ class SubmitHandler:
                                  json.dumps(form_data['questions']), form_data['public'], json.dumps(form_data['tags'])))
 
         # Trimiterea raspunsului
-        print("CEL MAI SMECHEEEEEEEEEEEEEEEEEER")
         handler.send_json_response(JsonResponse.success("Data received and processed"))
