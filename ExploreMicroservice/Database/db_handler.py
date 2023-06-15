@@ -23,23 +23,26 @@ class DatabaseHandler:
             self.user = user
             self.password = password
             self.connection = psycopg2.connect(host=self.host, dbname=self.dbname, user=self.user, password=self.password)
-            self.cursor = self.connection.cursor()  # Create a new cursor
             DatabaseHandler.__instance = self
 
     def execute_query(self, query, params=None):
+        cursor = self.connection.cursor()
         if params is None:
-            self.cursor.execute(query)
+            cursor.execute(query)
         else:
-            self.cursor.execute(query, params)
+            cursor.execute(query, params)
         self.connection.commit()
+        cursor.close()
 
     def fetch_query(self, query, params=None):
+        cursor = self.connection.cursor()
         if params is None:
-            self.cursor.execute(query)
+            cursor.execute(query)
         else:
-            self.cursor.execute(query, params)
-        return self.cursor.fetchall()
+            cursor.execute(query, params)
+        ret = cursor.fetchall()
+        cursor.close()
+        return ret
 
     def close(self):
-        self.cursor.close()
         self.connection.close()

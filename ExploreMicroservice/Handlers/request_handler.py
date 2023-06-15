@@ -10,25 +10,37 @@ from Handlers.img_handler import ImgHandler
 from Handlers.form_list_handler import ExploreListHandler
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+    cookies = {}
+    bod = {}
     def __init__(self, *args, **kwargs):
-        
-        #prefix is empty for the moment
-        prefix = ""
         id_regex = '([a-zA-Z0-9\-_]{16})'
 
         self.routes = [
             # GET routes
-            ('GET', f'^{prefix}/?$', HtmlHandler.handle),
-            ('GET', f'^{prefix}/([^.]+).css$', CssHandler.handle),
-            ('GET', f'^{prefix}/explore_forms.js$', JsHandler.handle),
-            ('GET', f'^{prefix}/pictures/([^.]+).jpg$', ImgHandler.handle),
-            ('GET', f'^{prefix}/pictures/([^.]+).png$', ImgHandler.handle),
+            ('GET', f'^/?$', HtmlHandler.handle),
+            ('GET', f'^/([^.]+).css$', CssHandler.handle),
+            ('GET', f'^/explore_forms.js$', JsHandler.handle),
+            ('GET', f'^/pictures/([^.]+).jpg$', ImgHandler.handle),
+            ('GET', f'^/pictures/([^.]+).png$', ImgHandler.handle),
 
             # Microservice routes
-            ('GET', f'^{prefix}/explore-api/popular/?$', ExploreListHandler.handle_popular),
-            ('GET', f'^{prefix}/explore-api/new/?$', ExploreListHandler.handle_new),
+            ('GET', f'^/explore-api/popular/?$', ExploreListHandler.handle_popular),
+            ('GET', f'^/explore-api/new/?$', ExploreListHandler.handle_new),
         ]
         super().__init__(*args, **kwargs)
+
+    def set_data_from_body(self):
+        try:
+            content_len = int(self.headers.get('Content-Length'))
+        except:
+            content_len = 0
+        
+        self.bod = json.loads(self.rfile.read(content_len))
+        print(self.bod)
+        ckies = self.bod['cookie']
+        self.bod.pop("cookie", None)
+        for cookie in ckies:
+            self.cookies[cookie] = ckies[cookie]
 
     def do_GET(self):
         self.handle_request('GET')
@@ -43,6 +55,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.handle_request('PATCH')
 
     def handle_request(self, method):
+        self.set_data_from_body()
         for route_method, pattern, handler in self.routes:
             if route_method == method:
                 match = re.match(pattern, self.path)

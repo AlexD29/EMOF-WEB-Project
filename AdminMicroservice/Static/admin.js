@@ -1,9 +1,7 @@
 async function fetchUserForms(query_string) {
-    //DE SCHIMBAT
-    id = '6zM1lZW4n58qeOvu'
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
-    await fetch(`http://127.0.0.1:8050/admin/admin-api/users/${id}/forms` + query_string).then(response => response.json()).then(data => {
+    await fetch(`/admin/admin-api/users/${{{user_id}}}/forms` + query_string).then(response => response.json()).then(data => {
         if(data.length > 0) {
           Array.prototype.forEach.call(data, form => displayForm(form));
         }
@@ -244,7 +242,7 @@ function refresh_selection() {
 function deleteForm(form_id) {
   popup_confirm("Are you sure you want to delete the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{method:'DELETE'}).then(response => {
+      fetch(`/admin/admin-api/forms/${form_id}`,{method:'DELETE'}).then(response => {
         if(response.status == 200) {
           //alert("Deleted "+formId)
           refresh_selection();
@@ -258,7 +256,7 @@ function deleteForm(form_id) {
 function launchForm(form_id) {
   popup_confirm("Are you sure you want to launch the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
+      fetch(`/admin/admin-api/forms/${form_id}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
         if(response.status == 200) {
           //alert("Launched "+formId)
           refresh_selection();
@@ -272,7 +270,7 @@ function launchForm(form_id) {
 function closeForm(form_id) {
   popup_confirm("Are you sure you want to close the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{
+      fetch(`/admin/admin-api/forms/${form_id}`,{
               method:'PATCH', 
               headers: {'Content-Type': 'application/json'}, 
               body:JSON.stringify({status:'closed'})}
@@ -288,7 +286,7 @@ function closeForm(form_id) {
     })(form_id));
 }
 function editForm(form_id) {
-  window.location.href = `/forms/edit/index.html?form=${form_id}`;
+  window.location.href = `/admin-forms-microservice/update/${form_id}.html`;
 }
 function statsForm(form_id) {
   window.location.href = `/forms/stats/index.html?form=${form_id}`;

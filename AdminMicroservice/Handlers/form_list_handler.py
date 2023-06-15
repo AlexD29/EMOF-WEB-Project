@@ -1,5 +1,4 @@
 import json
-import psycopg2
 from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 
@@ -54,8 +53,9 @@ class FormListHandler:
         db_config = config['database']        
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
-        db.cursor.execute("""DELETE FROM forms WHERE id = %s;""", (str(form_id),))
-        if(db.cursor.rowcount > 0):
+        c = db.connection.cursor()
+        c.execute("""DELETE FROM forms WHERE id = %s;""", (str(form_id),))
+        if(c.rowcount > 0):
             db.connection.commit()
             handler.send_response(200)
             handler.end_headers()
@@ -63,12 +63,10 @@ class FormListHandler:
             db.connection.rollback()
             handler.send_response(409) #Conflict
             handler.end_headers()
+        c.close()
 
     def handle_update_form(handler):
-        content_length = int(handler.headers['Content-Length'])
-        patch_data = handler.rfile.read(content_length)
-        patch_data_decoded = patch_data.decode('utf-8')
-        patch_data_json = json.loads(patch_data_decoded)
+        patch_data_json = handler.bod
         
         newStatus = None
         
@@ -83,8 +81,9 @@ class FormListHandler:
 
             db_config = config['database']        
             db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
-            db.cursor.execute("""UPDATE forms SET status=%s WHERE id = %s;""", (str(newStatus),str(form_id),))
-            if(db.cursor.rowcount > 0):
+            c = db.connection.cursor()
+            c.execute("""UPDATE forms SET status=%s WHERE id = %s;""", (str(newStatus),str(form_id),))
+            if(c.rowcount > 0):
                 db.connection.commit()
                 handler.send_response(200)
                 handler.end_headers()
@@ -92,3 +91,4 @@ class FormListHandler:
                 db.connection.rollback()
                 handler.send_response(409) #Conflict
                 handler.end_headers()
+            c.close()
