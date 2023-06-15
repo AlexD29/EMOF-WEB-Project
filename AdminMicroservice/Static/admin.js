@@ -1,3 +1,13 @@
+function escapeHtml(unsafe)
+{
+    return String(unsafe)
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
 async function fetchUserForms(query_string) {
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
@@ -22,7 +32,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${form.title}
+                ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item draft-form-bubble">
                   Draft
@@ -30,10 +40,10 @@ function displayForm(form) {
               </div>
               <div class="form-info">
                 <p>
-                  Description: ${form.description}
+                  Description: ${escapeHtml(form.description)}
                 </p>
                 <p>
-                  Questions: ${form.nr_questions}
+                  Questions: ${escapeHtml(form.nr_questions)}
                 </p>
               </div>
             </div>
@@ -76,7 +86,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${form.title}
+                ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item active-form-bubble">
                   Active Form
@@ -84,13 +94,13 @@ function displayForm(form) {
               </div>
               <div class="form-info">
                 <p>
-                  Description: ${form.description}
+                  Description: ${escapeHtml(form.description)}
                 </p>
                 <p>
-                  Questions: ${form.nr_questions}
+                  Questions: ${escapeHtml(form.nr_questions)}
                 </p>
                 <p>
-                  <strong>Responses: ${form.nr_responses}</strong>
+                  <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
                 </p>
               </div>
             </div>
@@ -134,7 +144,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                  ${form.title}
+                  ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item closed-form-bubble">
                   Closed Form
@@ -142,13 +152,13 @@ function displayForm(form) {
               </div>
               <div class="form-info">
                 <p>
-                  Description: ${form.description}
+                  Description: ${escapeHtml(form.description)}
                 </p>
                 <p>
-                  Questions: ${form.nr_questions}
+                  Questions: ${escapeHtml(form.nr_questions)}
                 </p>
                 <p>
-                  <strong>Responses: ${form.nr_responses}</strong>
+                  <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
                 </p>
               </div>
             </div>
@@ -292,3 +302,11 @@ function statsForm(form_id) {
   window.location.href = `/forms/stats/index.html?form=${form_id}`;
 }
 displayAllForms()
+
+document.getElementById("logout-btn").addEventListener("click", function(event) {
+	event.preventDefault();
+
+	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+	window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
+});

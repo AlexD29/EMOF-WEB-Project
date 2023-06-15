@@ -1,7 +1,6 @@
-import json
-import psycopg2
 from Database.db_handler import DatabaseHandler
 from Config.config import get_config
+import html
 
 class ExploreListHandler:
     select_skeleton = """SELECT f.id, f.name, image, questions, total_responses(f.id), u.username, f.published_at, f.closed_at
@@ -11,8 +10,8 @@ class ExploreListHandler:
         forms = []
         for i in rez:
             forms.append(
-                {"id":i[0], "title":i[1], "image":i[2],
-                 "questions":i[3],"nr_questions":len(i[3]["questions"]),"nr_responses":i[4], "description":i[3]["description"], "author":i[5]}
+                {"id":i[0], "title":html.escape(i[1]), "image":i[2],
+                 "questions":html.escape(i[3]),"nr_questions":len(i[3]["questions"]),"nr_responses":i[4], "description":html.escape(i[3]["description"]), "author":html.escape(i[5])}
             )
         return forms
 

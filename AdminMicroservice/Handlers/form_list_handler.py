@@ -1,4 +1,4 @@
-import json
+import html
 from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 
@@ -8,7 +8,7 @@ class FormListHandler:
         forms = []
         for i in rez:
             forms.append(
-                {"id":i[0], "title":i[1], "public":i[2], "image":i[3], "status":i[4], "questions":i[5],"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":i[5]["description"]}
+                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3], "status":html.escape(i[4]), "questions":html.escape(i[5]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"])}
             )
         return forms
 

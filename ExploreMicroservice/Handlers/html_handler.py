@@ -1,6 +1,7 @@
 from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 import http.server
+import html
 
 class HtmlHandler:
     @staticmethod
@@ -36,7 +37,7 @@ class HtmlHandler:
 
         with open(handler.path) as myFile:
             content = myFile.read()
-            content = str(content).replace("${{{user_name}}}", str(user_name))
+            content = str(content).replace("${{{user_name}}}", html.escape(str(user_name)))
             handler.send_response(200)
             handler.send_header('Content-type', 'text/html')
             handler.end_headers()

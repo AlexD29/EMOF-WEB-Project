@@ -19,10 +19,10 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.routes = [
             # GET routes
             ('GET', f'^/?$', HtmlHandler.handle),
-            ('GET', f'^/([^.]+).css$', CssHandler.handle),
-            ('GET', f'^/admin.js$', JsHandler.handle),
-            ('GET', f'^/pictures/([^.]+).jpg$', ImgHandler.handle),
-            ('GET', f'^/pictures/([^.]+).png$', ImgHandler.handle),
+            ('GET', f'^/([^\.]+).css$', CssHandler.handle),
+            ('GET', f'^/admin\.js$', JsHandler.handle),
+            ('GET', f'^/pictures/([^\.]+)\.jpg$', ImgHandler.handle),
+            ('GET', f'^/pictures/([^\.]+)\.png$', ImgHandler.handle),
 
             # Microservice routes
 
@@ -58,7 +58,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         #    print('not oka t alkl')
         #    return False
 
-    def set_cookies_from_body(self):
+    def set_data_from_body(self):
         try:
             content_len = int(self.headers.get('Content-Length'))
         except:
@@ -84,7 +84,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.handle_request('PATCH')
 
     def handle_request(self, method):
-        self.set_cookies_from_body()
+        self.set_data_from_body()
 
         if not self.has_valid_sid():
             self.send_response(302)
