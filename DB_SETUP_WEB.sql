@@ -244,7 +244,7 @@ BEGIN
 		END;
 	END LOOP;
 
-	-- update users set password=encode(sha256(password::bytea),'hex');
+	update users set password=encode(sha256(password::bytea),'hex');
 END;
 $$;
 
