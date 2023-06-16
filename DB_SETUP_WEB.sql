@@ -38,7 +38,7 @@ CREATE TABLE public.forms (
     closed_at timestamp with time zone,
     public boolean DEFAULT false NOT NULL,
     questions json NOT NULL,
-    image bytea,
+    image text,
     status public.form_status DEFAULT 'draft'::public.form_status NOT NULL,
     published_at timestamp with time zone,
     tags json
