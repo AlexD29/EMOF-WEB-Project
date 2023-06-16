@@ -11,7 +11,7 @@ class ExploreListHandler:
         for i in rez:
             forms.append(
                 {"id":i[0], "title":html.escape(i[1]), "image":i[2],
-                 "questions":html.escape(i[3]),"nr_questions":len(i[3]["questions"]),"nr_responses":i[4], "description":html.escape(i[3]["description"]), "author":html.escape(i[5])}
+                 "nr_questions":len(i[3]["questions"]),"nr_responses":i[4], "description":html.escape(i[3]["description"]), "author":html.escape(i[5])}
             )
         return forms
 

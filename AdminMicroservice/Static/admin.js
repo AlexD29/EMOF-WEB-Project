@@ -11,7 +11,7 @@ function escapeHtml(unsafe)
 async function fetchUserForms(query_string) {
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
-    await fetch(`/admin/admin-api/users/${encodeURIComponent(${{{user_id}}})}/forms` + query_string).then(response => response.json()).then(data => {
+    await fetch(`/admin/admin-api/users/${encodeURIComponent('${{{user_id}}}')}/forms` + query_string).then(response => response.json()).then(data => {
         if(data.length > 0) {
           Array.prototype.forEach.call(data, form => displayForm(form));
         }
@@ -47,9 +47,6 @@ function displayForm(form) {
                   Questions: ${escapeHtml(form.nr_questions)}
                 </p>
               </div>
-            </div>
-            <div class="collapsed-admin-buttons">
-              ...
             </div>
             <div class="form-admin-buttons">
             </div>
@@ -105,9 +102,6 @@ function displayForm(form) {
                 </p>
               </div>
             </div>
-            <div class="collapsed-admin-buttons">
-              ⋮
-            </div>
             <div class="form-admin-buttons">
             </div>
       `;
@@ -162,9 +156,6 @@ function displayForm(form) {
                   <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
                 </p>
               </div>
-            </div>
-            <div class="collapsed-admin-buttons">
-              ⋮
             </div>
             <div class="form-admin-buttons">
             </div>

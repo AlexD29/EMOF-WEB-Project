@@ -3,12 +3,13 @@ from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 
 class FormListHandler:
+    select_skeleton = "SELECT id, name, public, image, status, questions, total_responses(id) FROM forms "
     @staticmethod
     def format_response(rez):
         forms = []
         for i in rez:
             forms.append(
-                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3], "status":html.escape(i[4]), "questions":html.escape(i[5]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"])}
+                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3], "status":html.escape(i[4]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"])}
             )
         return forms
 
@@ -39,7 +40,7 @@ class FormListHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
         forms_of_user = FormListHandler.format_response(
-            db.fetch_query("""SELECT id, name, public, image, status, questions, total_responses(id) FROM forms WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
+            db.fetch_query(FormListHandler.select_skeleton + """WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
             )
 
         handler.send_json_response(forms_of_user)
