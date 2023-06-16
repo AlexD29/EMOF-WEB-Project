@@ -11,7 +11,7 @@ function escapeHtml(unsafe)
 async function fetchUserForms(query_string) {
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
-    await fetch(`/admin/admin-api/users/${{{user_id}}}/forms` + query_string).then(response => response.json()).then(data => {
+    await fetch(`/admin/admin-api/users/${encodeURIComponent(${{{user_id}}})}/forms` + query_string).then(response => response.json()).then(data => {
         if(data.length > 0) {
           Array.prototype.forEach.call(data, form => displayForm(form));
         }
@@ -27,6 +27,7 @@ async function fetchUserForms(query_string) {
 function displayForm(form) {
     let formList = document.getElementById("form-list-main");
     let thisForm = document.createElement("section");
+    console.log(form.image)
     if(form.status == "draft") {
       thisForm.innerHTML = `
             <div class="form-info-pane">
@@ -252,7 +253,7 @@ function refresh_selection() {
 function deleteForm(form_id) {
   popup_confirm("Are you sure you want to delete the Form?", (
     (formId) => function() {
-      fetch(`/admin/admin-api/forms/${form_id}`,{method:'DELETE'}).then(response => {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'DELETE'}).then(response => {
         if(response.status == 200) {
           //alert("Deleted "+formId)
           refresh_selection();
@@ -266,7 +267,7 @@ function deleteForm(form_id) {
 function launchForm(form_id) {
   popup_confirm("Are you sure you want to launch the Form?", (
     (formId) => function() {
-      fetch(`/admin/admin-api/forms/${form_id}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
         if(response.status == 200) {
           //alert("Launched "+formId)
           refresh_selection();
@@ -280,7 +281,7 @@ function launchForm(form_id) {
 function closeForm(form_id) {
   popup_confirm("Are you sure you want to close the Form?", (
     (formId) => function() {
-      fetch(`/admin/admin-api/forms/${form_id}`,{
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{
               method:'PATCH', 
               headers: {'Content-Type': 'application/json'}, 
               body:JSON.stringify({status:'closed'})}
@@ -296,10 +297,10 @@ function closeForm(form_id) {
     })(form_id));
 }
 function editForm(form_id) {
-  window.location.href = `/admin-forms-microservice/update/${form_id}.html`;
+  window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
 function statsForm(form_id) {
-  window.location.href = `/forms/stats/index.html?form=${form_id}`;
+  window.location.href = `/forms-microservice/${encodeURIComponent(form_id)}.html`;
 }
 displayAllForms()
 

@@ -4,8 +4,13 @@ from Config.config import get_config
 class JsHandler:
     @staticmethod
     def get_id_from_sid(handler):
-        sid = handler.cookies['sessionId']
-        
+        try:
+            sid = handler.cookies.get('sessionId')
+        except:
+            print("No sid")
+            handler.send_response(400)
+            handler.end_headers()
+            return None
         config = get_config()
 
         db_config = config['database']

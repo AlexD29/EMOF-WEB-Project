@@ -37,8 +37,14 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def has_valid_sid(self):
         #try:
             
-            sid = self.cookies['sessionId']
-
+            try:
+                sid = self.cookies.get('sessionId')
+            except:
+                print("No sid")
+                self.send_response(400)
+                self.end_headers()
+                return None
+            
             config = get_config()
 
             db_config = config['database']        
@@ -63,13 +69,16 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             content_len = int(self.headers.get('Content-Length'))
         except:
             content_len = 0
-        
-        self.bod = json.loads(self.rfile.read(content_len))
+        k = self.rfile.read(content_len)
+        if k == b'':
+            k = "{}"
+        print(k)
+        self.bod = json.loads(k)
         print(self.bod)
-        ckies = self.bod['cookie']
-        self.bod.pop("cookie", None)
-        for cookie in ckies:
-            self.cookies[cookie] = ckies[cookie]
+        ckies = self.bod.pop("cookie", None)
+        if ckies:
+            for cookie in ckies:
+                self.cookies[cookie] = ckies[cookie]
 
     def do_GET(self):
         self.handle_request('GET')

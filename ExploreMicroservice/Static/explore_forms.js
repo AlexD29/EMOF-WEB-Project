@@ -10,7 +10,7 @@ function escapeHtml(unsafe)
 
 async function fetchCategory(category) {
     forms = []
-    await fetch('http://127.0.0.1:8050/explore/explore-api/' + category).then(response => response.json()).then(data => {
+    await fetch('http://127.0.0.1:8050/explore/explore-api/' + encodeURIComponent(category)).then(response => response.json()).then(data => {
         if(data.length > 0) {
           forms = data
         }
