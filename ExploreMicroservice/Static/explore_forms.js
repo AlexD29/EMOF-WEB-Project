@@ -45,8 +45,8 @@ function displayForm(container, form) {
 }
 
 function takeForm(form_id) {
-  alert(form_id + " taken!")
-  //window.location.href = `/forms/edit/index.html?form=${form_id}`;
+  //alert(form_id + " taken!")
+  window.location.href = `/forms-microservice/${form_id}.html`;
 }
 
 async function displayCategory(category_endpoint, category_title) {
