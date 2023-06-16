@@ -291,7 +291,7 @@ function editForm(form_id) {
   window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
 function statsForm(form_id) {
-  window.location.href = `/forms-microservice/${encodeURIComponent(form_id)}.html`;
+  window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
 }
 displayAllForms()
 
