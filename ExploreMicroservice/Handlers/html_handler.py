@@ -6,7 +6,12 @@ import html
 class HtmlHandler:
     @staticmethod
     def get_username_from_sid(handler):
-        sid = handler.cookies['sessionId']
+        print("ent")
+        try:
+            sid = handler.cookies.get('sessionId')
+        except:
+            print("No sid")
+            return None
         
         config = get_config()
 
@@ -14,7 +19,7 @@ class HtmlHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
         user_name = None
-        while not user_name:
+        while user_name == None:
             user_name = db.fetch_query("""SELECT username FROM users WHERE sid = %s;""", (str(sid),))
 
         if len(user_name) != 1:
@@ -27,14 +32,13 @@ class HtmlHandler:
 
     @staticmethod
     def handle(handler):
-        handler.path = 'Static/explore_forms.html'
-
         user_name = HtmlHandler.get_username_from_sid(handler)
         if user_name is None:
             handler.path = 'Static/explore_forms_nologin.html'
             return http.server.SimpleHTTPRequestHandler.do_GET(handler)
              
 
+        handler.path = 'Static/explore_forms.html'
         with open(handler.path) as myFile:
             content = myFile.read()
             content = str(content).replace("${{{user_name}}}", html.escape(str(user_name)))

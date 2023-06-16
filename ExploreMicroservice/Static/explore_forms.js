@@ -63,8 +63,7 @@ async function displayCategory(category_endpoint, category_title) {
 
   container = parent_element.getElementsByClassName("form-scroller")[0].children[0]
 
-  forms = await fetchCategory(category_endpoint) 
-  console.log(category_endpoint, container)
+  forms = await fetchCategory(category_endpoint)
   populateContainer(container, forms);
   
   document.getElementById("section-list").appendChild(parent_element)
@@ -85,14 +84,17 @@ async function init() {
   document.getElementById("section-list").innerText = ''
   await displayCategory("popular", "Popular forms")
   await displayCategory("new", "New forms")
+  const m = document.getElementById("logout-btn")
+  if(m) {
+    m.addEventListener("click", function(event) {
+      event.preventDefault();
+    
+      document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+      window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
+    });
+  }
 }
 
 init()
 
-document.getElementById("logout-btn").addEventListener("click", function(event) {
-	event.preventDefault();
-
-	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-	window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
-});

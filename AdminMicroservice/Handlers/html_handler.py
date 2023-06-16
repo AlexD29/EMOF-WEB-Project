@@ -6,7 +6,13 @@ import html
 class HtmlHandler:
     @staticmethod
     def get_username_from_sid(handler):
-        sid = handler.cookies['sessionId']
+        try:
+            sid = handler.cookies.get('sessionId')
+        except:
+            print("No sid")
+            handler.send_response(400)
+            handler.end_headers()
+            return None
         
         config = get_config()
 

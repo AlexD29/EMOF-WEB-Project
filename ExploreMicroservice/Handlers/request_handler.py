@@ -34,13 +34,16 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             content_len = int(self.headers.get('Content-Length'))
         except:
             content_len = 0
-        
-        self.bod = json.loads(self.rfile.read(content_len))
+        k = self.rfile.read(content_len)
+        if k == b'':
+            k = "{}"
+        self.bod = json.loads(k)
         print(self.bod)
-        ckies = self.bod['cookie']
-        self.bod.pop("cookie", None)
-        for cookie in ckies:
-            self.cookies[cookie] = ckies[cookie]
+        ckies = self.bod.pop("cookie", None)
+        self.cookies = {}
+        if ckies:
+            for cookie in ckies:
+                self.cookies[cookie] = ckies[cookie]
 
     def do_GET(self):
         self.handle_request('GET')
