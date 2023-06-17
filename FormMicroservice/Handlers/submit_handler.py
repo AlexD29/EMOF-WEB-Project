@@ -27,15 +27,17 @@ class SubmitHandler:
         db_config = config['database']        
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
+        duration = post_data_json.pop("duration")
         response_to_db = {
             'id_form': id,  # înlocuiți cu ID-ul formularului
             'response': post_data_json,  # înlocuiți cu răspunsul real
-            'id': secrets.token_hex(16)[:16]  # înlocuiți cu ID-ul utilizatorului
+            'id': secrets.token_hex(16)[:16], # înlocuiți cu ID-ul utilizatorului
+            'duration' : duration
         }
 
         # inserați datele în baza de date
-        query = "INSERT INTO public.responses (response, id_form, submitted_at, id) VALUES (%s, %s, NOW(), %s)"
-        db.execute_query(query, (json.dumps(response_to_db['response']), response_to_db['id_form'], response_to_db['id']))
+        query = "INSERT INTO public.responses (response, id_form, submitted_at, id, duration) VALUES (%s, %s, NOW(), %s, %s)"
+        db.execute_query(query, (json.dumps(response_to_db['response']), response_to_db['id_form'], response_to_db['id'], response_to_db['duration']))
 
         # Trimiterea raspunsului
         handler.send_json_response(JsonResponse.success("Data received and processed"))
