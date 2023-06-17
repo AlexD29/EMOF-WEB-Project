@@ -406,7 +406,7 @@ h1 {
     flex-direction: column;
     background-color: #0fd139;
     font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-image: url('pictures/background.jpg');
+    background-image: url('background.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -555,7 +555,7 @@ h1 {
     animation-fill-mode: both;
     flex-direction: column;
     background-color: #de0909;
-    background-image: url('pictures/background.jpg');
+    background-image: url('background.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
