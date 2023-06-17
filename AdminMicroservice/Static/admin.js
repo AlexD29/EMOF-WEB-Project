@@ -49,7 +49,7 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <div>
+                <div class="form-info-text">
                   <p>
                     Description: ${escapeHtml(form.description)}
                   </p>
@@ -70,6 +70,16 @@ function displayForm(form) {
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
         info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
       }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
       launchButton = document.createElement('a');
@@ -111,7 +121,7 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <div>
+                <div class="form-info-text">
                   <p>
                     Description: ${escapeHtml(form.description)}
                   </p>
@@ -139,6 +149,16 @@ function displayForm(form) {
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
         info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
       }
 
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
@@ -182,7 +202,7 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <div>
+                <div class="form-info-text">
                   <p>
                     Description: ${escapeHtml(form.description)}
                   </p>
@@ -212,6 +232,16 @@ function displayForm(form) {
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
         info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
       }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
 

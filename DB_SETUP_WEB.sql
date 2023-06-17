@@ -294,9 +294,9 @@ CREATE FUNCTION public.trg_set_timestamps() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
-	IF NEW.status = 'active' AND OLD.status <> 'active' AND NEW.published_at <> OLD.published_at THEN
+	IF NEW.status = 'active' AND OLD.status <> 'active' THEN
 		NEW.published_at := NOW();
-	ELSIF NEW.status = 'closed' AND OLD.status <> 'closed' AND NEW.closed_at <> OLD.published_at THEN
+	ELSIF NEW.status = 'closed' AND OLD.status <> 'closed' THEN
 		NEW.closed_at := NOW();
 	END IF;
 	RETURN NEW;
