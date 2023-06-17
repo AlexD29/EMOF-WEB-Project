@@ -7,15 +7,6 @@ from Config.config import get_config
 from Database.db_handler import DatabaseHandler
 from Helpers.json_response import JsonResponse
 
-def save_image(file, folder_path):
-    filename = 'image.jpg' 
-    filepath = os.path.join(folder_path, filename)
-
-    with open(filepath, 'wb') as f:
-        f.write(file.read())
-
-    print(f'Image saved successfully at: {filepath}')
-
 class SubmitHandler:
     @staticmethod
     def handle(handler):
