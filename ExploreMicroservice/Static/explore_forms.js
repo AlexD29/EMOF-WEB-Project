@@ -6,7 +6,17 @@ function escapeHtml(unsafe)
          .replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
- }
+}
+
+function is_ok_image(img_str) {
+  if(!img_str) {
+    return false
+  }
+  if(img_str.startsWith("data:image/")) {
+    return true
+  }
+  return false
+}
 
 async function fetchCategory(category) {
     forms = []
@@ -34,6 +44,15 @@ function displayForm(container, form) {
           </div>
         </div>
     `;
+    if (is_ok_image(form.image)){
+      let c=thisForm.getElementsByClassName("form-presentation-info")[0]
+      let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","200");
+        img.setAttribute("height","200");
+        img.setAttribute("overflow","hidden");
+      c.insertBefore(img, c.firstChild);
+    }
     buttons = thisForm.getElementsByClassName("form-presentation")[0];
 
     viewButton = document.createElement('a');
@@ -91,7 +110,7 @@ async function init() {
     
       document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
-      window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
+      window.location.href = "/signupLogin/static/login.html";
     });
   }
 }

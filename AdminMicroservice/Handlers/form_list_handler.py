@@ -3,13 +3,22 @@ from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 
 class FormListHandler:
-    select_skeleton = "SELECT id, name, public, image, status, questions, total_responses(id) FROM forms "
+
+    def is_valid_img(img):
+        if not img:
+            return False
+        elif img.startswith("data:image/"):
+            return True
+        return False
+
+    select_skeleton = "SELECT id, name, public, image, status, questions, total_responses(id), published_at, closed_at FROM forms "
     @staticmethod
     def format_response(rez):
         forms = []
         for i in rez:
             forms.append(
-                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3], "status":html.escape(i[4]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"])}
+                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3] if FormListHandler.is_valid_img(i[3]) else None, "status":html.escape(i[4]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"]),
+                 "published_at":i[7].strftime("%d-%m-%Y %H:%M") if i[7] else None, "closed_at":i[8].strftime("%d-%m-%Y %H:%M") if i[8] else None}
             )
         return forms
 

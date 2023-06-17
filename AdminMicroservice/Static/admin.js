@@ -6,7 +6,17 @@ function escapeHtml(unsafe)
          .replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
- }
+}
+
+function is_ok_image(img_str) {
+  if(!img_str) {
+    return false
+  }
+  if(img_str.startsWith("data:image/")) {
+    return true
+  }
+  return false
+}
 
 async function fetchUserForms(query_string) {
     formList = document.getElementById("form-list-main")
@@ -27,7 +37,6 @@ async function fetchUserForms(query_string) {
 function displayForm(form) {
     let formList = document.getElementById("form-list-main");
     let thisForm = document.createElement("section");
-    console.log(form.image)
     if(form.status == "draft") {
       thisForm.innerHTML = `
             <div class="form-info-pane">
@@ -40,17 +49,28 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${escapeHtml(form.description)}
-                </p>
-                <p>
-                  Questions: ${escapeHtml(form.nr_questions)}
-                </p>
+                <div>
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                </div>
               </div>
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
       launchButton = document.createElement('a');
       launchButton.classList.add("emphasised-button")
@@ -91,20 +111,36 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${escapeHtml(form.description)}
-                </p>
-                <p>
-                  Questions: ${escapeHtml(form.nr_questions)}
-                </p>
-                <p>
-                  <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
-                </p>
+                <div>
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Published at: ${escapeHtml(form.published_at)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                  <p>
+                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                  </p>
+                </div>
               </div>
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
+
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
       closeButton = document.createElement('a');
       closeButton.classList.add("emphasised-button")
@@ -146,20 +182,37 @@ function displayForm(form) {
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${escapeHtml(form.description)}
-                </p>
-                <p>
-                  Questions: ${escapeHtml(form.nr_questions)}
-                </p>
-                <p>
-                  <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
-                </p>
+                <div>
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Published at: ${escapeHtml(form.published_at)}
+                  </p>
+                  <p>
+                    Closed at: ${escapeHtml(form.closed_at)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                  <p>
+                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                  </p>
+                </div>
               </div>
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
 
       viewButton = document.createElement('a');
@@ -300,5 +353,5 @@ document.getElementById("logout-btn").addEventListener("click", function(event) 
 
 	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-	window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
+	window.location.href = "/signupLogin/static/login.html";
 });

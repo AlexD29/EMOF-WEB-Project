@@ -56,7 +56,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 return True
             else:
                 if users:
-                    print('sid not ok', users[0][0]," users found")
+                    print(sid, 'sid not ok', users[0][0]," users found")
                 else:
                     print("No response from db")
                 return False
