@@ -39,11 +39,11 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             
             try:
                 sid = self.cookies.get('sessionId')
+                if sid is None:
+                    raise Exception("No sid")
             except:
                 print("No sid")
-                self.send_response(400)
-                self.end_headers()
-                return None
+                return False
             
             config = get_config()
 
