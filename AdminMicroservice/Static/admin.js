@@ -1,9 +1,27 @@
+function escapeHtml(unsafe)
+{
+    return String(unsafe)
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+function is_ok_image(img_str) {
+  if(!img_str) {
+    return false
+  }
+  if(img_str.startsWith("data:image/")) {
+    return true
+  }
+  return false
+}
+
 async function fetchUserForms(query_string) {
-    //DE SCHIMBAT
-    id = '6zM1lZW4n58qeOvu'
     formList = document.getElementById("form-list-main")
     formList.innerText = '';
-    await fetch(`http://127.0.0.1:8050/admin/admin-api/users/${id}/forms` + query_string).then(response => response.json()).then(data => {
+    await fetch(`/admin/admin-api/users/${encodeURIComponent('${{{user_id}}}')}/forms` + query_string).then(response => response.json()).then(data => {
         if(data.length > 0) {
           Array.prototype.forEach.call(data, form => displayForm(form));
         }
@@ -24,27 +42,45 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${form.title}
+                ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item draft-form-bubble">
                   Draft
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${form.description}
-                </p>
-                <p>
-                  Questions: ${form.nr_questions}
-                </p>
+                <div class="form-info-text">
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="collapsed-admin-buttons">
-              ...
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
+      }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
       launchButton = document.createElement('a');
       launchButton.classList.add("emphasised-button")
@@ -78,30 +114,53 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${form.title}
+                ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item active-form-bubble">
                   Active Form
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${form.description}
-                </p>
-                <p>
-                  Questions: ${form.nr_questions}
-                </p>
-                <p>
-                  <strong>Responses: ${form.nr_responses}</strong>
-                </p>
+                <div class="form-info-text">
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Published at: ${escapeHtml(form.published_at)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                  <p>
+                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="collapsed-admin-buttons">
-              ⋮
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
+      }
+
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
       closeButton = document.createElement('a');
       closeButton.classList.add("emphasised-button")
@@ -136,30 +195,54 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                  ${form.title}
+                  ${escapeHtml(form.title)}
                 </h1>
                 <span class="form-item closed-form-bubble">
                   Closed Form
                 </span>
               </div>
               <div class="form-info">
-                <p>
-                  Description: ${form.description}
-                </p>
-                <p>
-                  Questions: ${form.nr_questions}
-                </p>
-                <p>
-                  <strong>Responses: ${form.nr_responses}</strong>
-                </p>
+                <div class="form-info-text">
+                  <p>
+                    Description: ${escapeHtml(form.description)}
+                  </p>
+                  <p>
+                    Published at: ${escapeHtml(form.published_at)}
+                  </p>
+                  <p>
+                    Closed at: ${escapeHtml(form.closed_at)}
+                  </p>
+                  <p>
+                    Questions: ${escapeHtml(form.nr_questions)}
+                  </p>
+                  <p>
+                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="collapsed-admin-buttons">
-              ⋮
             </div>
             <div class="form-admin-buttons">
             </div>
       `;
+      if(is_ok_image(form.image)) {
+        const info = thisForm.getElementsByClassName("form-info")[0]
+        let img = document.createElement("img");
+        img.setAttribute("src",form.image.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'));
+        img.setAttribute("width","300");
+        img.setAttribute("height","300");
+        img.setAttribute("overflow","hidden");
+        info.appendChild(img)
+      }
+      if(form.tags && form.tags.length > 0) {
+        const info = thisForm.getElementsByClassName("form-info")[0].getElementsByClassName("form-info-text")[0]
+        let tagsElem = document.createElement("p");
+        let s = "<strong>Contains:</strong>"
+        for (let tag in form.tags) {
+          s += " <span class=\"form-item\">" + escapeHtml(form.tags[tag]) + "</span>"
+        }
+        tagsElem.innerHTML = s
+        info.appendChild(tagsElem)
+      }
       buttons = thisForm.getElementsByClassName("form-admin-buttons")[0];
 
       viewButton = document.createElement('a');
@@ -244,7 +327,7 @@ function refresh_selection() {
 function deleteForm(form_id) {
   popup_confirm("Are you sure you want to delete the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{method:'DELETE'}).then(response => {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'DELETE'}).then(response => {
         if(response.status == 200) {
           //alert("Deleted "+formId)
           refresh_selection();
@@ -258,7 +341,7 @@ function deleteForm(form_id) {
 function launchForm(form_id) {
   popup_confirm("Are you sure you want to launch the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
         if(response.status == 200) {
           //alert("Launched "+formId)
           refresh_selection();
@@ -272,7 +355,7 @@ function launchForm(form_id) {
 function closeForm(form_id) {
   popup_confirm("Are you sure you want to close the Form?", (
     (formId) => function() {
-      fetch(`http://127.0.0.1:8090/admin-api/forms/${form_id}`,{
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{
               method:'PATCH', 
               headers: {'Content-Type': 'application/json'}, 
               body:JSON.stringify({status:'closed'})}
@@ -288,9 +371,17 @@ function closeForm(form_id) {
     })(form_id));
 }
 function editForm(form_id) {
-  window.location.href = `/forms/edit/index.html?form=${form_id}`;
+  window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
 function statsForm(form_id) {
-  window.location.href = `/forms/stats/index.html?form=${form_id}`;
+  window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
 }
 displayAllForms()
+
+document.getElementById("logout-btn").addEventListener("click", function(event) {
+	event.preventDefault();
+
+	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+	window.location.href = "/signupLogin/static/login.html";
+});

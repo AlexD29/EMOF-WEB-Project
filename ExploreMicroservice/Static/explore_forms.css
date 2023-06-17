@@ -74,12 +74,12 @@ h1{
     background-color: white;
     border-radius: 1em;
     padding:1.5em;
-    height:20em;
     width:18em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
+    word-wrap: break-word;
 }
 
 h2{
@@ -111,8 +111,9 @@ strong {
 .form-presentation p {
     line-height: 2rem;
     font-size:1rem;
-    overflow-x: hidden;
-    white-space: nowrap;
+    max-height:6rem;
+    overflow: hidden;
+    white-space: initial;
     text-overflow: ellipsis;
 }
 

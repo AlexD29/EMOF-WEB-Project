@@ -7,7 +7,7 @@ hostName = "127.0.0.1"
 serverPort = 8083
 
 def get_db_connection():
-    with open('StatisticsMicroservice\config.yaml', 'r') as config_file:
+    with open('config.yaml', 'r') as config_file:
         config = yaml.safe_load(config_file)
 
     conn = psycopg2.connect(
