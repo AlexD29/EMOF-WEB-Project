@@ -6,27 +6,42 @@ class HtmlEditHandler:
         html_template = """
         <!DOCTYPE html>
 <html>
+  <head>
+    <title>Create Formular</title>
+    <link href="emof.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <link rel="icon" href="icon.png" />
+  </head>
 
-<head>
-  <title>Edit Formular</title>
-  <link href="emof.css" rel="stylesheet" />
-  <link href="style.css" rel="stylesheet" />
-</head>
-
-<body>
-	<div id="FORM_ID" style="display:none;">{{!@#$}}</div>
-  <div id="container">
+  <body>
+	  <div id="FORM_ID" style="display:none;">{{!@#$}}</div>
     <div class="landing-section-header">
-      <header id="landing-header-id" class="landing-header" role="banner" itemscope="">
+      <header
+        id="landing-header-id"
+        class="landing-header"
+        role="banner"
+        itemscope=""
+      >
         <div class="landing-header-elements">
           <a href="/admin/all_forms.html" class="logo-link">
             <img alt="" src="logo.png" class="logo_landing" />
           </a>
-          <nav id="landing-header_menu" class="landing-header_menu landing-header_menu--microsite"
-            aria-label="Navigation" data-translated="1" itemscope="">
-            <ul id="menu-landing-header_menu-left" class="landing-header_menu-left">
-              <li id="menu-item-92366" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-92366">
-                <a><span class="your-formulars">Edit Formular</span></a>
+          <nav
+            id="landing-header_menu"
+            class="landing-header_menu landing-header_menu--microsite"
+            aria-label="Navigation"
+            data-translated="1"
+            itemscope=""
+          >
+            <ul
+              id="menu-landing-header_menu-left"
+              class="landing-header_menu-left"
+            >
+              <li
+                id="menu-item-92366"
+                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-92366"
+              >
+                <a><span class="your-formulars">Create Formular</span></a>
               </li>
               <li id="menu-item-92365"
                 class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365">
@@ -45,30 +60,117 @@ class HtmlEditHandler:
         </div>
       </header>
     </div>
-    <input id="form-name-input" placeholder="Enter the form name" class="form-text-input flex-container-centered rounded-div drop-shadow-effect question-input">
-    <input id="form-description-input" placeholder="Enter the form description" class="form-text-input flex-container-centered rounded-div drop-shadow-effect question-input">
-    <input id="form-ending-input" placeholder="Enter the form ending" class="form-text-input flex-container-centered rounded-div drop-shadow-effect question-input">
-    <input id="form-tags-input" placeholder="Enter one word tags separated by space (Optional)" class="form-text-input flex-container-centered rounded-div drop-shadow-effect question-input">
-    <div id="questions-container">
-      <div class="flex-container-centered">
+
+    <div id="container">
+      <div id="centered-box" class="centered-box">
+        <h2 id="create-title">Create Form</h2>
+        <div class="image-upload-container">
+          <div class="image-preview">
+            <img id="preview-image" src="">
+            <span id="placeholder-text" class="placeholder-text">Form Image</span>
+          </div>
+          <label for="image-upload-input" class="image-label">
+            <span class="custom-file-input">Choose Picture</span>
+          </label>
+          <input type="file" id="image-upload-input" class="form-file-input" onchange="previewImage(event)" accept="image/*" />
+          <button id="remove-image" class="remove-image-button" onclick="removeImage()">Remove</button>
+        </div>
         
-        <button id="add-btn" class="rounded-div drop-shadow-effect" onclick="addQuestion()">
-          + Add question
-        </button>
-        <button id="del-btn" class="rounded-div drop-shadow-effect" onclick="deleteQuestion()">
-          - Delete question
-        </button>
+        <form id="first-page-form">
+          <div class="form-fields">
+            <label class="form-label" for="title">Title</label>
+            <input
+              id="form-name-input"
+              class="question-input"
+            />
+            <label class="form-label" for="title">Description</label>
+            <input
+              id="form-description-input"
+              class="question-input"
+            />
+            <label class="form-label" for="title">Ending Message</label>
+            <input
+              id="form-ending-input"
+              class="question-input"
+            />
+            <label class="form-label" for="title">Tags Separated by commas(Optional)</label>
+            <input
+              id="form-tags-input"
+              class="question-input"
+            />
+          </div>
+        </form>
+        <button id="add-questions-btn">Add Questions</button>
       </div>
 
-      <div id="next-btn" class="rounded-div" onclick="create()">
-        <a> Done </a>
+      <div id="questions-container">
+        <div id="questions-box">
+          <h2 id="questions-title">Questions</h2>
+          <label class="question-label" for="question">1.</label>
+          <input
+            id="first-question"
+            class="add-question-input"
+          />
+        </div>
+        <div class="flex-container-centered">
+          <button
+            id="add-btn"
+            class=""
+            onclick="addQuestion()"
+          >
+            Add Question
+          </button>
+          <button
+            id="del-btn"
+            class=""
+            onclick="deleteQuestion()"
+          >
+            Delete Question
+          </button>
+        </div>
+        <fieldset id="questions-about-user-info-container">
+          <legend>Aspects followed in completing the form:</legend>
+
+          <div id="about-user-1">
+            <input type="checkbox" />
+            <label for="Age">Age</label>
+          </div>
+
+          <div id="about-user-2">
+            <input type="checkbox" />
+            <label for="Sex">Sex</label>
+          </div>
+
+          <div id="about-user-3">
+            <input type="checkbox" />
+            <label for="Location">Location</label>
+          </div>
+
+          <div id="about-user-4">
+            <input type="checkbox" />
+            <label for="Occupation">Occupation</label>
+          </div>
+
+          <div id="about-user-5">
+            <input type="checkbox" />
+            <label for="Platform">Platform</label>
+          </div>
+
+          <div id="about-user-6">
+            <input type="checkbox" />
+            <label for="Relationship Status">Relationship Status</label>
+          </div>
+        </fieldset>
+        <div class="create-button" >
+          <button id="back-button" onclick="back()">Back</button>
+          <button id="create-button" onclick="create()">Create</button>
+        </div>
       </div>
     </div>
-  </div>
-</body>
-<script src="edit.js"></script>
-
+  </body>
+  <script src="script.js"></script>
 </html>
+
         """
         if id is not None:
             html_content = html_template.replace("{{!@#$}}",id)
