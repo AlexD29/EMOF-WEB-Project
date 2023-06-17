@@ -20,7 +20,8 @@ SERVICE_URLS = {
     'admin': 'http://127.0.0.1:8090',
     'explore': 'http://127.0.0.1:8091',
     'service2': 'http://127.0.0.1:5002',
-    'signupLogin': 'http://127.0.0.1:8084'
+    'authentication': 'http://127.0.0.1:8084',
+    'statistics': 'http://127.0.0.1:8083'
     # etc...
 }
 

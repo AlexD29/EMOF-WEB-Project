@@ -3,8 +3,8 @@ var requested;
 var fetchedData;
 var barChartArray;
 
-function fetchData() {
-  fetch("/data")
+function fetchData(id_form) {
+  fetch( `/statistics/data/${id_form}`)
     .then((response) => response.json())
     .then((data) => {
       window.scrollTo(0, 0);
@@ -19,39 +19,47 @@ function fetchData() {
       console.error("Error:", error);
     });
 }
-fetchData();
+// fetchData(id_form);
 
 function createCanvasElements(data) {
+  if(data.answers.length == 0){
+    return;
+  }
   const container = document.getElementById("container");
   container.innerHTML = "";
-  const platform = findWordPosition(data.requested, "Platforma");
-  const location1 = findWordPosition(data.requested, "Locatia");
+  const platform = findWordPosition(data.requested, "Platform");
+  const location1 = findWordPosition(data.requested, "Location");
   const age = findWordPosition(data.requested, "Age");
   const occupation = findWordPosition(data.requested, "Occupation");
   const sex = findWordPosition(data.requested, "Sex");
   const relationship = findWordPosition(data.requested, "Relationship Status");
 
   createPieChart(data.answers);
-  createRadarChartQuestions(data);
+  if(data.questions.length > 2){
+    createRadarChartQuestions(data);
+  }
+  else{
+    createBarChartTop3(data);
+  }
   createLineChartSubmitTime(data);
   createBubbleChart(data.answers);
   if (age >= 0) {
-    createBarChartAge(data.answers, age);
+    createBarChartAge(data.answers);
   }
   if (sex >= 0) {
-    createPieChartSex(data.answers, sex);
+    createPieChartSex(data.answers);
   }
   if (location1 >= 0) {
-    createPolarChartLocation(data.answers, location1);
+    createPolarChartLocation(data.answers);
   }
   if (platform >= 0) {
-    createDoughnutChartPlatform(data.answers, platform);
+    createDoughnutChartPlatform(data.answers);
   }
   if (relationship >= 0) {
-    createDoughnutChartRelationshipStatus(data.answers, relationship);
+    createDoughnutChartRelationshipStatus(data.answers);
   }
   if (occupation >= 0) {
-    createPolarChartOccupation(data.answers, occupation);
+    createPolarChartOccupation(data.answers);
   }
 
   setTimeout(() => {
@@ -172,9 +180,8 @@ function extractNumberFromCanvasId(canvasId) {
   return null;
 }
 
-function findWordPosition(string, word) {
-  var words = string.split(", ");
-  var position = words.indexOf(word);
+function findWordPosition(array, word) {
+  var position = array.indexOf(word);
   return position;
 }
 
@@ -269,7 +276,7 @@ function excludeElements(htmlContent) {
   return doc.documentElement.outerHTML;
 }
 
-function exportChartData() {
+function exportChartDataCSV() {
   const container = document.getElementById("container");
   const canvasElements = container.getElementsByTagName("canvas");
   const chartIds = Array.from(canvasElements).map((canvas) => canvas.id);
@@ -381,6 +388,128 @@ function exportChartData() {
   }
 }
 
+function exportChartDataJSON() {
+  const container = document.getElementById("container");
+  const canvasElements = container.getElementsByTagName("canvas");
+  const chartIds = Array.from(canvasElements).map((canvas) => canvas.id);
+
+  const jsonData = [];
+
+  chartIds.forEach((chartId) => {
+    const chartCanvas = document.getElementById(chartId);
+    const chartInstance = Chart.getChart(chartCanvas);
+
+    const datasets = chartInstance.data.datasets;
+    const title = chartInstance.options.plugins.title.text;
+
+    let chartJsonContent = {};
+
+    if (chartId === `${formName}BubbleChart`) {
+      chartJsonContent.title = title;
+
+      const data = datasets[0].data;
+
+      const durations = data.map((item) => item.y);
+      const emotions = data.map((item) => item.x);
+      const complexities = data.map((item) => item.r);
+      const averageDuration = (
+        durations.reduce((sum, value) => sum + value, 0) / durations.length
+      ).toFixed(2);
+      const smallestDuration = Math.min(...durations);
+      const biggestDuration = Math.max(...durations);
+      const averageEmotions = (
+        emotions.reduce((sum, value) => sum + value, 0) / emotions.length
+      ).toFixed(2);
+      const smallestEmotions = Math.min(...emotions);
+      const biggestEmotions = Math.max(...emotions);
+      const averageComplexity = (
+        complexities.reduce((sum, value) => sum + value, 0) /
+        complexities.length
+      ).toFixed(2);
+
+      chartJsonContent.averageDuration = averageDuration;
+      chartJsonContent.smallestDuration = smallestDuration;
+      chartJsonContent.biggestDuration = biggestDuration;
+      chartJsonContent.averageEmotions = averageEmotions;
+      chartJsonContent.smallestEmotions = smallestEmotions;
+      chartJsonContent.biggestEmotions = biggestEmotions;
+      chartJsonContent.averageComplexity = averageComplexity;
+    } else if (chartId === "lineChartSubmitTime") {
+      chartJsonContent.title = title;
+      chartJsonContent.data = [];
+
+      const labels = chartInstance.data.labels;
+      const data = datasets[0].data;
+
+      const total = data.reduce((sum, value) => sum + value, 0);
+      const percentages = data.map((value) =>
+        ((value / total) * 100).toFixed(2)
+      );
+
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const value = data[i];
+        const percentage = percentages[i];
+
+        chartJsonContent.data.push({ label, value, percentage });
+      }
+    } else if (chartId === "radarChart") {
+      chartJsonContent.title = title;
+      chartJsonContent.data = [];
+
+      const labels = chartInstance.data.labels;
+
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        const positivity = datasets[0].data[i];
+        const negativity = datasets[1].data[i];
+        const neutrality = datasets[2].data[i];
+
+        chartJsonContent.data.push({ label, positivity, negativity, neutrality });
+      }
+    } else {
+      chartJsonContent.title = title;
+      chartJsonContent.data = [];
+
+      const data = datasets[0].data;
+      const labels = chartInstance.data.labels;
+
+      const total = data.reduce((sum, value) => sum + value, 0);
+      const percentages = data.map((value) =>
+        ((value / total) * 100).toFixed(2)
+      );
+
+      for (let i = 0; i < data.length; i++) {
+        const label = labels[i];
+        const value = data[i];
+        const percentage = percentages[i];
+
+        chartJsonContent.data.push({ label, value, percentage });
+      }
+    }
+
+    jsonData.push(chartJsonContent);
+  });
+
+  const jsonString = JSON.stringify(jsonData, null, 2);
+  const filename = formName + ".json";
+  const jsonBlob = new Blob([jsonString], { type: "application/json" });
+
+  if (navigator.msSaveBlob) {
+    navigator.msSaveBlob(jsonBlob, filename);
+  } else {
+    const url = URL.createObjectURL(jsonBlob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
+
 document
   .getElementById("downloadHTMLButton")
   .addEventListener("click", function () {
@@ -434,26 +563,11 @@ document
 
 document
   .getElementById("downloadCSVButton")
-  .addEventListener("click", exportChartData);
+  .addEventListener("click", exportChartDataCSV);
 
 document
   .getElementById("downloadJSONButton")
-  .addEventListener("click", function () {
-    const data = getDataFromCanvasElements();
-    const jsonData = JSON.stringify(data, null, 2);
-    const encodedURI = encodeURI(jsonData);
-    const link = document.createElement("a");
-    link.setAttribute(
-      "href",
-      "data:application/json;charset=utf-8," + encodedURI
-    );
-    const fileName = formName + ".json";
-    link.setAttribute("download", fileName);
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+  .addEventListener("click", exportChartDataJSON);
 
 const colorMapping = {
   Grief: [41, 131, 197],
@@ -505,44 +619,44 @@ const platformColorMapping = {
   Discord: [114, 137, 218],
   Reddit: [255, 86, 0, 1],
   Other: [20, 179, 51],
-  NaN: [211, 211, 211],
+  "Not mentioned": [211, 211, 211],
 };
 
 const positiveEmotions = [
-  "joy",
-  "admiration",
-  "trust",
-  "interest",
-  "serenity",
-  "optimism",
-  "love",
-  "awe",
+  "Joy",
+  "Admiration",
+  "Trust",
+  "Interest",
+  "Serenity",
+  "Optimism",
+  "Love",
+  "Awe",
 ];
 const negativeEmotions = [
-  "grief",
-  "sadness",
-  "loathing",
-  "disgust",
-  "boredom",
-  "rage",
-  "anger",
-  "annoyance",
-  "remorse",
-  "contempt",
-  "aggressiveness",
-  "terror",
-  "fear",
-  "apprehension",
+  "Grief",
+  "Sadness",
+  "Loathing",
+  "Disgust",
+  "Boredom",
+  "Rage",
+  "Anger",
+  "Annoyance",
+  "Remorse",
+  "Contempt",
+  "Aggressiveness",
+  "Terror",
+  "Fear",
+  "Apprehension",
 ];
 const neutralEmotions = [
-  "pensiveness",
-  "vigilance",
-  "anticipation",
-  "distraction",
-  "acceptance",
-  "amazement",
-  "surprise",
-  "submission",
+  "Pensiveness",
+  "Vigilance",
+  "Anticipation",
+  "Distraction",
+  "Acceptance",
+  "Amazement",
+  "Surprise",
+  "Submission",
 ];
 
 const colorAgeCategories = {
@@ -554,7 +668,7 @@ const colorAgeCategories = {
   "40-49": [255, 0, 255],
   "50-59": [255, 165, 0],
   "60+": [128, 128, 128],
-  NaN: [211, 211, 211],
+  "Not mentioned": [211, 211, 211],
 };
 
 function createBarChart(canvasId, question, answers) {
@@ -603,6 +717,10 @@ function createBarChart(canvasId, question, answers) {
     "data-answers",
     answers.map((answer) => JSON.stringify(answer)).join(",")
   );
+
+  const maxCount = Math.max(...data);
+  const maxCountWithBuffer = Math.ceil(maxCount * 1.1); 
+
   const chart = new Chart(ctx, {
     type: "bar",
     data: {
@@ -650,7 +768,7 @@ function createBarChart(canvasId, question, answers) {
       scales: {
         y: {
           beginAtZero: true,
-          max: totalCount,
+          max: maxCountWithBuffer,
           stepSize: 1,
           ticks: {
             precision: 0,
@@ -915,7 +1033,7 @@ function createPieChart(data) {
   return { chart: pieChart, labels: labels, counts: counts, title: chartTitle };
 }
 
-function createDoughnutChartPlatform(data, platform) {
+function createDoughnutChartPlatform(data) {
   const canvas = document.createElement("canvas");
   canvas.id = "doughnutChartPlatform";
   const container = document.getElementById("container");
@@ -924,15 +1042,23 @@ function createDoughnutChartPlatform(data, platform) {
   const platformCounts = {};
 
   data.forEach((item) => {
-    const received = item.user_info.split(", ")[platform];
-    if (received) {
+    const userInfo = item.user_info;
+    const platformQuestion = "Platform";
+  
+    const platformInfo = userInfo.find((info) => info.question === platformQuestion);
+  
+    if (platformInfo) {
+      var received = platformInfo.answer;
+      if(received == ""){
+        received = "Not mentioned";
+      }
       if (platformCounts.hasOwnProperty(received)) {
         platformCounts[received]++;
       } else {
         platformCounts[received] = 1;
       }
     }
-  });
+  });  
 
   const labels = Object.keys(platformCounts);
   const counts = Object.values(platformCounts);
@@ -948,7 +1074,7 @@ function createDoughnutChartPlatform(data, platform) {
     datasets: [
       {
         data: counts,
-        backgroundColor: colors.map((color) => `rgba(${color.join(",")}, 0.8)`),
+        backgroundColor: colors.map((color) => `rgba(${color.join(",")}, 1)`),
       },
     ],
   };
@@ -990,7 +1116,7 @@ function createDoughnutChartPlatform(data, platform) {
   };
 }
 
-function createPolarChartLocation(data, location) {
+function createPolarChartLocation(data) {
   Chart.defaults.backgroundColor = "#fff";
   Chart.defaults.borderColor = "#36A2EB";
   Chart.defaults.color = "#000";
@@ -1003,8 +1129,16 @@ function createPolarChartLocation(data, location) {
   const locationCounts = {};
 
   data.forEach((item) => {
-    const received = item.user_info.split(", ")[location];
-    if (received) {
+    const userInfo = item.user_info;
+    const locationQuestion = "Location";
+  
+    const locationInfo = userInfo.find((info) => info.question === locationQuestion);
+  
+    if (locationInfo) {
+      var received = locationInfo.answer;
+      if(received == ""){
+        received = "Not mentioned";
+      }
       if (locationCounts.hasOwnProperty(received)) {
         locationCounts[received]++;
       } else {
@@ -1012,6 +1146,7 @@ function createPolarChartLocation(data, location) {
       }
     }
   });
+  
 
   const labels = Object.keys(locationCounts);
   const counts = Object.values(locationCounts);
@@ -1341,7 +1476,7 @@ function createRadarChartQuestions(data) {
   });
 }
 
-function createPolarChartOccupation(data, occupationPosition) {
+function createPolarChartOccupation(data) {
   Chart.defaults.backgroundColor = "#fff";
   Chart.defaults.borderColor = "#36A2EB";
   Chart.defaults.color = "#000";
@@ -1354,9 +1489,16 @@ function createPolarChartOccupation(data, occupationPosition) {
   const occupationCounts = {};
 
   data.forEach((item) => {
-    const userInfo = item.user_info.split(", ");
-    if (userInfo.length > occupationPosition) {
-      const occupation = userInfo[occupationPosition];
+    const userInfo = item.user_info;
+    const occupationQuestion = "Occupation";
+  
+    const occupationInfo = userInfo.find((info) => info.question === occupationQuestion);
+  
+    if (occupationInfo) {
+      var occupation = occupationInfo.answer;
+      if(occupation == ""){
+        occupation = "Not mentioned";
+      }
       if (occupationCounts.hasOwnProperty(occupation)) {
         occupationCounts[occupation]++;
       } else {
@@ -1364,6 +1506,7 @@ function createPolarChartOccupation(data, occupationPosition) {
       }
     }
   });
+  
 
   const labels = Object.keys(occupationCounts);
   const counts = Object.values(occupationCounts);
@@ -1443,7 +1586,7 @@ function createPolarChartOccupation(data, occupationPosition) {
   });
 }
 
-function createBarChartAge(data, agePosition) {
+function createBarChartAge(data) {
   Chart.defaults.backgroundColor = "#fff";
   Chart.defaults.borderColor = "#36A2EB";
   Chart.defaults.color = "#000";
@@ -1462,13 +1605,17 @@ function createBarChartAge(data, agePosition) {
     "40-49": 0,
     "50-59": 0,
     "60+": 0,
-    NaN: 0,
+    "Not mentioned": 0,
   };
 
   data.forEach((item) => {
-    const userInfo = item.user_info.split(", ");
-    if (userInfo.length > agePosition) {
-      const age = parseInt(userInfo[agePosition]);
+    const userInfo = item.user_info;
+    const ageQuestion = "Age";
+  
+    const ageInfo = userInfo.find((info) => info.question === ageQuestion);
+  
+    if (ageInfo) {
+      const age = parseInt(ageInfo.answer);
       if (!isNaN(age)) {
         if (age < 14) {
           ageRanges["<14"]++;
@@ -1488,11 +1635,11 @@ function createBarChartAge(data, agePosition) {
           ageRanges["60+"]++;
         }
       } else {
-        ageRanges["NaN"]++;
+        ageRanges["Not mentioned"]++;
       }
     }
   });
-
+  
   const filteredRanges = Object.entries(ageRanges)
     .filter(([_, count]) => count > 0)
     .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
@@ -1587,7 +1734,7 @@ function createBarChartAge(data, agePosition) {
   };
 }
 
-function createPieChartSex(data, sexPosition) {
+function createPieChartSex(data) {
   Chart.defaults.backgroundColor = "#fff";
   Chart.defaults.borderColor = "#36A2EB";
   Chart.defaults.color = "#000";
@@ -1604,17 +1751,23 @@ function createPieChartSex(data, sexPosition) {
   };
 
   data.forEach((item) => {
-    const userInfo = item.user_info.split(", ");
-    if (userInfo.length > sexPosition) {
-      const sex = userInfo[sexPosition];
+    const userInfo = item.user_info;
+    const sexQuestion = "Sex";
+  
+    var sexInfo = userInfo.find((info) => info.question === sexQuestion);
+    if(sexInfo.answer == ""){
+      sexInfo.answer = "Not mentioned";
+    }
+    if (sexInfo) {
+      const sex = sexInfo.answer;
       if (sexCounts.hasOwnProperty(sex)) {
         sexCounts[sex]++;
       } else {
-        sexCounts["NaN"]++;
+        sexCounts[sex] = 1;
       }
     }
   });
-
+  
   const filteredCounts = Object.entries(sexCounts)
     .filter(([_, count]) => count > 0)
     .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
@@ -1625,7 +1778,7 @@ function createPieChartSex(data, sexPosition) {
   const colors = {
     Masculine: [0, 123, 255],
     Feminine: [255, 99, 132],
-    NaN: [192, 192, 192],
+    "Not mentioned": [192, 192, 192],
   };
 
   const backgroundColors = labels.map(
@@ -1709,10 +1862,7 @@ function createPieChartSex(data, sexPosition) {
   };
 }
 
-function createDoughnutChartRelationshipStatus(
-  data,
-  relationshipStatusPosition
-) {
+function createDoughnutChartRelationshipStatus(data) {
   Chart.defaults.backgroundColor = "#fff";
   Chart.defaults.borderColor = "#36A2EB";
   Chart.defaults.color = "#000";
@@ -1727,21 +1877,25 @@ function createDoughnutChartRelationshipStatus(
     "In a relationship": 0,
     Engaged: 0,
     Divorced: 0,
-    NaN: 0,
+    "Not mentioned": 0,
   };
 
   data.forEach((item) => {
-    const userInfo = item.user_info.split(", ");
-    if (userInfo.length > relationshipStatusPosition) {
-      const status = userInfo[relationshipStatusPosition];
+    const userInfo = item.user_info;
+    const relationshipStatusQuestion = "Relationship Status";
+  
+    const relationshipStatusInfo = userInfo.find((info) => info.question === relationshipStatusQuestion);
+  
+    if (relationshipStatusInfo) {
+      var status = relationshipStatusInfo.answer;
       if (relationshipStatusCounts.hasOwnProperty(status)) {
         relationshipStatusCounts[status]++;
       } else {
-        relationshipStatusCounts["NaN"]++;
+        relationshipStatusCounts["Not mentioned"]++;
       }
     }
   });
-
+  
   const filteredCounts = Object.entries(relationshipStatusCounts)
     .filter(([_, count]) => count > 0)
     .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
@@ -1754,7 +1908,7 @@ function createDoughnutChartRelationshipStatus(
     "In a relationship": [255, 99, 132],
     Engaged: [255, 205, 86],
     Divorced: [75, 192, 192],
-    NaN: [192, 192, 192],
+    "Not mentioned": [192, 192, 192],
   };
 
   const backgroundColors = labels.map(
@@ -1836,4 +1990,95 @@ function createDoughnutChartRelationshipStatus(
     counts: counts,
     title: chartTitle,
   };
+}
+
+function createBarChartTop3(data) {
+  Chart.defaults.backgroundColor = "#fff";
+  Chart.defaults.borderColor = "#36A2EB";
+  Chart.defaults.color = "#000";
+  Chart.defaults.font.size = 16;
+  const canvas = document.createElement("canvas");
+  canvas.id = "barChartTop3Emotions";
+  const container = document.getElementById("container");
+  container.appendChild(canvas);
+
+  const responses = data.answers.map(answer => Object.values(answer.response).flat());
+
+  const flattenedResponses = [].concat(...responses);
+
+  const responseCount = flattenedResponses.reduce((count, response) => {
+    count[response] = (count[response] || 0) + 1;
+    return count;
+  }, {});
+
+  const sortedResponses = Object.keys(responseCount).sort((a, b) => responseCount[b] - responseCount[a]);
+
+  const totalResponses = sortedResponses.reduce((sum, response) => sum + responseCount[response], 0);
+
+  const percentages = sortedResponses.map(response => ((responseCount[response] / totalResponses) * 100).toFixed(2) + '%');
+
+  const top3Responses = sortedResponses.slice(0, 3);
+  const top3Counts = top3Responses.map(response => responseCount[response]);
+  const top3Percentages = top3Responses.map(response => percentages[sortedResponses.indexOf(response)]);
+
+  const backgroundColors = top3Responses.map(response => {
+    const color = colorMapping[response];
+    const rgbaColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`;
+    return rgbaColor;
+  });
+
+  const borderColor = top3Responses.map(response => {
+    const color = colorMapping[response];
+    const rgbaColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 1)`;
+    return rgbaColor;
+  });
+
+  const chartTitle = "Top 3 Emotions Overall";
+
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: top3Responses.map((response, index) => `${response}`),
+      datasets: [{
+        label: 'Response Count',
+        data: top3Counts,
+        backgroundColor: backgroundColors,
+        borderColor: borderColor,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: chartTitle,
+          font: {
+            size: 30,
+          },
+        },
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const count = context.dataset.data[context.dataIndex];
+              const response = top3Responses[context.dataIndex];
+              const percentage = top3Percentages[context.dataIndex];
+              return `${response}: Count: ${count} (${percentage})`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          }
+        }
+      }
+    }
+  });
 }

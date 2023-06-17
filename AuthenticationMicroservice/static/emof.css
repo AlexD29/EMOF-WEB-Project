@@ -134,6 +134,7 @@ h1 {
 
 /*LOGIN*/
 .login_position {
+    height: 92vh;
     -webkit-box-pack: center;
     justify-content: center;
     display: flex;
@@ -179,6 +180,8 @@ h1 {
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     color: inherit;
+    border: 3px solid #1b69be;
+    border-radius: 5px;
 }  
 @media only screen and (max-width: 1000px) {
 
@@ -328,6 +331,7 @@ h1 {
     margin: 0.5rem 0px 1.5rem;
 }
 .login_button[disabled], .login_button[aria-disabled="true"] {
+    margin-top: 10px;
     min-height: 42px;
     padding-bottom: 0px;
     background-color: rgb(204, 204, 204);
@@ -336,8 +340,8 @@ h1 {
     cursor: not-allowed;
 }
 .login_button {
+    margin-top: 10px;
     width: 100%;
-    margin: 0px;
     border: 0px;
     cursor: pointer;
     display: inline-block;
@@ -406,7 +410,7 @@ h1 {
     flex-direction: column;
     background-color: #0fd139;
     font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-image: url('pictures/background.jpg');
+    background-image: url('background.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -537,6 +541,7 @@ h1 {
 
 /*SIGN UP*/
 .signup_position {
+    height: 92vh;
     -webkit-box-pack: center;
     justify-content: center;
     display: flex;
@@ -555,7 +560,7 @@ h1 {
     animation-fill-mode: both;
     flex-direction: column;
     background-color: #de0909;
-    background-image: url('pictures/background.jpg');
+    background-image: url('background.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -567,9 +572,7 @@ h1 {
     align-items: center;
     width: 100%;
     max-width: 26rem;
-    height: 100rem;
-    padding-top: 6rem;
-    margin: 0px;
+    margin-top:-2rem;
 }
 .create_account_text {
     color: inherit;
@@ -584,9 +587,10 @@ h1 {
     -webkit-box-align: center;
     align-items: center;
     background-color: rgb(255, 255, 255);
-    border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
     color: inherit;
+    border: 3px solid #1b69be;
+    border-radius: 5px;
 }
 .signup_sectiune {
     display: flex;

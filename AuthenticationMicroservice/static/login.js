@@ -35,7 +35,6 @@ document.getElementById("password").addEventListener("input", checkFormCompletio
 
 loginButton.addEventListener("click", function (event) {
   event.preventDefault();
-
   var emailUsernameInput = document.getElementById("username_or_email");
   var passwordInput = document.getElementById("password");
   var emailUsername = emailUsernameInput.value;
@@ -88,6 +87,5 @@ loginButton.addEventListener("click", function (event) {
     "password": password
   }
   const formDataString = JSON.stringify(formData);
-  console.log(formDataString);
   xhr.send(formDataString);
 });

@@ -27,12 +27,15 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             ('GET', '/script\.js$', JsHandler.handle),
             ('GET', '/emof\.css$', CssEmofHandler.handle),
             ('GET', '/logo\.png$', ImgHandler.handle),
+            ('GET', '/create-formular\.jpg$', ImgHandler.handle),
             ('GET', '/update/style\.css$', CssHandler.handle),
             ('GET', '/update/emof\.css$', CssEmofHandler.handle),
             ('GET', '/update/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
             ('GET', '/update/(?P<id>[\w\-]{16})\.html', HtmlEditHandler.handle),
             ('GET', '/update/edit\.js$', JsEditHandler.handle),
             ('GET', '/update/logo\.png$', ImgHandler.handle),
+            ('GET', f'^{prefix}/pictures/([^.]+).jpg$', ImgHandler.handle),
+            ('GET', f'^{prefix}/pictures/([^.]+).png$', ImgHandler.handle),
 
 
             # POST routes

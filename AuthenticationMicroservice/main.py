@@ -67,17 +67,15 @@ def check_if_username_match_password(username,password):
         return False
 
 def login_user(username_or_email, password):
-    print(username_or_email )
-    print(password)
-    # hashed_password = hash_password(password)
+    hashed_password = hash_password(password)
     if check_if_email_already_exists(username_or_email):
-        if check_if_email_match_password(username_or_email, password) == False:
-            raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
+        if check_if_email_match_password(username_or_email, hashed_password) == False:
+            raise ValueError("Your password is incorrect. Please re-enter your information.")
     elif check_if_username_already_exists(username_or_email):
-        if check_if_username_match_password(username_or_email, password) == False:
-            raise ValueError("Your password is incorrect. Re-enter your information or reset your password.")
+        if check_if_username_match_password(username_or_email, hashed_password) == False:
+            raise ValueError("Your password is incorrect. Please re-enter your information.")
     else:
-        raise ValueError("Your username, email, or password is incorrect. Re-enter your information or reset your password.")
+        raise ValueError("Your username, email, or password is incorrect. Please re-enter your information.")
 
     session_id = generate_session_id()
 
@@ -87,7 +85,7 @@ def login_user(username_or_email, password):
 
 def insert_session_id(username_or_email, session_id):
     sql = "UPDATE users SET sid = %s WHERE username = %s OR email = %s"
-    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor = con.cursor(cursor_factory=psycopg2.extras.DictCursor) #parametrul din paranteza e optional si e folosit doar ca sa returneze dict in loc de lista de tuple cum era default
     cursor.execute(sql, (session_id, username_or_email, username_or_email))
     con.commit()
     cursor.close()
@@ -118,18 +116,17 @@ def insert_user(email, username, password):
         'updated_at': now,
         'sid': session_id
     }
-
     cur = con.cursor()
     cur.execute(sql, params)
     con.commit()
     cur.close()
-
     return session_id
 
+#Foloseste algoritmul SHA-256 pentru criptare 
 def hash_password(password):
     sha256_hash = hashlib.sha256()
     sha256_hash.update(password.encode('utf-8'))
-    hashed_password = sha256_hash.hexdigest()
+    hashed_password = sha256_hash.hexdigest() #hexdigest returneaza string-ul cu valoarea hashuita
     return hashed_password
 
 def verify_password(password, hashed_password):
@@ -139,26 +136,28 @@ def verify_password(password, hashed_password):
     return entered_password_hashed == hashed_password
 
 class MyServer(BaseHTTPRequestHandler):
+    #Apelata cand serverul primeste un request GET
     def do_GET(self):
         if self.path == '/':
             filename = 'static/landing.html'
         else:
-            filename = self.path[1:]
+            filename = self.path[1:] # '/' initial e eliminat ca sa obtinem numele fisierului
+
         try:
             with open(filename, 'rb') as f:
                 content = f.read()
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
-                self.wfile.write(content)
+                self.wfile.write(content) # contentul fisierului e scris ca raspuns 
         except FileNotFoundError:
             self.send_error(404, 'File not found')
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        body = self.rfile.read(content_length)
-        bodyDecoded = body.decode('utf-8')
-        data = json.loads(bodyDecoded)
+        content_length = int(self.headers['Content-Length']) #Ca sa stie dimensiunea a ceea ce primeste
+        body = self.rfile.read(content_length) #Citeste continutul din request si il baga in body
+        bodyDecoded = body.decode('utf-8') #Decodeaza din bytes in String
+        data = json.loads(bodyDecoded) #Parseaza ceea ce a primit ca JSON
 
         if self.path == '/signup':
             email = data['email']
@@ -174,12 +173,12 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                self.wfile.write(json.dumps(response_data).encode('utf-8'))
+                self.wfile.write(json.dumps(response_data).encode('utf-8')) #Raspunsul ca JSON este serializat intr-un String si codat folosind utf-8 si e trimis ca raspuns
             except ValueError as e:
                 self.send_response(400)
                 self.send_header('Content-Type', 'text/plain')
                 self.end_headers()
-                self.wfile.write(str(e).encode('utf-8'))
+                self.wfile.write(str(e).encode('utf-8')) #Daca nu e ceva corect trimite ca raspuns un mesaj de eroare
         elif self.path == '/login':
             username_email = data['emailUsername']
             password = data['password']
@@ -199,29 +198,16 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_header('Content-Type', 'text/plain')
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
-        # elif self.path == '/reset':
-        #     email = data['email'][0]
-
-        #     try:
-        #         print("Reset succesfully")
-        #         self.send_response(200)
-        #         self.send_header('Content-Type', 'text/plain')
-        #         self.end_headers()
-        #         self.wfile.write(b"Success")
-        #     except ValueError as e:
-        #         self.send_response(400)
-        #         self.send_header('Content-Type', 'text/plain')
-        #         self.end_headers()
-        #         self.wfile.write(str(e).encode('utf-8'))
         else:
             self.send_error(404, 'Page not found')
 
+#Conditia verifica daca scriptul e rulat direct ca main
 if __name__ == "__main__":
-    webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)
+    webServer = ThreadingHTTPServer((hostName, serverPort), MyServer) #Creeaza o instanta cu host si port si specifica handler-ul MyServer care sa se ocupe de request-uri
     print("Server started http://%s:%s" % (hostName, serverPort))
     try:
-        webServer.serve_forever()  
-    except KeyboardInterrupt:
+        webServer.serve_forever() #Porneste server pe termen nedefinit, gestionand cererile in thread-uri diferite. Asta permite ca cererile sa fie procesate in acelasi timp.
+    except KeyboardInterrupt: #Cand primeste CTRL+C se inchide 
         pass
 
     webServer.server_close()
