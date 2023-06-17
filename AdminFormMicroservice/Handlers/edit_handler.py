@@ -28,10 +28,33 @@ class EditHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
         #TO BE DELETED
-        user_id = "yLstQoFVDfZnDjVC"
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
         form_id = post_data_json.pop('id')
+        cookie = post_data_json.pop("cookie")
+
+        sessionID =  cookie['sessionId']
+
+        query = "SELECT id FROM public.users WHERE sid = %s"
+        result = db.fetch_query(query, (sessionID,))
+        user_id = result[0][0] if result else None
+
+        if user_id is None:
+            handler.send_json_response(JsonResponse.error("User not found") ,status = 404)
+            return
+        
+        query = "SELECT id_creator FROM public.forms WHERE id = %s"
+        result = db.fetch_query(query, (form_id,))
+        id_creator = result[0][0] if result else None
+
+        if id_creator is None:
+            handler.send_json_response(JsonResponse.error("Form not found") , status = 404)
+            return
+        
+        print(id_creator ,  user_id)
+        if id_creator != user_id:
+            handler.send_json_response(JsonResponse.error("You are not authorised to edit this form") ,status = 403)
+            return
 
         form_data = {
             'id': form_id,
@@ -58,5 +81,5 @@ class EditHandler:
             handler.send_json_response(JsonResponse.success("Data received and processed"))
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")
-            handler.send_json_response(JsonResponse.error("Nu s-a putut edita formularul"))
+            handler.send_json_response(JsonResponse.error("Nu s-a putut edita formularul") , status=400)
 

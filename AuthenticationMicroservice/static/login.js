@@ -1,4 +1,4 @@
-const myURL = "http://127.0.0.1:8050/signupLogin";
+const myURL = "http://127.0.0.1:8050/authentication";
 var loginButton = document.getElementById("login-submit-btn");
 loginButton.disabled = true;
 

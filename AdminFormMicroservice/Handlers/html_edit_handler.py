@@ -30,7 +30,7 @@ class HtmlEditHandler:
               </li>
               <li id="menu-item-92365"
                 class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365">
-                <a href="../../admin/all_forms.html" data-tracking-id="sign-up-top-bar" itemprop="url">Back</a>
+                <a href="/admin/" data-tracking-id="sign-up-top-bar" itemprop="url">Back</a>
               </li>
             </ul>
             <ul class="landing-header_menu-right first-in-focus">
@@ -38,7 +38,7 @@ class HtmlEditHandler:
                 <a><span class="menu-item-text">AlexD29</span></a>
               </li>
               <li class="landing-button logout_button">
-                <a href="/login.html" itemprop="url">Log out</a>
+                <a id="logout-btn" href="/login.html" itemprop="url">Log out</a>
               </li>
             </ul>
           </nav>

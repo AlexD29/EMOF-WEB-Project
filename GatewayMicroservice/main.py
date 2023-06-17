@@ -72,6 +72,8 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             if url.query != "":
                 target_url = target_url + "?" + url.query
             
+            print("UITE FRATE ::")
+            print(forward_data)
             response = request_method(target_url, data=forward_data)
 
             self.send_response(response.status_code)
