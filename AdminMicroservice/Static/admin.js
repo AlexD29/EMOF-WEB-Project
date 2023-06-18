@@ -168,13 +168,6 @@ function displayForm(form) {
       closeButton.innerText = "Close"; 
       closeButton.addEventListener("click",((form_id) => function (){closeForm(form_id)})(form.id));
       buttons.appendChild(closeButton);
-      
-      editButton = document.createElement('a');
-      editButton.classList.add("active-button")
-      editButton.classList.add("button")
-      editButton.innerText = "Edit"; 
-      editButton.addEventListener("click",((form_id) => function (){editForm(form_id)})(form.id));
-      buttons.appendChild(editButton);
 
       viewButton = document.createElement('a');
       viewButton.classList.add("active-button")
