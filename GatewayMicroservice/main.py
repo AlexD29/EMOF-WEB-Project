@@ -52,10 +52,10 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
         data = {}
         cookie_raw = self.headers.get('Cookie')
         if cookie_raw:
-            print(cookie_raw)
+            #print(cookie_raw)
             cookie = SimpleCookie()
             cookie.load(cookie_raw)
-            print(cookie)
+            #print(cookie)
             cookies = {k: v.value for k, v in cookie.items()}
             data.update({"cookie" : cookies})
 
@@ -74,7 +74,8 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             if url.query != "":
                 target_url = target_url + "?" + url.query
             
-            if "admin" in service:
+            # GOD FORGIVE ME FOR MY SINS
+            if "admin" in service and not (".css" in target_url or ".png" in target_url or ".img" in target_url or "jpg" in target_url or "jpeg" in target_url):
                send_error = False
                sessionId = None
                try:
@@ -86,7 +87,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                    send_error = True
                else:
                     #are dar trebuie validat
-                    
+
                     config = get_config()
 
                     db_config = config['database']        
@@ -104,11 +105,12 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                     else:
                         print("UTILIZATORUL EXISTA")
                     
+                    
 
                if send_error == True:
-                    time.sleep(1)
+                    #time.sleep(1)
                     print("SE VA TRIMITE LA LOGIN !!!!")
-                    print(forward_data)
+                    print(target_url , forward_data )
                     data = {"message": "You need to login first", "status": "unauthorized"}
                     response_data_json = json.dumps(data)
                     self.send_response(403)
@@ -117,8 +119,8 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(response_data_json.encode())
                     return
 
-            print("UITE FRATE ::")
-            print(forward_data)
+            #print("UITE FRATE ::")
+            #print(forward_data)
             response = request_method(target_url, data=forward_data)
 
             self.send_response(response.status_code)
