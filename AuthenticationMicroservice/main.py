@@ -140,6 +140,24 @@ class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             filename = 'static/landing.html'
+        elif self.path == '/logout':
+            # logout user
+            content_length = int(self.headers['Content-Length']) #Ca sa stie dimensiunea a ceea ce primeste
+            body = self.rfile.read(content_length) #Citeste continutul din request si il baga in body
+            bodyDecoded = body.decode('utf-8') #Decodeaza din bytes in String
+            data = json.loads(bodyDecoded) #Parseaza ceea ce a primit ca JSON
+            print(data)
+            cookies = data.get('cookie', None)
+            if cookies is not None:
+                sessionId = cookies.get('sessionId', None)
+                if sessionId is not None:
+                    cur = con.cursor()
+                    sql = "UPDATE users set sid = NULL where sid = %s"
+                    cur.execute(sql,(sessionId,))
+                    print(cur.rowcount, " sessionIds removed (",sessionId, ")")
+                    con.commit()
+
+            filename = 'static/logout.html'
         else:
             filename = self.path[1:] # '/' initial e eliminat ca sa obtinem numele fisierului
 
