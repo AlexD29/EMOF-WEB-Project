@@ -170,10 +170,9 @@ function displayForm(form) {
       buttons.appendChild(closeButton);
 
       viewButton = document.createElement('a');
-      viewButton.classList.add("active-button")
+      viewButton.classList.add("unselectable-button")
       viewButton.classList.add("button")
       viewButton.innerText = "View Statistics"; 
-      viewButton.addEventListener("click",((form_id) => function (){statsForm(form_id)})(form.id));
       buttons.appendChild(viewButton);
 
       deleteButton = document.createElement('a');

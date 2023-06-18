@@ -49,7 +49,7 @@ class FormListHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
         forms_of_user = FormListHandler.format_response(
-            db.fetch_query(FormListHandler.select_skeleton + """WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
+            db.fetch_query(FormListHandler.select_skeleton + """WHERE id_creator = %s""" + where_clause + " ORDER BY created_at DESC;", (str(user_id),))
             )
 
         handler.send_json_response(forms_of_user)
