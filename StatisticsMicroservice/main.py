@@ -27,11 +27,12 @@ class MyServer(SimpleHTTPRequestHandler):
         if re.match("^/([a-zA-Z0-9-_]{16})/?$",self.path): #verifica daca am /{id_form}
             id_form = self.path.split("/")[1] #Imi ia id_form-ul
             print(id_form)
-            
+            user_name = self.get_username_from_sid()
             #Deschide pe pagina de statistici si inlocuieste placeholder-ul din HTML cu adevarul id_form
             with open('static/statistics.html') as myFile:
                 content = myFile.read()
                 content = str(content).replace("${{{id_form}}}", str(id_form))
+                content = str(content).replace("${{{user_name}}}", str(user_name))
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
@@ -103,6 +104,46 @@ class MyServer(SimpleHTTPRequestHandler):
             }
         else:
             return None
+        
+    def get_username_from_sid(self):
+        try:
+            content_len = int(self.headers.get('Content-Length'))
+        except:
+            content_len = 0
+        k = self.rfile.read(content_len)
+        if k == b'':
+            k = "{}"
+        print(k)
+        bod = json.loads(k)
+        print(bod)
+        ckies = bod.pop("cookie", None)
+        mycookies = {}
+        if ckies:
+            for cookie in ckies:
+                mycookies[cookie] = ckies[cookie]
+        
+        try:
+            sid = mycookies['sessionId']
+        except:
+            print("No sid")
+            self.send_response(400)
+            self.end_headers()
+            return None
+        print(sid, "+++++")
+        cur = con.cursor()
+
+        user_name = None
+        while not user_name:
+            con.rollback()
+            cur.execute("""SELECT username FROM users WHERE sid = %s;""", (str(sid),))
+            user_name = cur.fetchall()
+        cur.close()
+
+        if len(user_name) != 1:
+            print("found no/multiple users with same sid!!", len(user_name), sid)
+            return None
+        else:
+            return user_name[0][0]
 
 if __name__ == "__main__":
     webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)
