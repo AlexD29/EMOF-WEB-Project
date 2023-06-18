@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>Statistics</title>
-    <link rel="stylesheet" href="/emof.css" />
-    <link rel="stylesheet" href="/StatisticsMicroservice\styles.css" />
-    <link rel="icon" href="/pictures/icon.png" />
+    <link rel="stylesheet" href="static/emof.css" />
+    <link rel="stylesheet" href="static/styles.css" />
+    <link rel="icon" href="icons/icon.png" />
   </head>
   <body>
       <div class="landing-section-header">
@@ -15,8 +15,8 @@
           itemscope=""
         >
           <div class="landing-header-elements">
-            <a href="/admin/all_forms.html" class="logo-link">
-              <img alt="" src="/pictures/logo.png" class="logo_landing" />
+            <a href="/admin/" class="logo-link">
+              <img alt="" src="icons/logo.png" class="logo_landing" />
             </a>
             <nav
               id="landing-header_menu"
@@ -42,7 +42,7 @@
                   class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365"
                 >
                   <a
-                  href="../../admin/all_forms.html"
+                  href="/admin/"
                   data-tracking-id="sign-up-top-bar"
                   itemprop="url"
                   >Back</a
@@ -54,7 +54,7 @@
                   <a><span class="menu-item-text">AlexD29</span></a>
                 </li>
                 <li class="landing-button logout_button">
-                  <a href="/login.html" itemprop="url">Log out</a>
+                  <a href="/authentication/logout" itemprop="url">Log out</a>
                 </li>
               </ul>
             </nav>
@@ -69,15 +69,15 @@
           <h2 id="downloadText">Download as:</h2>
           <div class="button-container">
             <button class="download-button" id="downloadHTMLButton">
-              <img src="/StatisticsMicroservice\icons\html.png" alt="">
+              <img src="icons\html.png" alt="">
               HTML
             </button>
             <button class="download-button" id="downloadCSVButton">
-              <img src="/StatisticsMicroservice\icons\csv.png" alt="CSV Icon">
+              <img src="icons\csv.png" alt="CSV Icon">
               CSV
             </button>
             <button class="download-button" id="downloadJSONButton">
-              <img src="/StatisticsMicroservice\icons\json-file.png" alt="JSON Icon">
+              <img src="icons\json-file.png" alt="JSON Icon">
               JSON
             </button>
           </div>
@@ -87,6 +87,7 @@
       </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/StatisticsMicroservice\statistics.js"></script>
+  <script src="static/statistics.js"></script>
+  <script>fetchData('${{{id_form}}}')</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </html>

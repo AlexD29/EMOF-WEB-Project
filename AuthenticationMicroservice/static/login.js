@@ -1,4 +1,4 @@
-const myURL = "http://127.0.0.1:8050/signupLogin";
+const myURL = "http://127.0.0.1:8050/authentication";
 var loginButton = document.getElementById("login-submit-btn");
 loginButton.disabled = true;
 
@@ -35,7 +35,6 @@ document.getElementById("password").addEventListener("input", checkFormCompletio
 
 loginButton.addEventListener("click", function (event) {
   event.preventDefault();
-
   var emailUsernameInput = document.getElementById("username_or_email");
   var passwordInput = document.getElementById("password");
   var emailUsername = emailUsernameInput.value;
@@ -88,6 +87,5 @@ loginButton.addEventListener("click", function (event) {
     "password": password
   }
   const formDataString = JSON.stringify(formData);
-  console.log(formDataString);
   xhr.send(formDataString);
 });

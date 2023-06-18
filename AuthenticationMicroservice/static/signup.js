@@ -1,5 +1,9 @@
+const myURL = "http://127.0.0.1:8050/authentication";
 var submitButton = document.getElementById("login-submit-btn");
 submitButton.disabled = true;
+
+var emailUsernameInput = document.getElementById("username");
+var passwordInput = document.getElementById("password");
 
 function checkFormCompletion() {
   var email = document.getElementById("email").value;
@@ -83,13 +87,13 @@ submitButton.addEventListener("click", function (event) {
   ) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/signup");
+    xhr.open("POST", myURL + "/signup");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function () {
       if (xhr.status === 200) {
         var response = JSON.parse(xhr.responseText);
         document.cookie = `sessionId=${response.sessionId}; path=/`;
-        window.location.href = "admin/all_forms.html";
+        window.location.href = "/admin/";
       } else if (xhr.status === 400) {
         var errorMessage = xhr.responseText;
         if (errorMessage.includes("Email") || errorMessage.includes("email")) {
@@ -114,14 +118,13 @@ submitButton.addEventListener("click", function (event) {
     xhr.onerror = function () {
       console.log("Request failed.");
     };
-    var formData =
-      "email=" +
-      encodeURIComponent(email) +
-      "&username=" +
-      encodeURIComponent(username) +
-      "&password=" +
-      encodeURIComponent(password);
-    xhr.send(formData);
+    const formData = {
+      "email": email,
+      "username": username,
+      "password": password
+    }
+    const formDataString = JSON.stringify(formData);
+    xhr.send(formDataString);
   }
 });
 

@@ -1,237 +1,352 @@
-document.getElementById("logout-btn").addEventListener("click", function(event) {
-	event.preventDefault();
-  
-	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  
-	window.location.href = "http://127.0.0.1:8050/signupLogin/static/login.html";
-});
+document
+  .getElementById("logout-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
 
-const container = document.getElementById('questions-container');
+    document.cookie =
+      "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+    window.location.href =
+      "http://127.0.0.1:8050/authentication/static/login.html";
+  });
+
+const container = document.getElementById("questions-box");
 let maxInputAllowed = 15;
-let questions_elements = []
+let questions_elements = [];
 let questions = [];
-const myURL = "http://127.0.0.1:8050/admin-forms-microservice"
+const myURL = "http://127.0.0.1:8050/admin-forms-microservice";
 
-//const formID = "sNiLgqTiV7GrxGNh" 
-const formID = document.getElementById('FORM_ID').textContent
+//const formID = "sNiLgqTiV7GrxGNh"
+const formID = document.getElementById("FORM_ID").textContent;
 
 //load preloaded questions if this is the case
-fetch(myURL + '/update/' + formID + '.json', {
-		method: 'GET'
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
-		}
-		return response.json();
-	})
-	.then(data => {
-		// Apelam functia loadData cu datele primite
-		console.log(data)
-		loadData(data);
-	})
-	.catch(error => {
-		console.error('There has been a problem with your fetch operation:', error);
-	});
+fetch(myURL + "/update/" + formID + ".json", {
+  method: "GET",
+})
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    // Apelam functia loadData cu datele primite
+    console.log(data);
+    loadData(data);
+  })
+  .catch((error) => {
+    console.error("There has been a problem with your fetch operation:", error);
+  });
 
 function loadData(formData) {
-	console.log(formData)
+  document.getElementById("form-name-input").value = formData.name;
+  document.getElementById("form-description-input").value = formData.description;
+  document.getElementById("form-ending-input").value = formData.ending;
+  document.getElementById("form-tags-input").value = formData.tags.join(", ");
+  document.getElementById("first-question").value = formData.questions[1];
 
-	// Incarcam numele formularului
-	document.getElementById('form-name-input').value = formData.name;
+  for (let i = 2; i < Object.keys(formData.questions).length; i++) {
+    const key = (i).toString();
+    if (formData.questions[key] !== undefined)
+      loadQuestion(formData.questions[key]);
+  }
 
-	// Incarcam descrierea formularului
-	document.getElementById('form-description-input').value = formData.description;
-
-	// Incarcam finalizarea formularului
-	document.getElementById('form-ending-input').value = formData.ending;
-
-	// Incarcam intrebarile
-	for (let i = 0; i < Object.keys(formData.questions).length; i++) {
-		const key = (i + 1).toString() 
-		if(formData.questions[key] !== undefined)
-			loadQuestion(formData.questions[key]);
+  console.log(formData.questions);
+  formData.questions.getUserInfoQuestions.forEach(labelName => {
+	const labelElement = document.querySelector(`label[for="${labelName}"]`);
+	if (labelElement) {
+	  const checkbox = labelElement.previousElementSibling;
+	  checkbox.checked = true;
 	}
+  });
 
-	// Incarcam tag-urile
-	document.getElementById('form-tags-input').value = formData.tags.join(" ");
+
+  if(formData.image !== null && !formData.image.startsWith("http")){
+	  const preview = document.getElementById("preview-image");
+  	preview.style.display = "block";
+    document.getElementById("remove-image").style.display = "block";
+    document.getElementById("placeholder-text").style.display = "none";
+    preview.src = formData.image;
+  }
+  else{
+
+  }
+
 }
 
 function loadQuestion(text) {
+  let input = document.createElement("input");
+  input.value = text;
+  let label = document.createElement("label");
+  label.textContent = String(questions_elements.length + 1) + ".";
 
-	let input = document.createElement('input');
-	input.value = text;
-
-	input.classList.add("flex-container-centered", "rounded-div", "drop-shadow-effect", "question-input")
-	container.appendChild(input);
-	questions_elements.push(input);
+  input.classList.add("add-question-input");
+  label.classList.add("question-label");
+  container.appendChild(label);
+  container.appendChild(input);
+  questions_elements.push(input);
 }
 
 function addQuestion() {
-	if (questions_elements.length >= maxInputAllowed) {
-		alert('You can add maximum ' + maxInputAllowed + ' questions.');
-		return;
-	}
+  if (questions_elements.length >= maxInputAllowed) {
+    alert("You can add maximum " + maxInputAllowed + " questions.");
+    return;
+  }
 
-	let input = document.createElement('input');
+  let input = document.createElement("input");
+  let label = document.createElement("label");
 
-	input.placeholder = 'Type something';
+  label.textContent = String(questions_elements.length + 1) + ".";
 
-	input.classList.add("flex-container-centered", "rounded-div", "drop-shadow-effect", "question-input")
-	container.appendChild(input);
-	questions_elements.push(input);
+  input.classList.add("add-question-input");
+  label.classList.add("question-label");
+  container.appendChild(label);
+  container.appendChild(input);
+  questions_elements.push(input);
 }
 
 function deleteQuestion() {
-	if (questions_elements.length > 0) {
-
-		let lastChild = container.lastChild;
-		container.removeChild(lastChild);
-		questions_elements.pop(lastChild)
-
-	} else {
-		alert('You dont have any questions to delete');
-		return;
-	}
+  if (questions_elements.length > 1) {
+    let lastChild = container.lastChild;
+    container.removeChild(lastChild);
+    lastChild = container.lastChild;
+    container.removeChild(lastChild);
+    questions_elements.pop(lastChild);
+  } else {
+    alert("You should have at least one question.");
+    return;
+  }
 }
 
 function validateQuestion(text) {
+  if (text == null) return "You can't have empty questions.";
+  if (text.length > 1000)
+    return "The questions should have a maximum of 1000 characters.";
 
-	if (text == null) return "Weird error , text is null"
-	if (text.length < 20) return "No question under 20 characters allowed"
-	if (text.length > 1000) return "No question bigger than 1000 characters allowed"
-
-	return true
+  return true;
 }
 
 function validateName(name) {
-	if (name == null) return "Name is null"
-	if (name.length < 6) return "No name under 6 characters allowed"
-	if (name.length > 100) return "No name bigger than 100 characters allowed"
+  if (name == null) return "The title shouldn't be empty.";
+  if (name.length < 4) return "The title should have at least 4 characters.";
+  if (name.length > 100)
+    return "The title shouldn't have more than 100 characters.";
 
-	console.log(name);
+  console.log(name);
 
-	return true
+  return true;
 }
 
 function validateDescription(text) {
-	if (text == null) return "Description is null"
-	if (text.length < 20) return "No description under 20 characters allowed"
-	if (text.length > 1000) return "No description bigger than 1000 characters allowed"
+  if (text == null) return "The description shouldn't be empty.";
+  if (text.length > 1000)
+    return "The description shouldn't have more than 1000 characters.";
 
-	console.log(text);
+  console.log(text);
 
-	return true
+  return true;
 }
 
 function validateEnding(text) {
-	if (text == null) return "Ending is null"
-	if (text.length < 10) return "No ending under 10 characters allowed"
-	if (text.length > 100) return "No ending bigger than 100 characters allowed"
+  if (text == null) return "The ending message shouldn't be empty.";
+  if (text.length > 100)
+    return "The ending message shouldn't have more than 100 characters.";
 
-	console.log(text);
+  console.log(text);
 
-	return true
+  return true;
 }
 
 function validateTags(tagsList) {
+  const pattern = /^[A-Za-z]+$/;
 
-	// To be done 
-	console.log(tagsList)
+  for (let tag of tagsList) {
+    if (!pattern.test(tag)) {
+      return "Tags should contain only letters.";
+    }
+  }
 
-	return true
+  return true;
+}
+
+function convertImageToString(inputImage) {
+  return new Promise((resolve, reject) => {
+    const file = inputImage.files[0];
+
+    if (!file) {
+      reject("No file selected");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const imageString = reader.result;
+      resolve(imageString);
+    };
+
+    reader.onerror = function (e) {
+      reject("Error occurred while reading the file");
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 
 function validateForm() {
+  var image = document.getElementById("preview-image").src;
+  if (image.startsWith("http")) {
+	  image = null;
+  }
 
-	const name = document.getElementById('form-name-input').value;
-	if (validateName(name) !== true) {
-		return validateName(name)
-	}
+  const name = document.getElementById("form-name-input").value;
+  if (validateName(name) !== true) {
+    return validateName(name);
+  }
 
-	const description = document.getElementById('form-description-input').value;
-	if (validateDescription(description) !== true) {
-		return validateDescription(description)
-	}
+  const description = document.getElementById("form-description-input").value;
+  if (validateDescription(description) !== true) {
+    return validateDescription(description);
+  }
 
-	const ending = document.getElementById('form-ending-input').value;
-	if (validateEnding(ending) !== true) {
-		return validateEnding(ending)
-	}
+  const ending = document.getElementById("form-ending-input").value;
+  if (validateEnding(ending) !== true) {
+    return validateEnding(ending);
+  }
 
-	const unfiltrated_tags = document.getElementById('form-tags-input').value.split(" ");
-	const tags = unfiltrated_tags.filter(token => {
-		return !(/\s|\.|,/.test(token));
-	});
+  const unfiltrated_tags = document.getElementById("form-tags-input").value;
+  const tagsArray = unfiltrated_tags.split(",");
+  const tags = tagsArray.map((tag) => tag.trim()).filter((tag) => tag !== "");
 
-	if (validateTags(tags) !== true) {
-		return validateTags(tags)
-	}
+  if (validateTags(tags) !== true) {
+    return validateTags(tags);
+  }
 
-	if (questions_elements.length == 0) {
-		return "You have no questions added"
-	}
+  for (let i = 0; i < questions_elements.length; i++) {
+    const text = questions_elements[i].value;
 
-	for (let i = 0; i < questions_elements.length; i++) {
-		const text = questions_elements[i].value;
+    const result = validateQuestion(text);
 
-		const result = validateQuestion(text)
+    if (result !== true) {
+      return result;
+    }
+  }
 
-		if (result !== true) {
-			return result;
-		}
-	}
+  let questionsDict = {};
+  questions_elements.forEach((element, index) => {
+    const key = (index + 1).toString(); // Construim cheia ca un șir
+    questionsDict[key] = element.value; // Adăugăm cheia și valoarea în dicționar
+  });
 
-	let questionsDict = {};
-	questions_elements.forEach((element, index) => {
-		const key = (index + 1).toString(); // Construim cheia ca un șir
-		questionsDict[key] = element.value; // Adăugăm cheia și valoarea în dicționar
-	});
-	/*
-	make a json from values above and return it
-	*/
-	const formData = {
-		"name": name,
-		"description": description,
-		"ending": ending,
-		"tags": tags,
-		"questions": questionsDict,
-		"id" : formID
-	};
+  let checkedQuestions = [];
+  for (let i = 1; i <= 6; i++) {
+    const checkbox = document
+      .getElementById(`about-user-${i}`)
+      .getElementsByTagName("input")[0];
+    if (checkbox.checked) {
+      const questionText = document
+        .getElementById(`about-user-${i}`)
+        .getElementsByTagName("label")[0].innerText;
+      checkedQuestions.push(questionText);
+    }
+  }
+  questionsDict["getUserInfoQuestions"] = checkedQuestions;
 
-	return formData;
+  const formData = {
+    name: name,
+    description: description,
+    ending: ending,
+    tags: tags,
+    questions: questionsDict,
+    id: formID,
+    image: image,
+  };
+
+  return formData;
 }
 
 function postFormData(formData) {
-
-	fetch(myURL + '/update', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(formData)
-		})
-		.then(response => {
-			if (response.ok) {
-				alert('Form edited successfully!');
-				window.location.href = 'http://127.0.0.1:8050/admin/';
-			} else {
-				throw new Error('Failed to edit form.');
-			}
-		})
-		.catch(error => {
-			alert('Error: ' + error.message);
-		});
+  fetch(myURL + "/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Form edited successfully!");
+        window.location.href = "http://127.0.0.1:8050/admin/";
+      } else {
+        throw new Error("Failed to edit form.");
+      }
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
 }
 
 function create() {
-	const result = validateForm();
+  const result = validateForm();
 
-	if (typeof result === 'string') {
-		alert("Error: " + result);
-		return;
-	}
+  if (typeof result === "string") {
+    alert("Error: " + result);
+    return;
+  }
 
-	console.log(result)
-	postFormData(result);
+  console.log(result);
+  postFormData(result);
+}
+
+questions_elements.push(document.getElementById("first-question"));
+document.getElementById("questions-container").style.display = "none";
+
+const addQuestionsBtn = document.getElementById("add-questions-btn");
+addQuestionsBtn.onclick = function (e) {
+  e.preventDefault();
+  document.getElementById("centered-box").style.display = "none";
+  document.getElementById("questions-container").style.display = "block";
+  window.scrollTo(0,0);
+};
+
+function back() {
+  document.getElementById("centered-box").style.display = "flex";
+  document.getElementById("questions-container").style.display = "none";
+  window.scrollTo(0,0);
+}
+
+function previewImage(event) {
+  const input = event.target;
+  const preview = document.getElementById("preview-image");
+  preview.style.display = "block";
+
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const extension = file.name.split(".").pop().toLowerCase();
+    const allowedExtensions = ["jpeg", "jpg", "png", "svg"];
+
+    if (allowedExtensions.includes(extension)) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+      document.getElementById("remove-image").style.display = "block";
+      document.getElementById("placeholder-text").style.display = "none";
+    } else {
+      alert("Invalid file type. Please select a JPEG, PNG, or SVG image.");
+      input.value = "";
+      removeImage();
+    }
+  }
+}
+
+function removeImage() {
+  document.getElementById("preview-image").src = "";
+  document.getElementById("image-upload-input").value = "";
+  document.getElementById("remove-image").style.display = "none";
+  document.getElementById("placeholder-text").style.display = "block";
+  document.getElementById("preview-image").style.display = "none";
 }

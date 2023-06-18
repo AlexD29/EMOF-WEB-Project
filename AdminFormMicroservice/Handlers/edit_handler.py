@@ -31,6 +31,7 @@ class EditHandler:
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
         form_id = post_data_json.pop('id')
+        image = post_data_json.pop('image')
         cookie = post_data_json.pop("cookie")
 
         sessionID =  cookie['sessionId']
@@ -56,13 +57,16 @@ class EditHandler:
             handler.send_json_response(JsonResponse.error("You are not authorised to edit this form") ,status = 403)
             return
 
+        # user_id = "Mk6dpRgLGEahkC32"
+
         form_data = {
             'id': form_id,
             'id_creator': user_id, 
             'name': name,
             'questions': post_data_json,  
-            'public': True,  
-            'tags':tags
+            'public': True,  # presupunem că formularul este public
+            'tags':tags,
+            'image': image
         }
 
         print("ASTA E JSONU FORM_DATA CE URMEAZA SA FACA UPDATE IN DB :")
@@ -70,14 +74,14 @@ class EditHandler:
         
         query = """
 		UPDATE public.forms
-		SET id_creator = %s, name = %s, questions = %s, public = %s, tags = %s
+		SET id_creator = %s, name = %s, questions = %s, public = %s, tags = %s, image = %s
 		WHERE id = %s
 		"""
 
         try:
             db.execute_query(query, (form_data['id_creator'], form_data['name'], 
                          json.dumps(form_data['questions']), form_data['public'], 
-                         json.dumps(form_data['tags']), form_data['id']))
+                         json.dumps(form_data['tags']), form_data['image'], form_data['id']))
             handler.send_json_response(JsonResponse.success("Data received and processed"))
         except Exception as err:
             print(f"Unexpected {err=}, {type(err)=}")

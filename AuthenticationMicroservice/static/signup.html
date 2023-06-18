@@ -8,7 +8,7 @@
     <div class="first_part">
       <header class="header">
         <nav class="nav">
-          <a href="landing.html"
+          <a href="/authentication/"
             ><img alt="" src="logo.png" class="logo"
           /></a>
         </nav>
@@ -23,10 +23,9 @@
           <div class="signup__continut">
             <section class="signup_sectiune">
               <div class="signup_date">
-                <form id="signup-form" class="signup_formular" action="/signup" method="post">
+                <form id="signup-form" autocomplete="off" class="signup_formular" action="/signup" method="post">
                   <div class="form-field">
                     <label for="email" class="email_text">Email</label>
-                    <p tabindex="0" data-functional-selector="email-description" class="email_text_information">Emails are collected only for password resets</p>
                     <div class="signup_caseta">
                       <input type="email" id="email" class="caseta" dir="auto" name="email" aria-required="true" data-functional-selector="email-input-field__input" value="" />
                       <p class="error-message"></p>
@@ -36,7 +35,7 @@
                   <div class="form-field">
                     <label for="username" class="username_text">Username</label>
                     <div class="signup_caseta">
-                      <input type="text" id="username" name="username" class="caseta" dir="auto" aria-required="true" data-functional-selector="username-input-field__input" value="" />
+                      <input type="text" id="username" autocomplete="new-email" name="username" class="caseta" dir="auto" aria-required="true" data-functional-selector="username-input-field__input" value="" />
                       <p class="error-message"></p>
                       <p id="username-error-message"></p>
                     </div>
@@ -44,7 +43,7 @@
                   <div class="form-field">
                     <label for="password" class="password_text">Password</label>
                     <div class="signup_caseta">
-                      <input type="password" id="password" name="password" class="caseta" dir="auto" aria-required="true" autocomplete="current-password" data-functional-selector="password-input-field__input" value="" />
+                      <input type="password" id="password" autocomplete="new-password" name="password" class="caseta" dir="auto" aria-required="true"  data-functional-selector="password-input-field__input" value="" />
                       <p class="error-message"></p>
                       <p id="password-error-message"></p>
                       <div class="view_password">

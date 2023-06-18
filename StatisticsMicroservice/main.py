@@ -1,5 +1,6 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import re
 import psycopg2
 import yaml
 
@@ -18,29 +19,41 @@ def get_db_connection():
         port=config['port']
     )
     return conn
-
 con = get_db_connection()
 
+#Extinde SimpleHTTPRequestHandler
 class MyServer(SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
-            self.path = '/StatisticsMicroservice/statistics.html'
-        elif self.path == '/data':
-            id_form = "32F7VzlxY_J4kBgW"
+        if re.match("^/([a-zA-Z0-9-_]{16})/?$",self.path): #verifica daca am /{id_form}
+            id_form = self.path.split("/")[1] #Imi ia id_form-ul
+            print(id_form)
+            
+            #Deschide pe pagina de statistici si inlocuieste placeholder-ul din HTML cu adevarul id_form
+            with open('static/statistics.html') as myFile:
+                content = myFile.read()
+                content = str(content).replace("${{{id_form}}}", str(id_form))
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(bytearray(content, 'utf-8'))
+            return
+        elif re.match("^/data/([a-zA-Z0-9-_]{16})/?$",self.path):
+            id_form = self.path.split("/data/")[1]
             data = self.retrieve_data_from_database(id_form)
             response = json.dumps(data).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
-            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0') #Previne caching-ul 
             self.end_headers()
             self.wfile.write(response)
             return
-        return SimpleHTTPRequestHandler.do_GET(self)
-
-    
+        
+        return SimpleHTTPRequestHandler.do_GET(self) #Daca nu intra in niciun if codul se intoarce la comportamentul default al lui do_GET
+ 
     def retrieve_data_from_database(self, id_form):
         cur = con.cursor()
-        cur.execute(f"SELECT name, questions, published_at, closed_at FROM forms WHERE id = '{id_form}'")
+        sql = "SELECT name, questions, published_at, closed_at FROM forms WHERE id = %s"
+        cur.execute(sql, (id_form,))
         result = cur.fetchone()
         cur.close()
         
@@ -49,11 +62,12 @@ class MyServer(SimpleHTTPRequestHandler):
             form_data = result[1]
             published_at = result[2]
             closed_at = result[3]
-            
+
             questions = form_data['questions']
             
             cur = con.cursor()
-            cur.execute(f"SELECT response, duration, submitted_at FROM responses WHERE id_form = '{id_form}'")
+            sql = "SELECT response, duration, submitted_at FROM responses WHERE id_form = %s"
+            cur.execute(sql, (id_form,))
             response_rows = cur.fetchall()
             cur.close()
             
@@ -63,8 +77,7 @@ class MyServer(SimpleHTTPRequestHandler):
                 response_duration = response_row[1]
                 submitted_at = response_row[2]
                 
-                first_key, info = next(iter(response.items()))
-                del response[first_key]
+                info = response.pop("userInfo")
 
                 answer_data = {
                     'response': response,
@@ -91,9 +104,8 @@ class MyServer(SimpleHTTPRequestHandler):
         else:
             return None
 
-
 if __name__ == "__main__":
-    webServer = HTTPServer((hostName, serverPort), MyServer)
+    webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
     try:
         webServer.serve_forever()

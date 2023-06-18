@@ -1,4 +1,6 @@
+import base64
 import json
+import os
 import secrets
 
 from Config.config import get_config
@@ -30,6 +32,7 @@ class SubmitHandler:
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
         form_id = secrets.token_hex(16)[:16]
+        image = post_data_json.pop('image') 
 
         cookie = post_data_json.pop("cookie")
         print(cookie)
@@ -50,8 +53,9 @@ class SubmitHandler:
             'id_creator': user_id, 
             'name': name,
             'questions': post_data_json,  
-            'public': True, 
-            'tags':tags
+            'public': True,  # presupunem că formularul este public
+            'tags':tags,
+            'image': image
         }
 
         print("ASTA E JSONU FORM_DATA CE URMEAZA SA INTRE IN DB :")
@@ -59,10 +63,10 @@ class SubmitHandler:
 
         query = """
         INSERT INTO public.forms 
-        (id, id_creator, name, created_at, questions, public, tags)
-        VALUES (%s, %s, %s, NOW(), %s, %s, %s)
+        (id, id_creator, name, created_at, questions, public, tags, image)
+        VALUES (%s, %s, %s, NOW(), %s, %s, %s, %s)
         """
         db.execute_query(query, (form_data['id'], form_data['id_creator'], form_data['name'], 
-                                 json.dumps(form_data['questions']), form_data['public'], json.dumps(form_data['tags'])))
+                                 json.dumps(form_data['questions']), form_data['public'], json.dumps(form_data['tags']), form_data['image']))
 
         handler.send_json_response(JsonResponse.success("Data received and processed"))

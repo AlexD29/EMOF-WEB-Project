@@ -2,4 +2,4 @@ database:
   host: localhost
   dbname: EMOF
   user: postgres
-  password: EMOF123_
+  password: s2receptor

@@ -3,9 +3,9 @@ import http.server
 class ImgHandler:
     @staticmethod
     def handle(handler):
-        
-        if handler.path.endswith("logo.png"):
-            handler.path = '/Static/logo.png'
+        #Poisonous Null Byte attack & ../ ca sa nu iasa din folder
+        if not(handler.path.find("%00") != -1 or handler.path.find("..") != -1):
+            handler.path = '/Static' + handler.path
+            return http.server.SimpleHTTPRequestHandler.do_GET(handler)
         else:
-            handler.path = ''
-        return http.server.SimpleHTTPRequestHandler.do_GET(handler)
+            return None
