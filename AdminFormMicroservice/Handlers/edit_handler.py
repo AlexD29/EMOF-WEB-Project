@@ -71,7 +71,7 @@ class EditHandler:
 
         print("ASTA E JSONU FORM_DATA CE URMEAZA SA FACA UPDATE IN DB :")
         print(form_data)
-         # inserați datele în baza de date
+        
         query = """
 		UPDATE public.forms
 		SET id_creator = %s, name = %s, questions = %s, public = %s, tags = %s, image = %s

@@ -1,15 +1,24 @@
-import json
-import psycopg2
+import html
 from Database.db_handler import DatabaseHandler
 from Config.config import get_config
 
 class FormListHandler:
+
+    def is_valid_img(img):
+        if not img:
+            return False
+        elif img.startswith("data:image/"):
+            return True
+        return False
+
+    select_skeleton = "SELECT id, name, public, image, status, questions, total_responses(id), published_at, closed_at, tags FROM forms "
     @staticmethod
     def format_response(rez):
         forms = []
         for i in rez:
             forms.append(
-                {"id":i[0], "title":i[1], "public":i[2], "image":i[3], "status":i[4], "questions":i[5],"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":i[5]["description"]}
+                {"id":i[0], "title":html.escape(i[1]), "public":i[2], "image":i[3] if FormListHandler.is_valid_img(i[3]) else None, "status":html.escape(i[4]),"nr_questions":len(i[5]["questions"]),"nr_responses":i[6], "description":html.escape(i[5]["description"]),
+        "published_at":i[7].strftime("%d-%m-%Y %H:%M") if i[7] else None, "closed_at":i[8].strftime("%d-%m-%Y %H:%M") if i[8] else None, "tags":i[9]}
             )
         return forms
 
@@ -40,7 +49,7 @@ class FormListHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
         forms_of_user = FormListHandler.format_response(
-            db.fetch_query("""SELECT id, name, public, image, status, questions, total_responses(id) FROM forms WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
+            db.fetch_query(FormListHandler.select_skeleton + """WHERE id_creator = %s""" + where_clause + ";", (str(user_id),))
             )
 
         handler.send_json_response(forms_of_user)
@@ -54,8 +63,9 @@ class FormListHandler:
         db_config = config['database']        
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
         
-        db.cursor.execute("""DELETE FROM forms WHERE id = %s;""", (str(form_id),))
-        if(db.cursor.rowcount > 0):
+        c = db.connection.cursor()
+        c.execute("""DELETE FROM forms WHERE id = %s;""", (str(form_id),))
+        if(c.rowcount > 0):
             db.connection.commit()
             handler.send_response(200)
             handler.end_headers()
@@ -63,12 +73,10 @@ class FormListHandler:
             db.connection.rollback()
             handler.send_response(409) #Conflict
             handler.end_headers()
+        c.close()
 
     def handle_update_form(handler):
-        content_length = int(handler.headers['Content-Length'])
-        patch_data = handler.rfile.read(content_length)
-        patch_data_decoded = patch_data.decode('utf-8')
-        patch_data_json = json.loads(patch_data_decoded)
+        patch_data_json = handler.bod
         
         newStatus = None
         
@@ -83,8 +91,9 @@ class FormListHandler:
 
             db_config = config['database']        
             db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
-            db.cursor.execute("""UPDATE forms SET status=%s WHERE id = %s;""", (str(newStatus),str(form_id),))
-            if(db.cursor.rowcount > 0):
+            c = db.connection.cursor()
+            c.execute("""UPDATE forms SET status=%s WHERE id = %s;""", (str(newStatus),str(form_id),))
+            if(c.rowcount > 0):
                 db.connection.commit()
                 handler.send_response(200)
                 handler.end_headers()
@@ -92,3 +101,4 @@ class FormListHandler:
                 db.connection.rollback()
                 handler.send_response(409) #Conflict
                 handler.end_headers()
+            c.close()

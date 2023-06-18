@@ -123,6 +123,12 @@ section {
     text-decoration: none;
 }
 
+.form-info {
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+}
+
 .form-info p {
     padding:0.5rem;
     padding-left:0;
@@ -162,12 +168,8 @@ section {
     .form-info  {
         display:none!important;
     }
-    .form-admin-buttons {
-        display: none!important;
-    }
     section {
         height:min-content!important;
-        flex-direction: row!important;
     }
     .collapsed-admin-buttons {
         display:flex!important;
