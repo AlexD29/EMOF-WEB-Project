@@ -82,6 +82,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
@@ -185,6 +186,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
@@ -292,6 +294,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
