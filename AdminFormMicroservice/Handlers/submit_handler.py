@@ -30,6 +30,7 @@ class SubmitHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
         #TO BE DELETED
+        # user_id = "Mk6dpRgLGEahkC32"
         name = post_data_json.pop("name")
         tags = post_data_json.pop("tags")
         form_id = secrets.token_hex(16)[:16]

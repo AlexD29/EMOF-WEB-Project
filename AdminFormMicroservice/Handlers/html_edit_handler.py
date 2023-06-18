@@ -7,7 +7,7 @@ class HtmlEditHandler:
         <!DOCTYPE html>
 <html>
   <head>
-    <title>Create Formular</title>
+    <title>Edit</title>
     <link href="emof.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="icon.png" />
@@ -41,7 +41,7 @@ class HtmlEditHandler:
                 id="menu-item-92366"
                 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-92366"
               >
-                <a><span class="your-formulars">Create Formular</span></a>
+                <a><span class="your-formulars">Edit</span></a>
               </li>
               <li id="menu-item-92365"
                 class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365">
@@ -63,7 +63,7 @@ class HtmlEditHandler:
 
     <div id="container">
       <div id="centered-box" class="centered-box">
-        <h2 id="create-title">Create Form</h2>
+        <h2 id="create-title">Edit</h2>
         <div class="image-upload-container">
           <div class="image-preview">
             <img id="preview-image" src="">
@@ -163,12 +163,12 @@ class HtmlEditHandler:
         </fieldset>
         <div class="create-button" >
           <button id="back-button" onclick="back()">Back</button>
-          <button id="create-button" onclick="create()">Create</button>
+          <button id="create-button" onclick="create()">Save</button>
         </div>
       </div>
     </div>
   </body>
-  <script src="script.js"></script>
+  <script src="edit.js"></script>
 </html>
 
         """

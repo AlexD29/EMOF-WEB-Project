@@ -6,7 +6,6 @@ document.getElementById("logout-btn").addEventListener("click", function(event) 
 	window.location.href = "http://127.0.0.1:8050/authentication/static/login.html";
 });
 
-
 const container = document.getElementById("questions-box");
 let maxInputAllowed = 15;
 let questions_elements = [];
@@ -159,10 +158,6 @@ function validateForm() {
     return validateTags(tags);
   }
 
-  if (questions_elements.length == 0) {
-    return "You have no questions added";
-  }
-
   for (let i = 0; i < questions_elements.length; i++) {
     const text = questions_elements[i].value;
 
@@ -249,11 +244,13 @@ addQuestionsBtn.onclick = function (e) {
   e.preventDefault();
   document.getElementById("centered-box").style.display = "none";
   document.getElementById("questions-container").style.display = "block";
+  window.scrollTo(0,0);
 };
 
 function back() {
   document.getElementById("centered-box").style.display = "flex";
   document.getElementById("questions-container").style.display = "none";
+  window.scrollTo(0,0);
 }
 
 function previewImage(event) {

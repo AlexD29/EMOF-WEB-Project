@@ -30,7 +30,8 @@ class JsonHandler:
             #TODO : trebuie verificat daca formularul este live sau nu
             questions_column = form[0][6]
             name = {"name" : form[0][2] }
-            tags_column = {"tags" : form[0][10]}
+            tags_column = {"tags" : form[0][9]}
+            image = {"image": form[0][10]}
 
             print(questions_column)
             print(tags_column)
@@ -39,6 +40,7 @@ class JsonHandler:
             data_to_send.update(name)
             if tags_column:
                 data_to_send.update(tags_column)
+            data_to_send.update(image)
             #form_json = json.dumps(form[0][6] + form[0][10]) # form[0] deoarece fetch_query returnează o listă de rezultate
             
             handler.send_json_response(data_to_send)
