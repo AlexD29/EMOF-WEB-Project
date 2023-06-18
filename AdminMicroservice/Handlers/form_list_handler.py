@@ -84,6 +84,7 @@ class FormListHandler:
         patch_data_json = handler.bod
         
         newStatus = None
+        newPublicStatus = None
         
         for i in patch_data_json:
             if i == "status":

@@ -31,6 +31,10 @@ class MyServer(SimpleHTTPRequestHandler):
             id_form = self.path.split("/")[1] #Imi ia id_form-ul
             print(id_form)
             user_name = self.get_username_from_sid()
+            if user_name is None:
+                self.send_response(400)
+                self.end_headers()
+                return
             #Deschide pe pagina de statistici si inlocuieste placeholder-ul din HTML cu adevarul id_form
             with open('static/statistics.html') as myFile:
                 content = myFile.read()
