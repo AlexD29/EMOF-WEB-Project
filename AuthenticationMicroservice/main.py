@@ -152,7 +152,8 @@ class MyServer(BaseHTTPRequestHandler):
                 sessionId = cookies.get('sessionId', None)
                 if sessionId is not None:
                     cur = con.cursor()
-                    cur.execute("UPDATE users set sid = NULL where sid = %s",(sessionId,))
+                    sql = "UPDATE users set sid = NULL where sid = %s"
+                    cur.execute(sql,(sessionId,))
                     print(cur.rowcount, " sessionIds removed (",sessionId, ")")
                     con.commit()
 
