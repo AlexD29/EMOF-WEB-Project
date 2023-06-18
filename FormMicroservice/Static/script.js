@@ -10,7 +10,6 @@ const startTime = new Date();
 
 async function fetchData() {
   try {
-    setDefault();
     const response = await fetch(API_URL + id + ".json");
     const data = await response.json();
     formInfo = data;
@@ -25,6 +24,8 @@ async function fetchData() {
     delete formInfo.questions.getUserInfoQuestions;
     formInfo.userInfoQuestions = userInfoQuestions;
     numberOfPages = Object.keys(formInfo.questions).length + 2;
+
+	setDefault();
 
     console.log(formInfo);
     updatePage();
@@ -69,7 +70,7 @@ function setDefault() {
     document.getElementById("question").style.display = "none";
     document.getElementById("next-button").style.display = "none";
 
-	if(formInfo.userInfoQuestions == undefined){
+	if(formInfo.userInfoQuestions == undefined || formInfo.userInfoQuestions == null){
 		document.querySelector("legend").style.display = "none";
 	}
   } catch (e) {
