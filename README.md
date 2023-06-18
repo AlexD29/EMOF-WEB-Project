@@ -142,3 +142,10 @@ We check user session ids and data access rights in order to prevent bypassing a
 We also verify session ids for every request and delay error messages in order to prevent bruteforce attacks.
 
 The database stores encrypted passwords in order to prevent password stealing.
+## Future Enhancements
+### 6.0 Natural Language Processing Microservice
+A planned future enhancement for our application is the development of a Natural Language Processing (NLP) microservice. This microservice will use various techniques to analyze text and predict the emotions contained within. The NLP microservice will take a string of text as input and return a prediction of the associated emotion as output. This may involve the emotions such as 'joy', 'fear', 'sadness', 'anger', 'surprise', 'disgust', etc.
+### 6.1 Mailing Microservice
+An upcoming enhancement that we're planning to add to our system is a mailing microservice. This microservice will be responsible for all email-related functionalities, including sending notifications, account activation instructions, password recovery instructions, and user updates.
+### 6.2 IP - Session Mapping using Redis on the Gateway
+We are planning to add an IP - Session mapping feature using Redis on our Gateway service. This will enhance the security and performance of our system by efficiently managing user sessions and controlling the rate of requests.
