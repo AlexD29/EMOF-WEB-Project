@@ -42,7 +42,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${escapeHtml(form.title)}
+                ${(form.title)}
                 </h1>
                 <span class="form-item draft-form-bubble">
                   Draft
@@ -51,10 +51,10 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                 </div>
               </div>
@@ -62,6 +62,19 @@ function displayForm(form) {
             <div class="form-admin-buttons">
             </div>
       `;
+
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -69,6 +82,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
@@ -96,6 +110,18 @@ function displayForm(form) {
       editButton.addEventListener("click",((form_id) => function (){editForm(form_id)})(form.id));
       buttons.appendChild(editButton);
 
+      publicButton = document.createElement('a');
+      publicButton.classList.add("active-button")
+      publicButton.classList.add("button")
+      if(form.public) {
+        publicButton.innerText = "Make private";
+      }
+      else {
+        publicButton.innerText = "Make public";
+      }
+      publicButton.addEventListener("click",((form_id, public_status) => function (){public_privateForm(form_id, public_status)})(form.id, !form.public));
+      buttons.appendChild(publicButton);
+
       viewButton = document.createElement('a');
       viewButton.classList.add("unselectable-button")
       viewButton.classList.add("button")
@@ -114,7 +140,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${escapeHtml(form.title)}
+                ${(form.title)}
                 </h1>
                 <span class="form-item active-form-bubble">
                   Active Form
@@ -123,16 +149,16 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Published at: ${escapeHtml(form.published_at)}
+                    Published at: ${(form.published_at)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                   <p>
-                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                    <strong>Responses: ${(form.nr_responses)}</strong>
                   </p>
                 </div>
               </div>
@@ -141,6 +167,18 @@ function displayForm(form) {
             </div>
       `;
 
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -148,6 +186,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
@@ -168,12 +207,30 @@ function displayForm(form) {
       closeButton.innerText = "Close"; 
       closeButton.addEventListener("click",((form_id) => function (){closeForm(form_id)})(form.id));
       buttons.appendChild(closeButton);
+      
+      shareButton = document.createElement('a');
+      shareButton.classList.add("active-button")
+      shareButton.classList.add("button")
+      shareButton.innerText = "Share";
+      shareButton.addEventListener("click",((form_id) => function (){shareForm(form_id)})(form.id));
+      buttons.appendChild(shareButton);
+
+      publicButton = document.createElement('a');
+      publicButton.classList.add("active-button")
+      publicButton.classList.add("button")
+      if(form.public) {
+        publicButton.innerText = "Make private";
+      }
+      else {
+        publicButton.innerText = "Make public";
+      }
+      publicButton.addEventListener("click",((form_id, public_status) => function (){public_privateForm(form_id, public_status)})(form.id, !form.public));
+      buttons.appendChild(publicButton);
 
       viewButton = document.createElement('a');
-      viewButton.classList.add("active-button")
+      viewButton.classList.add("unselectable-button")
       viewButton.classList.add("button")
       viewButton.innerText = "View Statistics"; 
-      viewButton.addEventListener("click",((form_id) => function (){statsForm(form_id)})(form.id));
       buttons.appendChild(viewButton);
 
       deleteButton = document.createElement('a');
@@ -188,7 +245,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                  ${escapeHtml(form.title)}
+                  ${(form.title)}
                 </h1>
                 <span class="form-item closed-form-bubble">
                   Closed Form
@@ -197,19 +254,19 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Published at: ${escapeHtml(form.published_at)}
+                    Published at: ${(form.published_at)}
                   </p>
                   <p>
-                    Closed at: ${escapeHtml(form.closed_at)}
+                    Closed at: ${(form.closed_at)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                   <p>
-                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                    <strong>Responses: ${(form.nr_responses)}</strong>
                   </p>
                 </div>
               </div>
@@ -217,6 +274,19 @@ function displayForm(form) {
             <div class="form-admin-buttons">
             </div>
       `;
+
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -224,6 +294,7 @@ function displayForm(form) {
         img.setAttribute("width","300");
         img.setAttribute("height","300");
         img.setAttribute("overflow","hidden");
+        img.classList.add("images");
         info.appendChild(img)
       }
       if(form.tags && form.tags.length > 0) {
@@ -360,11 +431,36 @@ function closeForm(form_id) {
       });
     })(form_id));
 }
+
+function public_privateForm(form_id, make_public) {
+  if(make_public) {
+    confirm_str = "Are you sure you want to make the form public?"
+  }
+  else {
+    confirm_str = "Are you sure you want to make the form private?"
+  }
+  popup_confirm(confirm_str, (
+    (formId, pub_status) => function() {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({public:pub_status})}).then(response => {
+        if(response.status == 200) {
+          refresh_selection();
+        }
+      }).catch(error => {
+        console.log(error)
+        alert("Error changing public status "+form_id)
+      });
+    })(form_id,make_public));
+}
+
 function editForm(form_id) {
   window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
 function statsForm(form_id) {
-  window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
+  window.location.href = `/statistics/${encodeURIComponent(escapeHtml(form_id))}`;
+}
+async function shareForm(form_id) {
+  await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + encodeURIComponent(escapeHtml(form_id)) + ".html");
+  alert("Copied link to clipboard!");
 }
 displayAllForms()
 

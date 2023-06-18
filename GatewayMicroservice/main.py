@@ -76,7 +76,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                 target_url = target_url + "?" + url.query
             
             # GOD FORGIVE ME FOR MY SINS
-            if "admin" in service and not (".css" in target_url or ".png" in target_url or ".img" in target_url or "jpg" in target_url or "jpeg" in target_url):
+            if "statistics" in service or ("admin" in service and not (".css" in target_url or ".png" in target_url or ".img" in target_url or "jpg" in target_url or "jpeg" in target_url)):
                send_error = False
                sessionId = None
                try:

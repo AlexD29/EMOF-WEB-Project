@@ -5,6 +5,7 @@
     <link href="emof.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/admin-forms-microservice/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
 
   <body>
@@ -34,7 +35,7 @@
                 id="menu-item-92366"
                 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-92366"
               >
-                <a><span class="your-formulars">Create Formular</span></a>
+                <a><span class="your-formulars">Create Form</span></a>
               </li>
               <li id="menu-item-92365"
                 class="back-button menu-item menu-item-type-custom menu-item-object-custom menu-item-92365">
@@ -43,10 +44,10 @@
             </ul>
             <ul class="landing-header_menu-right first-in-focus">
               <li class="icon-before-nav">
-                <a><span class="menu-item-text">AlexD29</span></a>
+                <a><span class="menu-item-text">${{{user_name}}}</span></a>
               </li>
               <li class="landing-button logout_button">
-                <a id="logout-btn" href="/login.html" itemprop="url">Log out</a>
+                <a id="logout-btn" href="/authentication/logout" itemprop="url">Log out</a>
               </li>
             </ul>
           </nav>

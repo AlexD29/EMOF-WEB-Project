@@ -7,6 +7,9 @@ import yaml
 hostName = "127.0.0.1"
 serverPort = 8083
 
+def escapeHTML(string):
+    return str(string).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("\'", "&#039;")
+
 def get_db_connection():
     with open('config.yaml', 'r') as config_file:
         config = yaml.safe_load(config_file)
@@ -27,11 +30,16 @@ class MyServer(SimpleHTTPRequestHandler):
         if re.match("^/([a-zA-Z0-9-_]{16})/?$",self.path): #verifica daca am /{id_form}
             id_form = self.path.split("/")[1] #Imi ia id_form-ul
             print(id_form)
-            
+            user_name = self.get_username_from_sid(id_form)
+            if user_name is None:
+                self.send_response(403)
+                self.end_headers()
+                return
             #Deschide pe pagina de statistici si inlocuieste placeholder-ul din HTML cu adevarul id_form
             with open('static/statistics.html') as myFile:
                 content = myFile.read()
                 content = str(content).replace("${{{id_form}}}", str(id_form))
+                content = str(content).replace("${{{user_name}}}", escapeHTML(user_name))
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
@@ -103,6 +111,44 @@ class MyServer(SimpleHTTPRequestHandler):
             }
         else:
             return None
+        
+    def get_username_from_sid(self, id_form):
+        try:
+            content_len = int(self.headers.get('Content-Length'))
+        except:
+            content_len = 0
+        k = self.rfile.read(content_len)
+        if k == b'':
+            k = "{}"
+        print(k)
+        bod = json.loads(k)
+        print(bod)
+        ckies = bod.pop("cookie", None)
+        mycookies = {}
+        if ckies:
+            for cookie in ckies:
+                mycookies[cookie] = ckies[cookie]
+        
+        try:
+            sid = mycookies['sessionId']
+        except:
+            print("No sid")
+            self.send_response(400)
+            self.end_headers()
+            return None
+        cur = con.cursor()
+        user_name = None
+        con.rollback()
+        cur.execute("""SELECT username FROM users u JOIN forms f on f.id_creator = u.id WHERE u.sid = %s AND f.id = %s;""", (str(sid), str(id_form)))
+        user_name = cur.fetchall()
+        print(user_name)
+        cur.close()
+
+        if len(user_name) != 1:
+            print("found no/multiple users with same sid!!", len(user_name), sid)
+            return None
+        else:
+            return user_name[0][0]
 
 if __name__ == "__main__":
     webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)

@@ -1,4 +1,8 @@
 import http.server
+from Config.config import get_config
+from Database.db_handler import DatabaseHandler
+import json
+import html
 
 class HtmlEditHandler:
     @staticmethod
@@ -11,6 +15,7 @@ class HtmlEditHandler:
     <link href="emof.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/admin-forms-microservice/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
 
   <body>
@@ -50,10 +55,10 @@ class HtmlEditHandler:
             </ul>
             <ul class="landing-header_menu-right first-in-focus">
               <li class="icon-before-nav">
-                <a><span class="menu-item-text">AlexD29</span></a>
+                <a><span class="menu-item-text">${{{user_name}}}</span></a>
               </li>
               <li class="landing-button logout_button">
-                <a id="logout-btn" href="/login.html" itemprop="url">Log out</a>
+                <a id="logout-btn" href="/authentication/logout" itemprop="url">Log out</a>
               </li>
             </ul>
           </nav>
@@ -173,10 +178,58 @@ class HtmlEditHandler:
 
         """
         if id is not None:
+            user_name = HtmlEditHandler.get_username_from_sid(handler, id)
+            if user_name is None:
+              handler.send_response(403)
+              handler.end_headers()
+              return
             html_content = html_template.replace("{{!@#$}}",id)
+            html_content = html_content.replace("${{{user_name}}}", html.escape(user_name))
             handler.send_html_response(html_content)
             return
         
         #id is empty
         handler.path = '/Static/error.html'
         return http.server.SimpleHTTPRequestHandler.do_GET(handler)
+    
+    def get_username_from_sid(self, form_id):
+        try:
+            content_len = int(self.headers.get('Content-Length'))
+        except:
+            content_len = 0
+        k = self.rfile.read(content_len)
+        if k == b'':
+            k = "{}"
+        bod = json.loads(k)
+        ckies = bod.pop("cookie", None)
+        mycookies = {}
+        if ckies:
+            for cookie in ckies:
+                mycookies[cookie] = ckies[cookie]
+        
+        try:
+            sid = mycookies['sessionId']
+        except:
+            print("No sid")
+            self.send_response(400)
+            self.end_headers()
+            return None
+
+        config = get_config()
+
+        db_config = config['database']        
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        con = db.connection
+        cur = con.cursor()
+
+        user_name = None
+        con.rollback()
+        cur.execute("""SELECT username FROM users u JOIN forms f on f.id_creator = u.id WHERE u.sid = %s AND f.id = %s;""", (str(sid), str(form_id)))
+        user_name = cur.fetchall()
+        cur.close()
+
+        if len(user_name) != 1:
+            print("found no/multiple users with same sid!!", len(user_name), sid)
+            return None
+        else:
+            return user_name[0][0]

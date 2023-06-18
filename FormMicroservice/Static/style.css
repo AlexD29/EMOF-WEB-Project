@@ -334,18 +334,16 @@ legend{
 
 #back-explore-button {
 	display: block;
-	margin: 20px 10px 10px 40%;
-	background-color: #002554;
-	/* a shade of green */
-	border: none;
-	border-radius: 20px;
-	/* adjust the value to increase or decrease the roundness */
-	color: white;
-	text-align: center;
-	font-size: 20px;
-	padding: 20px 40px;
-	text-decoration: none;
-	transition: background-color 0.3s ease;
+    background-color: #002554;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    padding: 20px 15px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 #back-explore-button:hover {

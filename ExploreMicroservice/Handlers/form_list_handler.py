@@ -9,9 +9,15 @@ class ExploreListHandler:
     def format_response(rez):
         forms = []
         for i in rez:
+            nr_qs = 0
+            
+            for q in i[3]["questions"].keys():
+                if q.isdigit():
+                    nr_qs+=1
+
             forms.append(
                 {"id":i[0], "title":html.escape(i[1]), "image":i[2],
-                 "nr_questions":len(i[3]["questions"]),"nr_responses":i[4], "description":html.escape(i[3]["description"]), "author":html.escape(i[5])}
+                 "nr_questions":nr_qs,"nr_responses":i[4], "description":html.escape(i[3]["description"]), "author":html.escape(i[5])}
             )
         return forms
 

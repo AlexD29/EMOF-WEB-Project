@@ -35,12 +35,12 @@ function displayForm(container, form) {
     let thisForm = document.createElement("section");
     thisForm.innerHTML = `
         <div class="form-presentation">
-          <h2>${escapeHtml(form.title)}</h2>
+          <h2>${(form.title)}</h2>
           <div class="form-presentation-info">
-            <p><strong>Author: </strong> ${escapeHtml(form.author)}</p>
-            <p><strong>Description:</strong> ${escapeHtml(form.description)}</p>
-            <p><strong>Questions:</strong> ${escapeHtml(form.nr_questions)}</p>
-            <p><strong>Responses:</strong> ${escapeHtml(form.nr_responses)}</p>
+            <p><strong>Author: </strong> ${(form.author)}</p>
+            <p><strong>Description:</strong> ${(form.description)}</p>
+            <p><strong>Questions:</strong> ${(form.nr_questions)}</p>
+            <p><strong>Responses:</strong> ${(form.nr_responses)}</p>
           </div>
         </div>
     `;
@@ -81,7 +81,7 @@ async function displayCategory(category_endpoint, category_title) {
   parent_element = document.createElement("section")
   parent_element.innerHTML = `
     <div class="section-description">
-      <h1>${escapeHtml(category_title)}</h1>
+      <h1>${(category_title)}</h1>
     </div>
     <div class="form-scroller">
       <div>

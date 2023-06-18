@@ -192,7 +192,7 @@ BEGIN
 					v_questions := CONCAT(v_questions,'"'|| v_j ||'":"What about '|| v_j || '_' || v_name || '?",');
 				END LOOP;
 				v_questions := SUBSTR(v_questions, 1, LENGTH(v_questions) - 1);
-				v_questions := CONCAT(v_questions, '} }');
+				v_questions := CONCAT(v_questions, ', "getUserInfoQuestions": []} }');
 				
 				INSERT INTO forms(id_creator, name, public, status, questions, created_at, published_at, closed_at) 
 					VALUES(v_user_id, v_name, v_public, v_published, v_questions::JSON, v_created_at, v_published_at, v_closed_at);
@@ -239,7 +239,7 @@ BEGIN
 					v_response := CONCAT(v_response,'],');
 			END LOOP;
 			v_response := SUBSTR(v_response, 1, LENGTH(v_response) - 1);
-			v_response := CONCAT(v_response, '}');
+			v_response := CONCAT(v_response, ', "userInfo": []}');
 			INSERT INTO responses(id_form, response, submitted_at, duration) VALUES(v_id, v_response::JSON, v_submitted_at, v_duration);
 		END;
 	END LOOP;
