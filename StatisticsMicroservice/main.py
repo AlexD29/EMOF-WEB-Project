@@ -30,9 +30,9 @@ class MyServer(SimpleHTTPRequestHandler):
         if re.match("^/([a-zA-Z0-9-_]{16})/?$",self.path): #verifica daca am /{id_form}
             id_form = self.path.split("/")[1] #Imi ia id_form-ul
             print(id_form)
-            user_name = self.get_username_from_sid()
+            user_name = self.get_username_from_sid(id_form)
             if user_name is None:
-                self.send_response(400)
+                self.send_response(403)
                 self.end_headers()
                 return
             #Deschide pe pagina de statistici si inlocuieste placeholder-ul din HTML cu adevarul id_form
@@ -112,7 +112,7 @@ class MyServer(SimpleHTTPRequestHandler):
         else:
             return None
         
-    def get_username_from_sid(self):
+    def get_username_from_sid(self, id_form):
         try:
             content_len = int(self.headers.get('Content-Length'))
         except:
@@ -137,12 +137,11 @@ class MyServer(SimpleHTTPRequestHandler):
             self.end_headers()
             return None
         cur = con.cursor()
-
         user_name = None
-        while not user_name:
-            con.rollback()
-            cur.execute("""SELECT username FROM users WHERE sid = %s;""", (str(sid),))
-            user_name = cur.fetchall()
+        con.rollback()
+        cur.execute("""SELECT username FROM users u JOIN forms f on f.id_creator = u.id WHERE u.sid = %s AND f.id = %s;""", (str(sid), str(id_form)))
+        user_name = cur.fetchall()
+        print(user_name)
         cur.close()
 
         if len(user_name) != 1:

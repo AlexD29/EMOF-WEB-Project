@@ -178,7 +178,11 @@ class HtmlEditHandler:
 
         """
         if id is not None:
-            user_name = HtmlEditHandler.get_username_from_sid(handler)
+            user_name = HtmlEditHandler.get_username_from_sid(handler, id)
+            if user_name is None:
+              handler.send_response(403)
+              handler.end_headers()
+              return
             html_content = html_template.replace("{{!@#$}}",id)
             html_content = html_content.replace("${{{user_name}}}", html.escape(user_name))
             handler.send_html_response(html_content)
@@ -188,7 +192,7 @@ class HtmlEditHandler:
         handler.path = '/Static/error.html'
         return http.server.SimpleHTTPRequestHandler.do_GET(handler)
     
-    def get_username_from_sid(self):
+    def get_username_from_sid(self, form_id):
         try:
             content_len = int(self.headers.get('Content-Length'))
         except:
@@ -219,10 +223,9 @@ class HtmlEditHandler:
         cur = con.cursor()
 
         user_name = None
-        while not user_name:
-            con.rollback()
-            cur.execute("""SELECT username FROM users WHERE sid = %s;""", (str(sid),))
-            user_name = cur.fetchall()
+        con.rollback()
+        cur.execute("""SELECT username FROM users u JOIN forms f on f.id_creator = u.id WHERE u.sid = %s AND f.id = %s;""", (str(sid), str(form_id)))
+        user_name = cur.fetchall()
         cur.close()
 
         if len(user_name) != 1:
