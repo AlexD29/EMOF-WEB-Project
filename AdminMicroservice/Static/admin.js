@@ -168,13 +168,6 @@ function displayForm(form) {
       closeButton.innerText = "Close"; 
       closeButton.addEventListener("click",((form_id) => function (){closeForm(form_id)})(form.id));
       buttons.appendChild(closeButton);
-      
-      editButton = document.createElement('a');
-      editButton.classList.add("active-button")
-      editButton.classList.add("button")
-      editButton.innerText = "Edit"; 
-      editButton.addEventListener("click",((form_id) => function (){editForm(form_id)})(form.id));
-      buttons.appendChild(editButton);
 
       viewButton = document.createElement('a');
       viewButton.classList.add("active-button")
@@ -329,7 +322,6 @@ function deleteForm(form_id) {
     (formId) => function() {
       fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'DELETE'}).then(response => {
         if(response.status == 200) {
-          //alert("Deleted "+formId)
           refresh_selection();
         }
       }).catch(error => {
@@ -343,7 +335,6 @@ function launchForm(form_id) {
     (formId) => function() {
       fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
         if(response.status == 200) {
-          //alert("Launched "+formId)
           refresh_selection();
         }
       }).catch(error => {
@@ -361,7 +352,6 @@ function closeForm(form_id) {
               body:JSON.stringify({status:'closed'})}
       ).then(response => {
           if(response.status == 200) {
-            //alert("Launched "+formId)
             refresh_selection();
           }
       }).catch(error => {

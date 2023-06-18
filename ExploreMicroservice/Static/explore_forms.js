@@ -53,6 +53,15 @@ function displayForm(container, form) {
         img.setAttribute("overflow","hidden");
       c.insertBefore(img, c.firstChild);
     }
+    else {
+      let c=thisForm.getElementsByClassName("form-presentation-info")[0]
+      let img = document.createElement("img");
+        img.setAttribute("src","/explore/pictures/icon.png");
+        img.setAttribute("width","200");
+        img.setAttribute("height","200");
+        img.setAttribute("overflow","hidden");
+      c.insertBefore(img, c.firstChild);
+    }
     buttons = thisForm.getElementsByClassName("form-presentation")[0];
 
     viewButton = document.createElement('a');
