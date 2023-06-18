@@ -930,6 +930,7 @@ function createPieChart(data) {
   data.forEach((item) => {
     const response = item.response;
     Object.values(response).forEach((emotions) => {
+      console.log(emotions);
       emotions.forEach((emotion) => {
         const trimmedEmotion = emotion.trim();
         if (positiveEmotions.includes(trimmedEmotion)) {

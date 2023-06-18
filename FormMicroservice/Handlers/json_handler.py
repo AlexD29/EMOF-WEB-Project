@@ -29,7 +29,11 @@ class JsonHandler:
 
         if form:
             #TODO : trebuie verificat daca formularul este live sau nu
-            form_json = json.dumps(form[0][6]) # form[0] deoarece fetch_query returnează o listă de rezultate
-            handler.send_json_response(form[0][6])
+            data_to_send = form[0][6] # form[0] deoarece fetch_query returnează o listă de rezultate
+            image = {"image": form[0][10]}
+            name = {"name": form[0][2]}
+            data_to_send.update(image)
+            data_to_send.update(name)
+            handler.send_json_response(data_to_send)
         else:
             handler.send_json_response(JsonResponse.error("There is no form with this ID") , 400 )
