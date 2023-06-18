@@ -108,7 +108,10 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                     
 
                if send_error == True:
-                    #time.sleep(1)
+                    
+                    #CA SA NU FACA BRUTEFORCE LA SID
+                    time.sleep(1)
+                    
                     print("SE VA TRIMITE LA LOGIN !!!!")
                     print(target_url , forward_data )
                     data = {"message": "You need to login first", "status": "unauthorized"}
