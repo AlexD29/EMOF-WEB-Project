@@ -28,7 +28,7 @@ class SubmitHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
         duration = post_data_json.pop("duration")
-        cookies = post_data_json.pop("cookie")
+        cookies = post_data_json.pop("cookie", None)
         response_to_db = {
             'id_form': id,  # înlocuiți cu ID-ul formularului
             'response': post_data_json,  # înlocuiți cu răspunsul real
