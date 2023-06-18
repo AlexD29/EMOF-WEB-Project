@@ -46,21 +46,24 @@ Frontend was build using HTML, CSS and JAVASCRIPT and the backend server was imp
 ## External Interface Requirements
 ### 3.1 User Interfaces
 Landing Page:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232017.png?raw=true)
+![Landing](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/landing.png?raw=true)
 Sign up:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232033.png?raw=true)
+![Sign up](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/signup.png?raw=true)
 Log in:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232025.png?raw=true)
+![Log in](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/login.png?raw=true)
 View Forms:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/all_forms.png?raw=true)
+![View Forms](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/admin.png?raw=true)
 Explore Forms:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore_formulars.png?raw=true)
+![Explore Forms](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/explore.png?raw=true)
 Create Form:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232206.png?raw=true)
+![Create Form](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/create_form_1.png?raw=true)
+![Create Form](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/create_form_2.png?raw=true)
 Complete Form:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232116.png?raw=true)
+![Complete Form](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/take_form_1.png?raw=true)
+![Complete Form](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/take_form_2.png?raw=true)
 View Statistics:
-![alt text](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/Images/Screenshot%202023-04-09%20232155.png?raw=true)
+![View Statistics](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/statistics_1.png?raw=true)
+![View Statistics](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/statistics_2.png?raw=true)
 
 ### 3.3 Software Interfaces
 PostgreSQL for Database to keep user accounts, forms and their resposes.
