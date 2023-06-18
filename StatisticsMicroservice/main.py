@@ -7,6 +7,9 @@ import yaml
 hostName = "127.0.0.1"
 serverPort = 8083
 
+def escapeHTML(string):
+    return str(string).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("\'", "&#039;")
+
 def get_db_connection():
     with open('config.yaml', 'r') as config_file:
         config = yaml.safe_load(config_file)
@@ -32,7 +35,7 @@ class MyServer(SimpleHTTPRequestHandler):
             with open('static/statistics.html') as myFile:
                 content = myFile.read()
                 content = str(content).replace("${{{id_form}}}", str(id_form))
-                content = str(content).replace("${{{user_name}}}", str(user_name))
+                content = str(content).replace("${{{user_name}}}", escapeHTML(user_name))
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
@@ -129,7 +132,6 @@ class MyServer(SimpleHTTPRequestHandler):
             self.send_response(400)
             self.end_headers()
             return None
-        print(sid, "+++++")
         cur = con.cursor()
 
         user_name = None

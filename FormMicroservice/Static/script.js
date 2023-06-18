@@ -140,7 +140,7 @@ function sendData() {
 
 function updateDescriptionPage() {
   document.getElementById("description-box").style.display = "block";
-  document.getElementById("description").innerHTML = formInfo.description;
+  document.getElementById("description").innerText = formInfo.description;
   document.getElementById("next-btn").style.display = "block";
   document.getElementById("user-info-container").style.display = "flex";
 
@@ -151,7 +151,7 @@ function updateDescriptionPage() {
 }
 
 function updateFinalPage() {
-  document.getElementById("question").innerHTML = formInfo.ending;
+  document.getElementById("question").innerText = formInfo.ending;
   document.getElementById("back-explore").style.display = "block";
   document.getElementById("back-explore-button").style.display = "block";
   document.getElementById("answer-container").style.display = "none";

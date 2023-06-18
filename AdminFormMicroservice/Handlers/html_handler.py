@@ -2,11 +2,13 @@ import http.server
 from Config.config import get_config
 from Database.db_handler import DatabaseHandler
 import json
+import html
 
 class HtmlHandler:
     @staticmethod
     def handle(handler):
         user_name = HtmlHandler.get_username_from_sid(handler)
+        user_name = html.escape(user_name)
         with open('Static/index.html') as myFile:
             content = myFile.read()
             content = str(content).replace("${{{user_name}}}", str(user_name))

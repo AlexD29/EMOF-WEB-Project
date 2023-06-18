@@ -42,7 +42,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${escapeHtml(form.title)}
+                ${(form.title)}
                 </h1>
                 <span class="form-item draft-form-bubble">
                   Draft
@@ -51,10 +51,10 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                 </div>
               </div>
@@ -140,7 +140,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                ${escapeHtml(form.title)}
+                ${(form.title)}
                 </h1>
                 <span class="form-item active-form-bubble">
                   Active Form
@@ -149,16 +149,16 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Published at: ${escapeHtml(form.published_at)}
+                    Published at: ${(form.published_at)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                   <p>
-                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                    <strong>Responses: ${(form.nr_responses)}</strong>
                   </p>
                 </div>
               </div>
@@ -245,7 +245,7 @@ function displayForm(form) {
             <div class="form-info-pane">
               <div class="form-heading">
                 <h1>
-                  ${escapeHtml(form.title)}
+                  ${(form.title)}
                 </h1>
                 <span class="form-item closed-form-bubble">
                   Closed Form
@@ -254,19 +254,19 @@ function displayForm(form) {
               <div class="form-info">
                 <div class="form-info-text">
                   <p>
-                    Description: ${escapeHtml(form.description)}
+                    Description: ${(form.description)}
                   </p>
                   <p>
-                    Published at: ${escapeHtml(form.published_at)}
+                    Published at: ${(form.published_at)}
                   </p>
                   <p>
-                    Closed at: ${escapeHtml(form.closed_at)}
+                    Closed at: ${(form.closed_at)}
                   </p>
                   <p>
-                    Questions: ${escapeHtml(form.nr_questions)}
+                    Questions: ${(form.nr_questions)}
                   </p>
                   <p>
-                    <strong>Responses: ${escapeHtml(form.nr_responses)}</strong>
+                    <strong>Responses: ${(form.nr_responses)}</strong>
                   </p>
                 </div>
               </div>
@@ -456,10 +456,10 @@ function editForm(form_id) {
   window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
 function statsForm(form_id) {
-  window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
+  window.location.href = `/statistics/${encodeURIComponent(escapeHtml(form_id))}`;
 }
 async function shareForm(form_id) {
-  await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + escapeHtml(form_id) + ".html");
+  await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + encodeURIComponent(escapeHtml(form_id)) + ".html");
   alert("Copied link to clipboard!");
 }
 displayAllForms()

@@ -2,6 +2,7 @@ import http.server
 from Config.config import get_config
 from Database.db_handler import DatabaseHandler
 import json
+import html
 
 class HtmlEditHandler:
     @staticmethod
@@ -178,7 +179,7 @@ class HtmlEditHandler:
         if id is not None:
             user_name = HtmlEditHandler.get_username_from_sid(handler)
             html_content = html_template.replace("{{!@#$}}",id)
-            html_content = html_content.replace("${{{user_name}}}", str(user_name))
+            html_content = html_content.replace("${{{user_name}}}", html.escape(user_name))
             handler.send_html_response(html_content)
             return
         
