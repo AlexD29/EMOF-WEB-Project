@@ -62,6 +62,19 @@ function displayForm(form) {
             <div class="form-admin-buttons">
             </div>
       `;
+
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -95,6 +108,18 @@ function displayForm(form) {
       editButton.innerText = "Edit"; 
       editButton.addEventListener("click",((form_id) => function (){editForm(form_id)})(form.id));
       buttons.appendChild(editButton);
+
+      publicButton = document.createElement('a');
+      publicButton.classList.add("active-button")
+      publicButton.classList.add("button")
+      if(form.public) {
+        publicButton.innerText = "Make private";
+      }
+      else {
+        publicButton.innerText = "Make public";
+      }
+      publicButton.addEventListener("click",((form_id, public_status) => function (){public_privateForm(form_id, public_status)})(form.id, !form.public));
+      buttons.appendChild(publicButton);
 
       viewButton = document.createElement('a');
       viewButton.classList.add("unselectable-button")
@@ -141,6 +166,18 @@ function displayForm(form) {
             </div>
       `;
 
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -175,6 +212,18 @@ function displayForm(form) {
       shareButton.innerText = "Share";
       shareButton.addEventListener("click",((form_id) => function (){shareForm(form_id)})(form.id));
       buttons.appendChild(shareButton);
+
+      publicButton = document.createElement('a');
+      publicButton.classList.add("active-button")
+      publicButton.classList.add("button")
+      if(form.public) {
+        publicButton.innerText = "Make private";
+      }
+      else {
+        publicButton.innerText = "Make public";
+      }
+      publicButton.addEventListener("click",((form_id, public_status) => function (){public_privateForm(form_id, public_status)})(form.id, !form.public));
+      buttons.appendChild(publicButton);
 
       viewButton = document.createElement('a');
       viewButton.classList.add("unselectable-button")
@@ -223,6 +272,19 @@ function displayForm(form) {
             <div class="form-admin-buttons">
             </div>
       `;
+
+      const formHead = thisForm.getElementsByClassName("form-heading")[0]
+      let pub = document.createElement("span");
+      pub.setAttribute("class","form-item");
+      pub.setAttribute("style","background-color:#9e13a3;");
+      if(form.public) {
+        pub.innerText = "Public"
+      }
+      else {
+        pub.innerText = "Private"
+      }
+      formHead.appendChild(pub);
+
       if(is_ok_image(form.image)) {
         const info = thisForm.getElementsByClassName("form-info")[0]
         let img = document.createElement("img");
@@ -366,6 +428,27 @@ function closeForm(form_id) {
       });
     })(form_id));
 }
+
+function public_privateForm(form_id, make_public) {
+  if(make_public) {
+    confirm_str = "Are you sure you want to make the form public?"
+  }
+  else {
+    confirm_str = "Are you sure you want to make the form private?"
+  }
+  popup_confirm(confirm_str, (
+    (formId, pub_status) => function() {
+      fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({public:pub_status})}).then(response => {
+        if(response.status == 200) {
+          refresh_selection();
+        }
+      }).catch(error => {
+        console.log(error)
+        alert("Error changing public status "+form_id)
+      });
+    })(form_id,make_public));
+}
+
 function editForm(form_id) {
   window.location.href = `/admin-forms-microservice/update/${encodeURIComponent(form_id)}.html`;
 }
@@ -373,7 +456,7 @@ function statsForm(form_id) {
   window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
 }
 async function shareForm(form_id) {
-  await navigator.clipboard.writeText("http://127.0.0.1:8050/forms-microservice/" + escapeHtml(form_id) + ".html");
+  await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + escapeHtml(form_id) + ".html");
   alert("Copied link to clipboard!");
 }
 displayAllForms()

@@ -89,15 +89,31 @@ class FormListHandler:
             if i == "status":
                 if patch_data_json[i] in {"active", "closed"}:
                     newStatus = patch_data_json[i]
+            elif i == "public":
+                newPublicStatus = bool(patch_data_json[i])
+                print(patch_data_json[i], newPublicStatus)
         
-        if newStatus:
-            form_id = handler.path.split("/forms/")[1][0:16]
-            config = get_config()
+        form_id = handler.path.split("/forms/")[1][0:16]
+        config = get_config()
 
-            db_config = config['database']        
-            db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db_config = config['database']        
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+
+        if newStatus:
             c = db.connection.cursor()
             c.execute("""UPDATE forms SET status=%s WHERE id = %s;""", (str(newStatus),str(form_id),))
+            if(c.rowcount > 0):
+                db.connection.commit()
+                handler.send_response(200)
+                handler.end_headers()
+            else:
+                db.connection.rollback()
+                handler.send_response(409) #Conflict
+                handler.end_headers()
+            c.close()
+        if newPublicStatus is not None:
+            c = db.connection.cursor()
+            c.execute("""UPDATE forms SET public=%s WHERE id = %s;""", (bool(newPublicStatus),str(form_id),))
             if(c.rowcount > 0):
                 db.connection.commit()
                 handler.send_response(200)
