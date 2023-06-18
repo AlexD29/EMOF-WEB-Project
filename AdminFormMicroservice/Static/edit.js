@@ -60,12 +60,16 @@ function loadData(formData) {
 	}
   });
 
-  if(formData.image !== null){
-	const preview = document.getElementById("preview-image");
+
+  if(formData.image !== null && !formData.image.startsWith("http")){
+	  const preview = document.getElementById("preview-image");
   	preview.style.display = "block";
-	document.getElementById("remove-image").style.display = "block";
-	document.getElementById("placeholder-text").style.display = "none";
-	preview.src = formData.image;
+    document.getElementById("remove-image").style.display = "block";
+    document.getElementById("placeholder-text").style.display = "none";
+    preview.src = formData.image;
+  }
+  else{
+
   }
 
 }
@@ -192,7 +196,7 @@ function convertImageToString(inputImage) {
 function validateForm() {
   var image = document.getElementById("preview-image").src;
   if (image.startsWith("http")) {
-	image = null;
+	  image = null;
   }
 
   const name = document.getElementById("form-name-input").value;

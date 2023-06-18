@@ -10,7 +10,7 @@ class HtmlEditHandler:
     <title>Edit</title>
     <link href="emof.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="icon.png" />
+    <link rel="icon" href="/admin-forms-microservice/icon.png" />
   </head>
 
   <body>
@@ -23,8 +23,8 @@ class HtmlEditHandler:
         itemscope=""
       >
         <div class="landing-header-elements">
-          <a href="/admin/all_forms.html" class="logo-link">
-            <img alt="" src="logo.png" class="logo_landing" />
+          <a href="/admin/" class="logo-link">
+            <img alt="" src="/admin-forms-microservice/logo.png" class="logo_landing" />
           </a>
           <nav
             id="landing-header_menu"

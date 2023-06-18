@@ -14,6 +14,10 @@ async function fetchData() {
 		const response = await fetch(API_URL + id + ".json")
 		const data = await response.json()
 		formInfo = data
+		
+		if(formInfo.image == null){
+			formInfo.image = "icon.png"
+		}
 		document.getElementById("form-image").src = formInfo.image;
 		document.getElementById("create-title").textContent = formInfo.name;
 

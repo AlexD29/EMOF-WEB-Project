@@ -97,7 +97,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         if not self.has_valid_sid():
             self.send_response(302)
-            self.send_header('Location','http://127.0.0.1:8050/signupLogin/')
+            self.send_header('Location','http://127.0.0.1:8050/authentication/')
             self.end_headers()
             return
 

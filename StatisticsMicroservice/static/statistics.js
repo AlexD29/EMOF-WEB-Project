@@ -35,12 +35,12 @@ function createCanvasElements(data) {
   const relationship = findWordPosition(data.requested, "Relationship Status");
 
   createPieChart(data.answers);
-  if(data.questions.length > 2){
+  console.log()
+  if(Object.keys(data.questions).length > 2){
     createRadarChartQuestions(data);
   }
-  else{
-    createBarChartTop3(data);
-  }
+  createBarChartTop3(data);
+
   createLineChartSubmitTime(data);
   createBubbleChart(data.answers);
   if (age >= 0) {

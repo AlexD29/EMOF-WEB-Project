@@ -25,6 +25,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             ('GET', '/style\.css$', CssHandler.handle),
             ('GET', '/script\.js$', JsHandler.handle),
             ('GET', '/background\.jpg', ImgHandler.handle),
+            ('GET', '/icon\.png', ImgHandler.handle),
 
             # POST routes
             ('POST', '/submit/(?P<id>[\w\-]{16})', SubmitHandler.handle),
