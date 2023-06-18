@@ -168,6 +168,13 @@ function displayForm(form) {
       closeButton.innerText = "Close"; 
       closeButton.addEventListener("click",((form_id) => function (){closeForm(form_id)})(form.id));
       buttons.appendChild(closeButton);
+      
+      shareButton = document.createElement('a');
+      shareButton.classList.add("active-button")
+      shareButton.classList.add("button")
+      shareButton.innerText = "Share";
+      shareButton.addEventListener("click",((form_id) => function (){shareForm(form_id)})(form.id));
+      buttons.appendChild(shareButton);
 
       viewButton = document.createElement('a');
       viewButton.classList.add("unselectable-button")
@@ -364,6 +371,10 @@ function editForm(form_id) {
 }
 function statsForm(form_id) {
   window.location.href = `/statistics/${encodeURIComponent(form_id)}`;
+}
+async function shareForm(form_id) {
+  await navigator.clipboard.writeText("http://127.0.0.1:8050/forms-microservice/" + escapeHtml(form_id) + ".html");
+  alert("Copied link to clipboard!");
 }
 displayAllForms()
 
