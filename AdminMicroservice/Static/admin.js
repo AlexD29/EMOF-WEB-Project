@@ -322,7 +322,6 @@ function deleteForm(form_id) {
     (formId) => function() {
       fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'DELETE'}).then(response => {
         if(response.status == 200) {
-          //alert("Deleted "+formId)
           refresh_selection();
         }
       }).catch(error => {
@@ -336,7 +335,6 @@ function launchForm(form_id) {
     (formId) => function() {
       fetch(`/admin/admin-api/forms/${encodeURIComponent(form_id)}`,{method:'PATCH', body:JSON.stringify({status:'active'})}).then(response => {
         if(response.status == 200) {
-          //alert("Launched "+formId)
           refresh_selection();
         }
       }).catch(error => {
@@ -354,7 +352,6 @@ function closeForm(form_id) {
               body:JSON.stringify({status:'closed'})}
       ).then(response => {
           if(response.status == 200) {
-            //alert("Launched "+formId)
             refresh_selection();
           }
       }).catch(error => {
