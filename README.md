@@ -65,6 +65,7 @@ View Statistics:
 ### 3.3 Software Interfaces
 PostgreSQL for Database to keep user accounts, forms and their resposes.
 ## System Features
+![sitemap diagram](https://github.com/AlexD29/EMOF-WEB-Project/blob/main/README-pictures/sitemap.png?raw=true)
 ### 4.1 Filling out the form
 #### 4.1.1 Description
 The user fills in the form using the Plutchick wheel and/or expressing himself in his own words.
