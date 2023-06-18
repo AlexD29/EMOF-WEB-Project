@@ -15,6 +15,7 @@ class HtmlEditHandler:
     <link href="emof.css" rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/admin-forms-microservice/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
 
   <body>
