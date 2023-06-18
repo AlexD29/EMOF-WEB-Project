@@ -2,9 +2,12 @@ import http.server
 import requests
 import urllib.parse
 import json
+import time
 
 from http.server import ThreadingHTTPServer
 from http.cookies import SimpleCookie
+from Config.config import get_config
+from Database.db_handler import DatabaseHandler
 
 # acest gateway va prelua cererea clientului si va trimite cererea catre serviciul aferent , gateway ul asteapta
 # raspunsul de la serviciul aferent si dupa ce il primeste il trimite inapoi la client
@@ -49,10 +52,10 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
         data = {}
         cookie_raw = self.headers.get('Cookie')
         if cookie_raw:
-            print(cookie_raw)
+            #print(cookie_raw)
             cookie = SimpleCookie()
             cookie.load(cookie_raw)
-            print(cookie)
+            #print(cookie)
             cookies = {k: v.value for k, v in cookie.items()}
             data.update({"cookie" : cookies})
 
@@ -71,8 +74,56 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             if url.query != "":
                 target_url = target_url + "?" + url.query
             
-            print("UITE FRATE ::")
-            print(forward_data)
+            # GOD FORGIVE ME FOR MY SINS
+            if "admin" in service and not (".css" in target_url or ".png" in target_url or ".img" in target_url or "jpg" in target_url or "jpeg" in target_url):
+               send_error = False
+               sessionId = None
+               try:
+                   sessionId = cookies['sessionId']
+               except:
+                   print("Nu are sessionID")
+               if sessionId is None:
+                   # nu are sessionId
+                   send_error = True
+               else:
+                    #are dar trebuie validat
+
+                    config = get_config()
+
+                    db_config = config['database']        
+                    db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+
+                    user_id = None
+                    query = "SELECT id FROM public.users WHERE sid = %s"
+                    try:
+                        result = db.fetch_query(query, (sessionId,))
+                        user_id = result[0][0] if result else None
+                    except:
+                        print("Nu s-a gasit utilizator cu aces sid")
+                    if user_id is None:
+                        send_error = True
+                    else:
+                        print("UTILIZATORUL EXISTA")
+                    
+                    
+
+               if send_error == True:
+                    
+                    #CA SA NU FACA BRUTEFORCE LA SID
+                    time.sleep(1)
+                    
+                    print("SE VA TRIMITE LA LOGIN !!!!")
+                    print(target_url , forward_data )
+                    data = {"message": "You need to login first", "status": "unauthorized"}
+                    response_data_json = json.dumps(data)
+                    self.send_response(403)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(response_data_json.encode())
+                    return
+
+            #print("UITE FRATE ::")
+            #print(forward_data)
             response = request_method(target_url, data=forward_data)
 
             self.send_response(response.status_code)
