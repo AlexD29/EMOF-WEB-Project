@@ -61,13 +61,13 @@ class EditHandler:
             'id_creator': user_id, 
             'name': name,
             'questions': post_data_json,  
-            'public': True,  # presupunem că formularul este public
+            'public': True,  
             'tags':tags
         }
 
         print("ASTA E JSONU FORM_DATA CE URMEAZA SA FACA UPDATE IN DB :")
         print(form_data)
-         # inserați datele în baza de date
+        
         query = """
 		UPDATE public.forms
 		SET id_creator = %s, name = %s, questions = %s, public = %s, tags = %s
