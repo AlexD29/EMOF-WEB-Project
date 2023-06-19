@@ -5,6 +5,7 @@ let formInfo = {};
 let pageCounter = 0;
 let numberOfPages = 2;
 let userInfoResponses = [];
+var first_time_draw = true;
 
 const startTime = new Date();
 
@@ -13,8 +14,8 @@ async function fetchData() {
     const response = await fetch(API_URL + id + ".json");
     const data = await response.json();
     formInfo = data;
-
-    if (formInfo.image == null) {
+    
+    if (formInfo.image == null || (formInfo.image).startsWith("http")) {
       formInfo.image = "icon.png";
     }
     document.getElementById("form-image").src = formInfo.image;
@@ -197,7 +198,7 @@ function nextPage() {
     return;
   }
 
-  if (pageCounter == numberOfPages - 2) sendData();
+  if (pageCounter == numberOfPages - 2) {sendData(); return}
   const button = document.getElementById("next-button");
   if (button.textContent == "Finish") {
     document.getElementById("answer-container").style.display = "none";
@@ -719,61 +720,63 @@ function proceedToQuestions() {
         startAngle: startAngle,
         endAngle: endAngle,
       };
+      if(first_time_draw) {
+        canvas.addEventListener("click", function (event) {
+          const rect = canvas.getBoundingClientRect();
 
-      canvas.addEventListener("click", function (event) {
-        const rect = canvas.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
 
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+          context.beginPath();
 
-        context.beginPath();
+          context.arc(
+            segment.x,
+            segment.y,
+            segment.radius,
+            segment.startAngle,
+            segment.endAngle
+          );
+          context.lineTo(segment.x, segment.y);
+          context.closePath();
 
-        context.arc(
-          segment.x,
-          segment.y,
-          segment.radius,
-          segment.startAngle,
-          segment.endAngle
-        );
-        context.lineTo(segment.x, segment.y);
-        context.closePath();
+          if (context.isPointInPath(x, y)) {
+            const a = x - canvas.width / 2;
+            const b = y - canvas.height / 2;
+            const distance = Math.sqrt(a * a + b * b);
 
-        if (context.isPointInPath(x, y)) {
-          const a = x - canvas.width / 2;
-          const b = y - canvas.height / 2;
-          const distance = Math.sqrt(a * a + b * b);
+            const h = (distance / (canvas.width / 2)) * 5;
 
-          const h = (distance / (canvas.width / 2)) * 5;
+            circle_number = parseInt(h, 10);
 
-          circle_number = parseInt(h, 10);
+            if (circle_number == k && k != 0) {
+              emotion = emotions_list[circle_number][i].name;
+              color = emotions_list[circle_number][i].color;
 
-          if (circle_number == k && k != 0) {
-            emotion = emotions_list[circle_number][i].name;
-            color = emotions_list[circle_number][i].color;
+              let tagsContainer = document.getElementById(
+                "howyoufeel-tags-container"
+              );
 
-            let tagsContainer = document.getElementById(
-              "howyoufeel-tags-container"
-            );
-
-            if (!selectedEmotions[pageCounter]) {
-              selectedEmotions[pageCounter] = [];
-            }
-
-            if (!selectedEmotions[pageCounter].includes(emotion)) {
-              selectedEmotions[pageCounter].push(emotion);
-            } else {
-              const index = selectedEmotions[pageCounter].indexOf(emotion);
-              if (index > -1) {
-                selectedEmotions[pageCounter].splice(index, 1);
+              if (!selectedEmotions[pageCounter]) {
+                selectedEmotions[pageCounter] = [];
               }
-            }
 
-            updateTagsContainer();
+              if (!selectedEmotions[pageCounter].includes(emotion)) {
+                selectedEmotions[pageCounter].push(emotion);
+              } else {
+                const index = selectedEmotions[pageCounter].indexOf(emotion);
+                if (index > -1) {
+                  selectedEmotions[pageCounter].splice(index, 1);
+                }
+              }
+
+              updateTagsContainer();
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
+  first_time_draw = false;
 }
 
 function back() {
