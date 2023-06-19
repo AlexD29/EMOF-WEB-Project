@@ -1,4 +1,18 @@
 import http.server
+from Config.config import get_config
+from Database.db_handler import DatabaseHandler
+def form_exists(f_id):
+    config = get_config()
+
+    db_config = config['database']
+    db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+
+    # Selectați formularul corespunzător din baza de date
+    query = "SELECT * FROM public.forms WHERE id = %s"
+    form = db.fetch_query(query, (f_id,))
+    if len(form) > 0:
+        return True
+    return False
 
 class HtmlHandler:
     @staticmethod
@@ -59,11 +73,15 @@ class HtmlHandler:
 </body>
 
 </html>"""
+        
+        
         if id is not None:
-            html_content = html_template.replace("{{!@#$}}",id)
-            handler.send_html_response(html_content)
-            return
+            if form_exists(id):
+                html_content = html_template.replace("{{!@#$}}",id)
+                handler.send_html_response(html_content)
+                return
         
         #id is empty
-        handler.path = '/Static/error.html'
-        return http.server.SimpleHTTPRequestHandler.do_GET(handler)
+        handler.send_response(400)
+        handler.end_headers()
+        return
