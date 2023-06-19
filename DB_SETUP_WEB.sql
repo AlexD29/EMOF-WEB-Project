@@ -216,7 +216,7 @@ BEGIN
 			ELSE
 				v_submitted_at := v_t_start + (RANDOM() * EXTRACT(MINUTES FROM (NOW() - v_t_start)) || ' minutes')::INTERVAL;
 			END IF;
-			FOR v_j IN 1..(SELECT count(*) FROM jsonb_object_keys((select questions FROM forms where id = v_id)::jsonb)) LOOP
+			FOR v_j IN 1..(SELECT (count(*) - 1) FROM jsonb_object_keys((select questions->'questions' FROM forms where id = v_id)::jsonb)) LOOP
 					v_response := CONCAT(v_response,'"'|| v_j ||'":[');
 					DECLARE
 						v_emotions CHARACTER VARYING[] := array[]::CHARACTER VARYING[];
