@@ -27,18 +27,23 @@ class DatabaseHandler:
             DatabaseHandler.__instance = self
 
     def execute_query(self, query, params=None):
+        c = self.connection.cursor()
         if params is None:
-            self.cursor.execute(query)
+            c.execute(query)
         else:
-            self.cursor.execute(query, params)
+            c.execute(query, params)
         self.connection.commit()
+        c.close()
 
     def fetch_query(self, query, params=None):
+        c = self.connection.cursor()
         if params is None:
-            self.cursor.execute(query)
+            c.execute(query)
         else:
-            self.cursor.execute(query, params)
-        return self.cursor.fetchall()
+            c.execute(query, params)
+        rez= c.fetchall()
+        c.close()
+        return rez
 
     def close(self):
         self.cursor.close()
