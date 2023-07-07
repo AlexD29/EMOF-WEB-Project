@@ -112,16 +112,6 @@ async function init() {
   document.getElementById("section-list").innerText = ''
   await displayCategory("popular", "Popular forms")
   await displayCategory("new", "New forms")
-  const m = document.getElementById("logout-btn")
-  if(m) {
-    m.addEventListener("click", function(event) {
-      event.preventDefault();
-    
-      document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-      window.location.href = "/authentication/static/login.html";
-    });
-  }
 }
 
 init()

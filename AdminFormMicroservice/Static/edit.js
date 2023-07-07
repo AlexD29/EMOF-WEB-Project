@@ -1,15 +1,3 @@
-document
-  .getElementById("logout-btn")
-  .addEventListener("click", function (event) {
-    event.preventDefault();
-
-    document.cookie =
-      "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    window.location.href =
-      "http://127.0.0.1:8050/authentication/static/login.html";
-  });
-
 const container = document.getElementById("questions-box");
 let maxInputAllowed = 15;
 let questions_elements = [];
