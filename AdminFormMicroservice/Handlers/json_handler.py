@@ -21,7 +21,7 @@ class JsonHandler:
         db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
 
         # Selectați formularul corespunzător din baza de date
-        query = "SELECT * FROM public.forms WHERE id = %s"
+        query = "SELECT id, id_creator, name, created_at, closed_at, public, questions, status, published_at, tags, image FROM public.forms WHERE id = %s"
         form = db.fetch_query(query, (id,))
 
         #TODO : TREBUIE SA TRIMIT UN ALT JSON CE NU CONTINE SI DATE CONFIDENTIALE , CI NUMAI MINIMUL NECESAR
