@@ -19,7 +19,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.routes = [
             # GET routes
             ('GET', f'^/?$', HtmlHandler.handle),
-            ('GET', f'^/([^\.]+).css$', CssHandler.handle),
+            ('GET', f'^/([^\.]+)\.css$', CssHandler.handle),
             ('GET', f'^/admin\.js$', JsHandler.handle),
             ('GET', f'^/pictures/([^\.]+)\.jpg$', ImgHandler.handle),
             ('GET', f'^/pictures/([^\.]+)\.png$', ImgHandler.handle),

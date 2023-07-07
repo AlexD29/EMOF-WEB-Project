@@ -15,7 +15,7 @@ async function fetchData() {
     const data = await response.json();
     formInfo = data;
     
-    if (formInfo.image == null || (formInfo.image).startsWith("http")) {
+    if (formInfo.image == null || String(formInfo.image).startsWith("http")) {
       formInfo.image = "icon.png";
     }
     document.getElementById("form-image").src = formInfo.image;
