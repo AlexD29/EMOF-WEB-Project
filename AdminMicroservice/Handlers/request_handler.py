@@ -19,7 +19,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.routes = [
             # GET routes
             ('GET', f'^/?$', HtmlHandler.handle),
-            ('GET', f'^/([^\.]+).css$', CssHandler.handle),
+            ('GET', f'^/([^\.]+)\.css$', CssHandler.handle),
             ('GET', f'^/admin\.js$', JsHandler.handle),
             ('GET', f'^/pictures/([^\.]+)\.jpg$', ImgHandler.handle),
             ('GET', f'^/pictures/([^\.]+)\.png$', ImgHandler.handle),
@@ -48,7 +48,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             config = get_config()
 
             db_config = config['database']        
-            db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+            db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
             users = None
             while not users:
                 users = db.fetch_query("""SELECT COUNT(*) FROM users WHERE sid = %s;""", (str(sid),))
@@ -97,7 +97,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         if not self.has_valid_sid():
             self.send_response(302)
-            self.send_header('Location','http://127.0.0.1:8050/authentication/')
+            #self.send_header('Location','http://127.0.0.1:8050/authentication/')
+            self.send_header('Location','/authentication/')
             self.end_headers()
             return
 

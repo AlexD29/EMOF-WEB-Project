@@ -51,7 +51,7 @@ class FormListHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         forms_of_user = FormListHandler.format_response(
             db.fetch_query(FormListHandler.select_skeleton + """WHERE id_creator = %s""" + where_clause + " ORDER BY created_at DESC;", (str(user_id),))
@@ -66,7 +66,7 @@ class FormListHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         c = db.connection.cursor()
         c.execute("""DELETE FROM forms WHERE id = %s;""", (str(form_id),))
@@ -98,7 +98,7 @@ class FormListHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
 
         if newStatus:
             c = db.connection.cursor()
