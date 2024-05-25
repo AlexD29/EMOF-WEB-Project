@@ -16,7 +16,7 @@ class HtmlHandler:
         config = get_config()
 
         db_config = config['database']
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         user_name = None
         while user_name == None:

@@ -20,7 +20,8 @@ function is_ok_image(img_str) {
 
 async function fetchCategory(category) {
     forms = []
-    await fetch('http://127.0.0.1:8050/explore/explore-api/' + encodeURIComponent(category)).then(response => response.json()).then(data => {
+    //await fetch('http://127.0.0.1:8050/explore/explore-api/' + encodeURIComponent(category)).then(response => response.json()).then(data => {
+      await fetch('/explore/explore-api/' + encodeURIComponent(category)).then(response => response.json()).then(data => {
         if(data.length > 0) {
           forms = data
         }
@@ -112,16 +113,6 @@ async function init() {
   document.getElementById("section-list").innerText = ''
   await displayCategory("popular", "Popular forms")
   await displayCategory("new", "New forms")
-  const m = document.getElementById("logout-btn")
-  if(m) {
-    m.addEventListener("click", function(event) {
-      event.preventDefault();
-    
-      document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
-      window.location.href = "/authentication/static/login.html";
-    });
-  }
 }
 
 init()

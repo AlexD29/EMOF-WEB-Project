@@ -1,5 +1,6 @@
 const id = document.getElementById("ID").textContent;
-const API_URL = "http://127.0.0.1:8050/forms-microservice/";
+//const API_URL = "http://127.0.0.1:8050/forms-microservice/";
+const API_URL = "/forms-microservice/";
 
 let formInfo = {};
 let pageCounter = 0;
@@ -15,7 +16,7 @@ async function fetchData() {
     const data = await response.json();
     formInfo = data;
     
-    if (formInfo.image == null || (formInfo.image).startsWith("http")) {
+    if (formInfo.image == null || String(formInfo.image).startsWith("http")) {
       formInfo.image = "icon.png";
     }
     document.getElementById("form-image").src = formInfo.image;

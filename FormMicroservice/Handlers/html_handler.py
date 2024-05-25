@@ -5,7 +5,7 @@ def form_exists(f_id):
     config = get_config()
 
     db_config = config['database']
-    db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+    db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
 
     # Selectați formularul corespunzător din baza de date
     query = "SELECT * FROM public.forms WHERE id = %s"
