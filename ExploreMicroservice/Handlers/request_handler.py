@@ -13,19 +13,19 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     cookies = {}
     bod = {}
     def __init__(self, *args, **kwargs):
-        id_regex = '([a-zA-Z0-9\-_]{16})'
+        id_regex = r'([a-zA-Z0-9\-_]{16})'
 
         self.routes = [
             # GET routes
-            ('GET', f'^/?$', HtmlHandler.handle),
-            ('GET', f'^/([^.]+).css$', CssHandler.handle),
-            ('GET', f'^/explore_forms.js$', JsHandler.handle),
-            ('GET', f'^/pictures/([^.]+).jpg$', ImgHandler.handle),
-            ('GET', f'^/pictures/([^.]+).png$', ImgHandler.handle),
+            ('GET', r'^/?$', HtmlHandler.handle),
+            ('GET', r'^/([^.]+).css$', CssHandler.handle),
+            ('GET', r'^/explore_forms.js$', JsHandler.handle),
+            ('GET', r'^/pictures/([^.]+).jpg$', ImgHandler.handle),
+            ('GET', r'^/pictures/([^.]+).png$', ImgHandler.handle),
 
             # Microservice routes
-            ('GET', f'^/explore-api/popular/?$', ExploreListHandler.handle_popular),
-            ('GET', f'^/explore-api/new/?$', ExploreListHandler.handle_new),
+            ('GET', r'^/explore-api/popular/?$', ExploreListHandler.handle_popular),
+            ('GET', r'^/explore-api/new/?$', ExploreListHandler.handle_new),
         ]
         super().__init__(*args, **kwargs)
 
@@ -75,14 +75,14 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     return
         self.send_response(404)
         self.end_headers()
-    
+
     def send_json_response(self, data, status=200):
         response_data_json = json.dumps(data)
         self.send_response(status)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         self.wfile.write(response_data_json.encode())
-    
+
     def send_html_response(self, data , status=200):
         self.send_response(status)
         self.send_header('Content-type','text/html')

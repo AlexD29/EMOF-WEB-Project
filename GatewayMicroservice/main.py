@@ -14,10 +14,10 @@ from Database.db_handler import DatabaseHandler
 
 # acest gateway va prelua cererea clientului si va trimite cererea catre serviciul aferent , gateway ul asteapta
 # raspunsul de la serviciul aferent si dupa ce il primeste il trimite inapoi la client
-# 
-# de ex : 
+#
+# de ex :
 # clientul face request la http://127.0.0.1:8050/forms-microservice (8050 fiind portul acestui gateway , forms-microservice e serviciul aferent la care vrem sa trimitem request)
-# acest gateway va prelua cererea cererea clientului si o va trimite catre http://127.0.0.1:8088 (acesta este URL-ul la care serviciul aferent a fost pornit) 
+# acest gateway va prelua cererea cererea clientului si o va trimite catre http://127.0.0.1:8088 (acesta este URL-ul la care serviciul aferent a fost pornit)
 # , gateway ul va returna automat catre client raspunsul de la http://127.0.0.1:8088
 
 SERVICE_URLS = {
@@ -32,7 +32,7 @@ SERVICE_URLS = {
 }
 
 CONFIG = get_config()
-DB_CONFIG = CONFIG['database']   
+DB_CONFIG = CONFIG['database']
 
 db = DatabaseHandler.getInstance(DB_CONFIG['host'], DB_CONFIG['dbname'], DB_CONFIG['user'], DB_CONFIG['password'],DB_CONFIG['port'])
 cache = redis.StrictRedis(host='emof-cache-redis-STP-resource-group.redis.cache.windows.net',port=6380,password="qYAi3rCq5wit971HZeEcvLLMV0dN1XZzQAzCaDHD79o=",ssl=True)
@@ -46,7 +46,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_PATCH(self):
         self.handle_request(requests.patch)
-    
+
     def do_DELETE(self):
         self.handle_request(requests.delete)
 
@@ -76,14 +76,14 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             data_json = json.loads(raw_data_decoded)
             #combine cookie data with the data from client header request
             data.update(data_json)
-    
+
         forward_data = bytearray(json.dumps(data),"utf-8")
 
         if service in SERVICE_URLS:
             target_url = SERVICE_URLS[service] + '/' + '/'.join(segments[1:])
             if url.query != "":
                 target_url = target_url + "?" + url.query
-            
+
             # GOD FORGIVE ME FOR MY SINS
             if "statistics" in service or ("admin" in service and not (".css" in target_url or ".png" in target_url or ".img" in target_url or "jpg" in target_url or "jpeg" in target_url)):
                send_error = False
@@ -104,7 +104,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                         user_id = result[0][0] if result else None
                     except:
                         print("Nu s-a gasit utilizator cu aces sid")
-                        
+
                     if user_id is None:
                         send_error = True
                     else:
@@ -114,7 +114,7 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                     print("Cache HIT <3")
 
                if send_error == True:
-                    
+
                     print("SE VA TRIMITE LA LOGIN !!!!")
                     print(target_url , forward_data )
                     data = {"message": "You need to login first", "status": "unauthorized"}
@@ -138,8 +138,8 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b'Service not found')
 
-
-PORT = 8050
+import os
+PORT = int(os.environ['PORT'])
 
 with ThreadingHTTPServer(("", PORT), GatewayRequestHandler) as httpd:
     print("Gateway service running at port", PORT)
