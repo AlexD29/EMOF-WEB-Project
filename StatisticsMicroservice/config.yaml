@@ -1,5 +1,5 @@
-database: EMOF
+database: postgres
 user: postgres
-password: s2receptor
-host: localhost
+password: emof-database-pass-cloud-1
+host: emof-postgres-db-stp.postgres.database.azure.com
 port: 5432

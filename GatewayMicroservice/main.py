@@ -3,6 +3,9 @@ import requests
 import urllib.parse
 import json
 import time
+import redis
+import logging
+import datetime
 
 from http.server import ThreadingHTTPServer
 from http.cookies import SimpleCookie
@@ -27,6 +30,12 @@ SERVICE_URLS = {
     'statistics': 'http://127.0.0.1:8083'
     # etc...
 }
+
+CONFIG = get_config()
+DB_CONFIG = CONFIG['database']   
+
+db = DatabaseHandler.getInstance(DB_CONFIG['host'], DB_CONFIG['dbname'], DB_CONFIG['user'], DB_CONFIG['password'],DB_CONFIG['port'])
+cache = redis.StrictRedis(host='emof-cache-redis-STP-resource-group.redis.cache.windows.net',port=6380,password="qYAi3rCq5wit971HZeEcvLLMV0dN1XZzQAzCaDHD79o=",ssl=True)
 
 class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -84,16 +93,10 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                except:
                    print("Nu are sessionID")
                if sessionId is None:
-                   # nu are sessionId
                    send_error = True
-               else:
-                    #are dar trebuie validat
+               elif cache.get(sessionId) is None:
 
-                    config = get_config()
-
-                    db_config = config['database']        
-                    db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
-
+                    print("Cache miss !!")
                     user_id = None
                     query = "SELECT id FROM public.users WHERE sid = %s"
                     try:
@@ -101,17 +104,16 @@ class GatewayRequestHandler(http.server.SimpleHTTPRequestHandler):
                         user_id = result[0][0] if result else None
                     except:
                         print("Nu s-a gasit utilizator cu aces sid")
+                        
                     if user_id is None:
                         send_error = True
                     else:
                         print("UTILIZATORUL EXISTA")
-                    
-                    
+                        cache.set(sessionId,user_id)
+               else:
+                    print("Cache HIT <3")
 
                if send_error == True:
-                    
-                    #CA SA NU FACA BRUTEFORCE LA SID
-                    time.sleep(1)
                     
                     print("SE VA TRIMITE LA LOGIN !!!!")
                     print(target_url , forward_data )
