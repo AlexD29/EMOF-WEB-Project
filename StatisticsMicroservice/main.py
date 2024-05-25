@@ -4,7 +4,7 @@ import re
 import psycopg2
 import yaml
 
-hostName = "127.0.0.1"
+hostName = "0.0.0.0"
 serverPort = 8083
 
 def escapeHTML(string):

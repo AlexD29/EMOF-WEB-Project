@@ -27,7 +27,7 @@ class ExploreListHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         forms_of_user = db.fetch_query(ExploreListHandler.select_skeleton + """ ORDER BY total_responses(f.id) DESC LIMIT 10;""")
         forms = ExploreListHandler.format_response(forms_of_user)
@@ -41,7 +41,7 @@ class ExploreListHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         forms_of_user = db.fetch_query(ExploreListHandler.select_skeleton + """ ORDER BY f.published_at DESC LIMIT 10;""")
         forms = ExploreListHandler.format_response(forms_of_user)

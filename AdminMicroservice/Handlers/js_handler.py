@@ -14,7 +14,7 @@ class JsHandler:
         config = get_config()
 
         db_config = config['database']
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
         
         user_id = None
         while not user_id:

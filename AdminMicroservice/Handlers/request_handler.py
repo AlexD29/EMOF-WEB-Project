@@ -14,19 +14,19 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     cookies = {}
     bod = {}
     def __init__(self, *args, **kwargs):
-        id_regex = '([a-zA-Z0-9\-_]{16})'
+        id_regex = r'([a-zA-Z0-9\-_]{16})'
 
         self.routes = [
             # GET routes
-            ('GET', f'^/?$', HtmlHandler.handle),
-            ('GET', f'^/([^\.]+).css$', CssHandler.handle),
-            ('GET', f'^/admin\.js$', JsHandler.handle),
-            ('GET', f'^/pictures/([^\.]+)\.jpg$', ImgHandler.handle),
-            ('GET', f'^/pictures/([^\.]+)\.png$', ImgHandler.handle),
+            ('GET', r'^/?$', HtmlHandler.handle),
+            ('GET', r'^/([^\.]+)\.css$', CssHandler.handle),
+            ('GET', r'^/admin\.js$', JsHandler.handle),
+            ('GET', r'^/pictures/([^\.]+)\.jpg$', ImgHandler.handle),
+            ('GET', r'^/pictures/([^\.]+)\.png$', ImgHandler.handle),
 
             # Microservice routes
 
-            ('GET', f'^/admin-api/users/{id_regex}/forms/?(\?(.*))?$', FormListHandler.handle_form_list),
+            ('GET', f'^/admin-api/users/{id_regex}/forms/?(\\?(.*))?$', FormListHandler.handle_form_list),
             # DELETE routes
             ('DELETE', f'^/admin-api/forms/{id_regex}/?$', FormListHandler.handle_delete_form),
             # PATCH routes
@@ -36,7 +36,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def has_valid_sid(self):
         #try:
-            
+
             try:
                 sid = self.cookies.get('sessionId')
                 if sid is None:
@@ -44,11 +44,11 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             except:
                 print("No sid")
                 return False
-            
+
             config = get_config()
 
-            db_config = config['database']        
-            db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+            db_config = config['database']
+            db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
             users = None
             while not users:
                 users = db.fetch_query("""SELECT COUNT(*) FROM users WHERE sid = %s;""", (str(sid),))
@@ -97,7 +97,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         if not self.has_valid_sid():
             self.send_response(302)
-            self.send_header('Location','http://127.0.0.1:8050/authentication/')
+            #self.send_header('Location','http://127.0.0.1:8050/authentication/')
+            self.send_header('Location','/authentication/')
             self.end_headers()
             return
 
@@ -117,7 +118,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     return
         self.send_response(404)
         self.end_headers()
-    
+
     def send_json_response(self, data, status=200):
         response_data_json = json.dumps(data)
         self.send_response(status)
@@ -125,7 +126,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(response_data_json.encode())
 
-    
+
     def send_html_response(self, data , status=200):
         self.send_response(200)
         self.send_header('Content-type','text/html')

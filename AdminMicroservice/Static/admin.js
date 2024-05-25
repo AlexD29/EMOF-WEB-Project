@@ -459,15 +459,8 @@ function statsForm(form_id) {
   window.location.href = `/statistics/${encodeURIComponent(escapeHtml(form_id))}`;
 }
 async function shareForm(form_id) {
-  await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + encodeURIComponent(escapeHtml(form_id)) + ".html");
+  //await navigator.clipboard.writeText("127.0.0.1:8050/forms-microservice/" + encodeURIComponent(escapeHtml(form_id)) + ".html");
+  await navigator.clipboard.writeText("/forms-microservice/" + encodeURIComponent(escapeHtml(form_id)) + ".html");
   alert("Copied link to clipboard!");
 }
 displayAllForms()
-
-document.getElementById("logout-btn").addEventListener("click", function(event) {
-	event.preventDefault();
-
-	document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-	window.location.href = "/authentication/static/login.html";
-});

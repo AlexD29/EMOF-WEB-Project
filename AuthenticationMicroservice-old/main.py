@@ -1,6 +1,6 @@
 import hashlib
 from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
-from pyisemail import is_email
+from pyisemail import is_email      
 import psycopg2
 import yaml
 import random
@@ -9,36 +9,9 @@ import json
 import psycopg2.extras
 from datetime import datetime
 from urllib.parse import parse_qs
-from azure.communication.email import EmailClient
 
 hostName = "127.0.0.1"
 serverPort = 8084
-
-print(__file__)
-
-def send_confirmation_mail(email, username):
-    try:
-        connection_string = open("secret", "rt").read()
-        client = EmailClient.from_connection_string(connection_string)
-
-        message = {
-            "senderAddress": "DoNotReply@c146f9fa-2c0a-4e0a-9173-777535133fff.azurecomm.net",
-            "recipients":  {
-                "to": [{"address": email}],
-            },
-            "content": {
-                "subject": "Confirmation Email",
-                "plainText": f"Thanks for signing up, {username}!",
-            }
-        }
-
-        poller = client.begin_send(message)
-        result = poller.result()
-
-    except Exception as ex:
-        print(ex)
-
-
 
 def get_db_connection():
     with open('config.yaml', 'r') as config_file:
@@ -81,7 +54,7 @@ def check_if_email_match_password(email,password):
         return True
     else:
         return False
-
+    
 def check_if_username_match_password(username,password):
     cur = con.cursor()
     sql = "SELECT password FROM users WHERE username = %s"
@@ -129,7 +102,7 @@ def insert_user(email, username, password):
         raise ValueError("Email address already exists.")
     if check_if_username_already_exists(username):
         raise ValueError("Username already exists.")
-
+    
     session_id = generate_session_id()
     now = datetime.now()
     hashed_password = hash_password(password)
@@ -149,7 +122,7 @@ def insert_user(email, username, password):
     cur.close()
     return session_id
 
-#Foloseste algoritmul SHA-256 pentru criptare
+#Foloseste algoritmul SHA-256 pentru criptare 
 def hash_password(password):
     sha256_hash = hashlib.sha256()
     sha256_hash.update(password.encode('utf-8'))
@@ -194,7 +167,7 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
-                self.wfile.write(content) # contentul fisierului e scris ca raspuns
+                self.wfile.write(content) # contentul fisierului e scris ca raspuns 
         except FileNotFoundError:
             self.send_error(404, 'File not found')
 
@@ -219,7 +192,6 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
                 self.wfile.write(json.dumps(response_data).encode('utf-8')) #Raspunsul ca JSON este serializat intr-un String si codat folosind utf-8 si e trimis ca raspuns
-                send_confirmation_mail(email, username)
             except ValueError as e:
                 self.send_response(400)
                 self.send_header('Content-Type', 'text/plain')
@@ -253,7 +225,7 @@ if __name__ == "__main__":
     print("Server started http://%s:%s" % (hostName, serverPort))
     try:
         webServer.serve_forever() #Porneste server pe termen nedefinit, gestionand cererile in thread-uri diferite. Asta permite ca cererile sa fie procesate in acelasi timp.
-    except KeyboardInterrupt: #Cand primeste CTRL+C se inchide
+    except KeyboardInterrupt: #Cand primeste CTRL+C se inchide 
         pass
 
     webServer.server_close()

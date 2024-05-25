@@ -25,7 +25,7 @@ class SubmitHandler:
         config = get_config()
 
         db_config = config['database']        
-        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'])
+        db = DatabaseHandler.getInstance(db_config['host'], db_config['dbname'], db_config['user'], db_config['password'],db_config['port'])
 
         duration = post_data_json.pop("duration")
         cookies = post_data_json.pop("cookie", None)

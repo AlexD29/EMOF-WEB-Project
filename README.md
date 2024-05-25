@@ -154,16 +154,3 @@ A planned future enhancement for our application is the development of a Natural
 An upcoming enhancement that we're planning to add to our system is a mailing microservice. This microservice will be responsible for all email-related functionalities, including sending notifications, account activation instructions, password recovery instructions, and user updates.
 ### 6.2 IP - Session Mapping using Redis on the Gateway
 We are planning to add an IP - Session mapping feature using Redis on our Gateway service. This will enhance the security and performance of our system by efficiently managing user sessions and controlling the rate of requests.
-
-## Customer Benefits
-1. Ease of Participation: Customers can provide feedback without the hassle of creating an account, making the process quick and straightforward.
-2. Anonymity: The assurance of anonymity encourages honest and candid feedback, allowing customers to express their true feelings without fear of repercussions.
-3. Enhanced Service and Product Improvements: By sharing emotional feedback, customers contribute to tangible improvements in products and services they use, leading to better overall experiences.
-4. User-Friendly Interface: The application is designed to be intuitive and easy to use, ensuring customers can effortlessly provide their input.
-
-## Other existing solutions
-1. Typeform: This is known for its user-friendly interface and interactive feedback forms. It allows users to create customized forms with various question types.
-2. Google Forms: This is a web-based application for creating surveys, quizzes, and data collection forms.
-
-## Business Canva
-![image](https://github.com/AlexD29/EMOF-WEB-Project/assets/38299145/11c76d74-27cc-4029-b619-b142785f11ee)

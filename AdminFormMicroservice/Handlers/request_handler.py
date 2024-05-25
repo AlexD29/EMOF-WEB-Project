@@ -16,24 +16,24 @@ from Handlers.css_emof_handler import CssEmofHandler
 
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        
+
         #prefix is empty for the moment
         prefix = ""
 
         self.routes = [
             # GET routes
-            ('GET', '/index\.html', HtmlHandler.handle),
-            ('GET', '/style\.css$', CssHandler.handle),
-            ('GET', '/script\.js$', JsHandler.handle),
-            ('GET', '/emof\.css$', CssEmofHandler.handle),
-            ('GET', '/logo\.png$', ImgHandler.handle),
-            ('GET', '/create-formular\.jpg$', ImgHandler.handle),
-            ('GET', '/update/style\.css$', CssHandler.handle),
-            ('GET', '/update/emof\.css$', CssEmofHandler.handle),
-            ('GET', '/update/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
-            ('GET', '/update/(?P<id>[\w\-]{16})\.html', HtmlEditHandler.handle),
-            ('GET', '/update/edit\.js$', JsEditHandler.handle),
-            ('GET', '/update/logo\.png$', ImgHandler.handle),
+            ('GET', r'/index\.html', HtmlHandler.handle),
+            ('GET', r'/style\.css$', CssHandler.handle),
+            ('GET', r'/script\.js$', JsHandler.handle),
+            ('GET', r'/emof\.css$', CssEmofHandler.handle),
+            ('GET', r'/logo\.png$', ImgHandler.handle),
+            ('GET', r'/create-formular\.jpg$', ImgHandler.handle),
+            ('GET', r'/update/style\.css$', CssHandler.handle),
+            ('GET', r'/update/emof\.css$', CssEmofHandler.handle),
+            ('GET', r'/update/(?P<id>[\w\-]{16})\.json', JsonHandler.handle),
+            ('GET', r'/update/(?P<id>[\w\-]{16})\.html', HtmlEditHandler.handle),
+            ('GET', r'/update/edit\.js$', JsEditHandler.handle),
+            ('GET', r'/update/logo\.png$', ImgHandler.handle),
             ('GET', f'^{prefix}/pictures/([^.]+).jpg$', ImgHandler.handle),
             ('GET', f'^{prefix}/pictures/([^.]+).png$', ImgHandler.handle),
 
@@ -65,14 +65,14 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
         self.wfile.write(b"404 Not Found")
-    
+
     def send_json_response(self, data, status=200):
         response_data_json = json.dumps(data)
         self.send_response(status)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         self.wfile.write(response_data_json.encode())
-    
+
     def send_html_response(self, data , status=200):
         self.send_response(200)
         self.send_header('Content-type','text/html')

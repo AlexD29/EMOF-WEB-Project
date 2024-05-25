@@ -7,14 +7,14 @@ class DatabaseHandler:
     __lock = threading.Lock()
 
     @staticmethod
-    def getInstance(host, dbname, user, password):
+    def getInstance(host, dbname, user, password,port):
         DatabaseHandler.__lock.acquire()
         if DatabaseHandler.__instance is None:
-            DatabaseHandler.__instance = DatabaseHandler(host, dbname, user, password)
+            DatabaseHandler.__instance = DatabaseHandler(host, dbname, user, password,port)
         DatabaseHandler.__lock.release()
         return DatabaseHandler.__instance
 
-    def __init__(self, host, dbname, user, password):
+    def __init__(self, host, dbname, user, password,port):
         if DatabaseHandler.__instance != None:
             raise Exception("This class is a singleton!")
         else:
@@ -22,7 +22,8 @@ class DatabaseHandler:
             self.dbname = dbname
             self.user = user
             self.password = password
-            self.connection = psycopg2.connect(host=self.host, dbname=self.dbname, user=self.user, password=self.password)
+            self.port = port
+            self.connection = psycopg2.connect(host=self.host, dbname=self.dbname, user=self.user, password=self.password, port=self.port)
             self.cursor = self.connection.cursor()  # Create a new cursor
             DatabaseHandler.__instance = self
 
